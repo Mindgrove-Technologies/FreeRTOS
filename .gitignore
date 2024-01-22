@@ -11,7 +11,7 @@
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
-
+*build/
 # CodeWarrior temporary files
 *.tdt
 CWSettingsWindows.stg
