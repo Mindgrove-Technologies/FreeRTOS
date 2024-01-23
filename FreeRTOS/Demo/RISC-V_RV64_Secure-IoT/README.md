@@ -20,7 +20,7 @@ $ sudo gtkterm -p /dev/ttyUSB2 -s 19200
 
 Start OpenOCD in another terminal:
 ```
-$ openocd -f seciot.cfg
+$ openocd -f seciot_<board>.cfg # <board> can be 100t or 200t, depending on the fpga.
 ```
 
 Start gdb in yet another:
