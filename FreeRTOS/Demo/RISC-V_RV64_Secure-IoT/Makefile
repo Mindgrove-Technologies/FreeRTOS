@@ -1,4 +1,6 @@
 XLEN ?= 64
+FPU ?= 1
+LIB ?= libshakti_fpu.a
 CROSS   = riscv$(XLEN)-unknown-elf-
 CC      = $(CROSS)gcc
 CPP     = $(CROSS)cpp
@@ -8,8 +10,15 @@ DEBUG ?= 0
 BASE_ADDRESS ?= 0x80000000
 
 ifeq ($(XLEN), 64)
-    MARCH = rv64imafdc
-    MABI = lp64d
+	ifeq ($(FPU), 0)
+    	MARCH = rv64imac
+    	MABI = lp64
+		LIB = libshakti.a
+	else
+		MARCH = rv64imafdc
+    	MABI = lp64d
+		LIB = libshakti_fpu.a
+	endif
 	STACK_SIZE = 600
 endif
 
@@ -67,7 +76,7 @@ OBJS = $(SRCS:%.c=$(BUILD_DIR)/%$(XLEN).o) $(ASMS:%.S=$(BUILD_DIR)/%$(XLEN).o)
 DEPS = $(SRCS:%.c=$(BUILD_DIR)/%$(XLEN).d) $(ASMS:%.S=$(BUILD_DIR)/%$(XLEN).d)
 
 $(BUILD_DIR)/SecureIoTDemo.shakti: $(OBJS) $(BUILD_DIR)/link.ld Makefile
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(OBJS) -T$(BUILD_DIR)/link.ld $(LIB_DIR)/libshakti.a -lm -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(OBJS) -T$(BUILD_DIR)/link.ld $(LIB_DIR)/$(LIB) -lm -o $@
 
 $(BUILD_DIR)/%$(XLEN).o: %.c Makefile
 	@mkdir -p $(@D)
