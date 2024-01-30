@@ -9,6 +9,9 @@
 
 To build, simply run `make`. If you want a debug build, pass `DEBUG=1`.
 
+In order to build the executable without FPU, pass `FPU=0` flag when running make.
+By default, the executable will be built with FPU in it.
+
 The resulting executable file is ./build/SecureIoTDemo.shakti.
 
 ## How to debug with gdb
