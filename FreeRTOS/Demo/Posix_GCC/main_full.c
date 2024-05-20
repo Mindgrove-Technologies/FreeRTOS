@@ -269,7 +269,6 @@ static void prvCheckTask( void * pvParameters )
 {
     TickType_t xNextWakeTime;
     const TickType_t xCycleFrequency = pdMS_TO_TICKS( 10000UL );
-    HeapStats_t xHeapStats;
 
     /* Just to remove compiler warning. */
     ( void ) pvParameters;
@@ -737,22 +736,28 @@ static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
         xErrorCount++;
     }
 
-    /* Also with the vTaskGetInfo() function. */
-    vTaskGetInfo( xTimerTaskHandle, /* The task being queried. */
-                  &xTaskInfo,       /* The structure into which information on the task will be written. */
-                  pdTRUE,           /* Include the task's high watermark in the structure. */
-                  eInvalid );       /* Include the task state in the structure. */
-
-    /* Check the information returned by vTaskGetInfo() is as expected. */
-    if( ( xTaskInfo.eCurrentState != eBlocked ) ||
-        ( strcmp( xTaskInfo.pcTaskName, "Tmr Svc" ) != 0 ) ||
-        ( xTaskInfo.uxCurrentPriority != configTIMER_TASK_PRIORITY ) ||
-        ( xTaskInfo.pxStackBase != uxTimerTaskStack ) ||
-        ( xTaskInfo.xHandle != xTimerTaskHandle ) )
+    #if( configUSE_TRACE_FACILITY == 1 )
     {
-        pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect information about the timer task";
-        xErrorCount++;
+        /* Also with the vTaskGetInfo() function. */
+        vTaskGetInfo( xTimerTaskHandle, /* The task being queried. */
+                      &xTaskInfo,       /* The structure into which information on the task will be written. */
+                      pdTRUE,           /* Include the task's high watermark in the structure. */
+                      eInvalid );       /* Include the task state in the structure. */
+
+        /* Check the information returned by vTaskGetInfo() is as expected. */
+        if( ( xTaskInfo.eCurrentState != eBlocked ) ||
+            ( strcmp( xTaskInfo.pcTaskName, "Tmr Svc" ) != 0 ) ||
+            ( xTaskInfo.uxCurrentPriority != configTIMER_TASK_PRIORITY ) ||
+            #if( configSUPPORT_STATIC_ALLOCATION == 1 )
+                ( xTaskInfo.pxStackBase != uxTimerTaskStack ) ||
+            #endif
+            ( xTaskInfo.xHandle != xTimerTaskHandle ) )
+        {
+            pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect information about the timer task";
+            xErrorCount++;
+        }
     }
+    #endif /* #if( configUSE_TRACE_FACILITY == 1 ) */
 
     /* Other tests that should only be performed once follow.  The test task
      * is not created on each iteration because to do so would cause the death
