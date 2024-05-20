@@ -28,6 +28,10 @@
 #ifndef SPI_H
 #define SPI_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include<stdlib.h>
 /*By default SPI0 is enabled at initialization.
   SPI0 is not available externally in TARGET=artix7_35t*/
@@ -117,4 +121,9 @@ int flash_cmd_read(int command);
 int flash_status_register_read(void);
 int flash_device_id(void);
 
+#ifdef __cplusplus
+}
 #endif
+
+#endif
+

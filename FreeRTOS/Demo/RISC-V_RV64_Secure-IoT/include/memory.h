@@ -27,8 +27,18 @@
 #ifndef _MEMORY_H
 #define _MEMORY_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include<stdint.h>
 
 void dump_word_memory(uint32_t* start, uint32_t word_length);
 void dump_byte_memory(uint32_t* start, uint32_t word_length);
+
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

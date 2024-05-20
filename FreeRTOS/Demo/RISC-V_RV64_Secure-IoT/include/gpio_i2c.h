@@ -29,6 +29,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef GPIO_I2C_H
 #define GPIO_I2C_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "platform.h"
 #include "gpio.h"
 
@@ -57,5 +61,9 @@ int I2c_shakti_readbytes(char *, int , int , unsigned char );
 void ReadAckForWrite(unsigned char delay);
 void SendNackForRead(unsigned char delay);
 void SendAckForRead(unsigned char delay);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

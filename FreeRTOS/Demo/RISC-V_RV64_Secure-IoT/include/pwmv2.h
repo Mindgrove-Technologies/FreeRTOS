@@ -28,8 +28,14 @@
  * @brief Header file for PWM Driver.
  */
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include<stdbool.h>
 #include <stdint.h>
+
 
 #define PERIOD_REGISTER_MAX   0xFFFFFFFF
 #define DUTY_REGISTER_MAX         0xFFFFFFFF
@@ -37,11 +43,11 @@
 #define DEADBAND_DELAY_REGISTER_MAX   0x0000FFFF
 
 #define PWM_0 0
-#define PWM_1 1
-#define PWM_2 2
+#define PWM_1 1 
+#define PWM_2 2 
 #define PWM_3 3
-#define PWM_4 4
-#define PWM_5 5
+#define PWM_4 4 
+#define PWM_5 5 
 #define PWM_6 6
 #define PWM_7 7
 
@@ -51,6 +57,7 @@
 #define PWM_OUTPUT_ENABLE               0x00000004
 #define PWM_OUTPUT_POLARITY             0x00000008
 #define PWM_COUNTER_RESET               0x00000010
+#define PWM_COMP_OUTPUT_ENABLE          0x00000020
 #define PWM_HALFPERIOD_INTERRUPT_ENABLE 0x00000040
 #define PWM_FALL_INTERRUPT_ENABLE       0x00000080
 #define PWM_RISE_INTERRUPT_ENABLE       0x00000100
@@ -62,14 +69,14 @@
 
 typedef enum
 {
-	rise_interrupt,				//Enable interrupt only on rise
-	fall_interrupt,				//Enable interrupt only on fall
-	halfperiod_interrupt,			//Enable interrupt only on halfperiod
-	rise_fall_interrupt,			//Enable interrupt on rise and fall
-	fall_halfperiod_interrupt,		//Enable interrupt on fall and halfperiod
-	rise_halfperiod_interrupt,		//Enable interrupt on rise and halfperiod
-	rise_fall_halfperiod_interrupt,		//Enable interrupt on rise, fall and halfperiod
-	no_interrupt				//Disable interrupts
+  rise_interrupt,       //Enable interrupt only on rise
+  fall_interrupt,       //Enable interrupt only on fall
+  halfperiod_interrupt,     //Enable interrupt only on halfperiod
+  rise_fall_interrupt,      //Enable interrupt on rise and fall
+  fall_halfperiod_interrupt,    //Enable interrupt on fall and halfperiod
+  rise_halfperiod_interrupt,    //Enable interrupt on rise and halfperiod
+  rise_fall_halfperiod_interrupt,   //Enable interrupt on rise, fall and halfperiod
+  no_interrupt        //Disable interrupts
 }pwm_interrupt_modes;
 
 
@@ -80,6 +87,8 @@ void pwm_set_duty_cycle(int pwm_number, uint32_t duty);
 void pwm_set_periodic_cycle(int pwm_number, uint32_t period);
 int pwm_set_control(int pwm_number, uint32_t value);
 void pwm_stop(int pwm_number);
+void pwm_start(int pwm_number);
+void analogWrite(int pin_number, int val);
 int pwm_set_deadband_delay(int pwm_number, uint32_t value);
 int configure_control(bool update, pwm_interrupt_modes interrupt_mode, bool change_output_polarity);
 void pwm_set_prescalar_value(int pwm_number, uint16_t prescalar_value);
@@ -96,3 +105,6 @@ void pwm_isr_handler4();
 void pwm_isr_handler5();
 
 
+#ifdef __cplusplus
+}
+#endif

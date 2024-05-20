@@ -29,6 +29,10 @@
 #ifndef I2C_H
 #define I2C_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "platform.h"
 
 #define ETIMEOUT -60
@@ -142,7 +146,13 @@ int i2c_write_interrupt_data(i2c_struct * instance, unsigned char writeData,
 			     unsigned char delay, unsigned char last);
 int i2c_read_data_nack(i2c_struct * instance, unsigned char *read_data, unsigned
 		       char delay);
+int i2c_repeat_start_send_slave_address(i2c_struct *,unsigned char slaveAddress, unsigned
+			   char rdWrCntrl, unsigned long delay);
 
 extern i2c_struct *i2c_instance[MAX_I2C_COUNT];
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

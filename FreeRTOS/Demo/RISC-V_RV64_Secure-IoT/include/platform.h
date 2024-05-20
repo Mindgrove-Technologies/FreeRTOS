@@ -1,10 +1,10 @@
 /*
-* @headerfile platform.h - Header File for Secure-IoT C-Class SoC for FPGA
+* @headerfile platform.h - Header file for Mindgrove Silicon Secure-IoT SoC
 
 * Name of Author  : Kapil Shyam. M
 * Email ID        : kapil@mindgrovetech.in
 
- Copyright (C) 2024  Mindgrove Technologies Pvt Ltd. All rights reserved.
+ Copyright (C) 2023 Mindgrove Technologies Private Limited. All rights reserved.
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-/*********C-RV64IMAFDC*********
+/*********c-rv64imafdc*********
  SPI   * 4
  GPIO  * 32
  UART  * 3
@@ -42,6 +42,11 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  *@brief RISCV - C CLASS SOC Memory mapping
  */
@@ -56,7 +61,9 @@
 #define CLINT_DIVISOR   256
 
 #define CLOCK_FREQUENCY_SIM 1000000000
+#define CLOCK_FREQUENCY_ASIC 700000000
 #define CLOCK_FREQUENCY 40000000
+#define DELAY_FREQ_BASE CLOCK_FREQUENCY
 
 /*!Debugger Offset */
 #define DBG_MEM_START 0x00000010
@@ -201,11 +208,11 @@
 #define QSPI_INTERRUPT_1      50  /* QSPI 1 */
 #define QSPI_READY_1          51
 #define QSPI_INTERRUPT_0      52  /* QSPI 0 */
-#define QSPI_READY_0          53
+#define QSPI_READY_0          53                    
 #define SPI_INTERRUPT_3       54  /* SPI 3 */
 #define SPI_INTERRUPT_2       55  /* SPI 2 */
 #define SPI_INTERRUPT_1       56  /* SPI 1 */
-#define SPI_INTERRUPT_0       57  /* SPI 0 */
+#define SPI_INTERRUPT_0       57  /* SPI 0 */  
 #define ADC_INTERRUPT         58  /* ADC  */
 
 #define PLIC_MAX_INTERRUPT_SRC 58
@@ -264,5 +271,9 @@
 #define GPIO30 (1 << 30)
 #define GPIO31 (1 << 31)
 #define GPIO_COUNT  0x20
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

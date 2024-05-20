@@ -9,27 +9,25 @@
  * @author Kapil Shyam. M (kapilshyamm@gmail.com)
  * @brief This is a Baremetal SSPI Driver's Header file for Mindgrove Silicon's SPI Peripheral
  * @version 0.2
- * @date 2023-04-16
+ * @date 2023-07-20
  * 
  * @copyright Copyright (c) Mindgrove Technologies Pvt. Ltd 2023. All rights reserved.
  * 
  */
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include "platform.h"
 #include "log.h"
 
-/*! `sspi_struct *sspi_instance[SSPI_MAX_COUNT];` is declaring an array of pointers to structures of
-type `sspi_struct`. The size of the array is defined by the constant `SSPI_MAX_COUNT`. This array is
-used to store the base addresses of the different SPI instances that are initialized in the system.
-Each element of the array corresponds to a specific SPI instance, and the base address of that
-instance is stored in the corresponding element of the array. This allows the driver to access the
-registers of a specific SPI instance by using its base address. */
-//extern sspi_struct *sspi_instance[SSPI_MAX_COUNT];
 
 #define FIFO_DEPTH_8  32
 #define FIFO_DEPTH_16 FIFO_DEPTH_8/2
 #define FIFO_DEPTH_32 FIFO_DEPTH_8/4
-
 
 #define MASTER 1
 #define SLAVE 0
@@ -53,6 +51,9 @@ registers of a specific SPI instance by using its base address. */
 #define SPI1 1
 #define SPI2 2
 #define SPI3 3
+
+//! Enable SPI_DEBUG Macro for Debugging purposes.
+//#define SPI_DEBUG 1
 
 /**
  * @fn void spi_enable(int spi_number)
@@ -152,23 +153,187 @@ void sclk_config( int spi_number, int pol, int pha, int prescale, int setup_time
  * SPI transaction. It is used to configure the SPI communication control register. Mostly, the values for 
  * the \a spi_size will be 8, 16. and 32.
  * 
+ * @see sspi_busy function.
  */
 void sspi_comm_control_config(int spi_number, int master_mode, int lsb_first, int comm_mode, int spi_size);
-int sspi8_transmit_data(int spi_number, uint8_t tx_data[FIFO_DEPTH_8], uint8_t data_size);
-int sspi16_transmit_data(int spi_number, uint16_t tx_data[FIFO_DEPTH_16], uint8_t data_size);
-int sspi32_transmit_data(int spi_number, uint32_t tx_data[FIFO_DEPTH_32], uint8_t data_size);
+
+/**
+ * @fn int sspi8_transmit_data(int spi_number, uint8_t tx_data)
+ * 
+ * @brief The function transmits data over SPI in 8-bit format.
+ * @details This function checks if the TX FIFO is not full, and it writes the data to the tx register.
+ * 
+ * @param spi_number The SPI instance number to be used for data transmission.
+ * @param tx_data An 8-bit data to be transmitted over SPI.
+ * 
+ * @see sspi_check_tx_fifo_32 function and sspi_wait_till_tx_complete function.
+ */
+int sspi8_transmit_data(int spi_number, uint8_t tx_data);
+
+/**
+ * @fn int sspi16_transmit_data(int spi_number, uint16_t tx_data[FIFO_DEPTH_16], uint8_t data_size)
+ * 
+ * @brief The function transmits 16-bit data over SPI in chunks of a specified size.
+ * @details This function checks if the TX FIFO contains atleast 2-bytes space, and it writes the data to the tx register.
+ * 
+ * @param spi_number The SPI instance number to be used for transmitting data.
+ * @param tx_data An array of 16-bit data to be transmitted over SPI.
+ * @param data_size The total number of data to be transmitted in bytes.
+ * 
+ * @see sspi_check_tx_fifo_30 function and sspi_wait_till_tx_complete function.
+ *
+ * @return an integer value. If the transmission is successful, it returns 0. If the TX FIFO does not
+ * have enough space, it returns -1.
+ */
+int sspi16_transmit_data(int spi_number, uint16_t tx_data);
+
+/**
+ * @fn int sspi32_transmit_data(int spi_number, uint32_t tx_data[FIFO_DEPTH_32], uint8_t data_size)
+ * 
+ * @brief The function transmits 32-bit data over SPI in chunks of a specified size.
+ * @details This function checks if the TX FIFO contains atleast 4-bytes space, and it writes the data to the tx register.
+ * 
+ * @param spi_number The SPI instance number to be used for transmitting data.
+ * @param tx_data An array of 32-bit data to be transmitted over SPI.
+ * @param data_size The total number of data to be transmitted in bytes.
+ * 
+ * @see sspi_check_tx_fifo_28 function and sspi_wait_till_tx_complete function.
+ * 
+ * @return an integer value. If the transmission is successful, it returns 0. If the TX FIFO does not
+ * have enough space, it returns -1.
+ */
+int sspi32_transmit_data(int spi_number, uint32_t tx_data);
+
+/**
+ * @fn sspi_wait_till_tx_not_en(int spi_number)
+ * 
+ * @brief The function waits until the transmit enable flag of a specified SPI instance is cleared.
+ * 
+ * @param spi_number The parameter `spi_number` is an integer that specifies the SPI instance number.
+ * It is used to select the SPI peripheral to be configured and operated on.
+ */
 void sspi_wait_till_tx_not_en(int spi_number);
+
+/**
+ * @fn void sspi_wait_till_tx_complete(int spi_number)
+ * 
+ * @brief The function when called, waits till the TX transfer completes.
+ * @details This function waits until the transmit FIFO of a specified SPI instance is empty.
+ * 
+ * @param spi_number The parameter `spi_number` is an integer that represents the SPI instance number.
+ * It is used to select the specific SPI peripheral instance to operate on when accessing the SPI registers.
+ * 
+ * @see sspi_wait_till_tx_not_en function.
+ */
 void sspi_wait_till_tx_complete(int spi_number);
+
+/**
+ * @fn int sspi_check_tx_fifo_32(int spi_number)
+ * 
+ * @brief This function when called will check if TX Buffer is Full.
+ * 
+ * @param spi_number The parameter `spi_number` is an integer that specifies the SPI instance number.
+ * It is used to select the SPI peripheral to be configured and operated on.
+ * 
+ * @return an integer value. If the TX FIFO is full, it returns 1. If the TX FIFO is not full, it
+ * returns 0.
+ */
 int sspi_check_tx_fifo_32(int spi_number);
+
+/**
+ * @fn int sspi_check_tx_fifo_30(int spi_number)
+ * 
+ * @brief This function when called will check if TX Buffer contains space for atleast 2 bytes 
+ * and also transmit FIFO of a specified SPI instance has atmost 30 bytes.
+ * 
+ * @param spi_number The parameter `spi_number` is an integer that specifies the SPI instance number.
+ * It is used to select the SPI peripheral to be configured and operated on.
+ * 
+ * @return an integer value. If the TX FIFO contains less than or equal to 30 bytes, it returns 0.
+ * Otherwise, it returns 1.
+ */
 int sspi_check_tx_fifo_30(int spi_number);
+
+/**
+ * @fn int sspi_check_tx_fifo_28(int spi_number)
+ * 
+ * @brief This function when called will check if TX Buffer contains space for atleast 4 bytes.
+ * and also transmit FIFO of a specified SPI instance has atmost 28 bytes.
+ * 
+ * @param spi_number The parameter `spi_number` is an integer that specifies the SPI instance number.
+ * It is used to select the SPI peripheral to be configured and operated on.
+ * 
+ * @return an integer value. If the TX FIFO contains less than or equal to 28 bytes, it returns 0.
+ * Otherwise, it returns 1.
+ */
 int sspi_check_tx_fifo_28(int spi_number);
-//int sspi_receive_data(int spi_number, int spi_size);
+
+/**
+ * @fn void sspi_wait_till_rxfifo_not_empty(int spi_number)
+ * 
+ * @brief The function waits until the receive FIFO of a specified SPI instance is not empty.
+ * 
+ * @param spi_number The parameter `spi_number` is an integer that specifies the SPI instance number.
+ * It is used to select the SPI peripheral to be configured and operated on.
+ */
 void sspi_wait_till_rxfifo_not_empty(int spi_number);
+
+/**
+ * @fn void sspi_wait_till_rxfifo_2(int spi_number)
+ * 
+ * @brief The function waits until the receive FIFO of a specified SPI instance has atleast 2 bytes.
+ * 
+ * @param spi_number The parameter `spi_number` is an integer that specifies the SPI instance number.
+ * It is used to select the SPI peripheral to be configured and operated on.
+ */
 void sspi_wait_till_rxfifo_2(int spi_number);
+
+/**
+ * @fn void sspi_wait_till_rxfifo_2(int spi_number)
+ * 
+ * @brief The function waits until the receive FIFO of a specified SPI instance has atleast 4 bytes.
+ * 
+ * @param spi_number The parameter `spi_number` is an integer that specifies the SPI instance number.
+ * It is used to select the SPI peripheral to be configured and operated on.
+ */
 void sspi_wait_till_rxfifo_4(int spi_number);
 
-void sspi8_receive_data(int spi_number, uint8_t rx_data[FIFO_DEPTH_8], uint8_t length);
+/**
+ * @fn uint8_t sspi8_receive_data(int spi_number)
+ * 
+ * @brief The function receives 8-bit data from an SPI interface.
+ * @details This function checks if the RX FIFO is not empty, and then it reads the data from the rx register.
+ * 
+ * @param spi_number The SPI instance number to be used for receiving data.
+ */
+uint8_t sspi8_receive_data(int spi_number);
+
+/**
+ * @fn void sspi16_receive_data(int spi_number, uint16_t rx_data[FIFO_DEPTH_16], uint8_t data_size)
+ * 
+ * @brief The function receives 16-bit data from an SPI interface.
+ * @details This function checks if the RX FIFO contains atleast 2-bytes, and then it reads the data from the rx register.
+ * 
+ * @param spi_number The SPI instance number to be use for receiving data.
+ * @param rx_data An array of 16-bit data to be received over SPI.
+ * @param data_size The total number of data to be received in bytes.
+ */
 void sspi16_receive_data(int spi_number, uint16_t rx_data[FIFO_DEPTH_16], uint8_t data_size);
+
+/**
+ * @fn void sspi32_receive_data(int spi_number, uint32_t rx_data[FIFO_DEPTH_32], uint8_t data_size)
+ * 
+ * @brief The function receives 32-bit data from an SPI interface.
+ * @details This function checks if the RX FIFO contains atleast 4-bytes, and then it reads the data from the rx register.
+ * 
+ * @param spi_number The SPI instance number to be use for receiving data.
+ * @param rx_data An array of 32-bit data to be received over SPI.
+ * @param data_size The total number of data to be received in bytes.
+ */
 void sspi32_receive_data(int spi_number, uint32_t tx_data[FIFO_DEPTH_32], uint8_t data_size);
-                                              
 void inter_enable_config(int spi_number, uint32_t value);
+
+
+#ifdef __cplusplus
+}
+#endif

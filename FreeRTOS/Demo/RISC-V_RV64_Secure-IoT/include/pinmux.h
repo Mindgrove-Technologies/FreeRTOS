@@ -27,14 +27,23 @@
 
 #ifndef PINMUX_H
 #define PINMUX_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include "platform.h"
 
-volatile unsigned int* pinmux_config_reg = (volatile unsigned int* ) PINMUX_CONFIGURE_REG;
+extern unsigned int* pinmux_config_reg = (unsigned int* ) PINMUX_CONFIGURE_REG;
 
 void pinmux_enable_gpio(int);
 void pinmux_enable_pwm(int);
 void pinmux_enable_all_pwm();
 void pinmux_enable_all_gpio();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

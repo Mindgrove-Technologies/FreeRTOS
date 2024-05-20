@@ -1,3 +1,7 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include "platform.h"
 #include "log.h"
@@ -81,3 +85,8 @@ void qspi_config_pir(int qspi_num, uint32_t poll_interval);
 void qspi_config_lptr(int qspi_num, uint32_t time_out);
 uint8_t qspi_check_transaction_complete (int qspi_num);
 void qspi_wait_till_transaction_complete (int qspi_num);
+
+
+#ifdef __cplusplus
+}
+#endif

@@ -29,6 +29,11 @@
 
 #ifndef TRAPS_H
 #define TRAPS_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 /*
@@ -126,5 +131,10 @@ extern mtrap_fptr_t mcause_interrupt_table[MAX_INTERRUPT_VALUE];
 void default_handler(uintptr_t cause, uintptr_t epc);
 unsigned int extract_ie_code(unsigned int num);
 uintptr_t handle_trap(uintptr_t cause, uintptr_t epc);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

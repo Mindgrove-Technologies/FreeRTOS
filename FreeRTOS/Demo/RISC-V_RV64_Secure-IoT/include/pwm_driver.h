@@ -26,6 +26,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * @details the header file for the pwm module which is used to change the frequency, period and duty registers
  */
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include<stdbool.h>
 
 // PWM Registers 
@@ -71,3 +76,6 @@ int set_pwm_clock_register(int module_number, int value);
 int configure_control_register_mode(int mode);
 void pwm_use_external_clock(int module_number, bool value);
 
+#ifdef __cplusplus
+}
+#endif

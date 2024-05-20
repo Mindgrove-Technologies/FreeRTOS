@@ -32,14 +32,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdint.h>
 #include "platform.h"
 
-#define SECURE_IOT_PUTCHAR putchar
-#define SECURE_IOT_GETCHAR getchar
-
 #ifdef __cplusplus
 extern "C" {
 #endif
-//#define USE_INTERRUPT 1 //Uncomment or add this line when interrupts are unused
-//#define USE_RX_THRESHOLD 1 //Uncomment or add this line when rx_threshold is required
+
+#define USE_INTERRUPT 1 //Uncomment or add this line when interrupts are unused
+#define USE_RX_THRESHOLD 1 //Uncomment or add this line when rx_threshold is required
 
 
 /** 
@@ -100,7 +98,7 @@ typedef struct
 /* UART control register */
 #define STOP_BITS(x) ( (x & 3) << 1) 				/*! 00 - 1 stop bits, 01 - 1.5 stop bits; 10 - 2 stop bits; 11 unused */
 #define PARITY(x) ( (x & 3)  << 3 ) 				/*! 00 --- No parity; 01 -Odd Parity; 10 - Even Parity;  11 - Unused */
-#define UART_TX_RX_LEN(x)       ( (x & 0x1F) << 5) 	/*! Maximum length 32 bits */
+#define UART_TX_RX_LEN(x)       ( (x & 0x3) << 5) 	/*! Maximum length 32 bits */
 
 #ifdef UART_DRIVER
 extern volatile uart_struct *uart_instance[MAX_UART_COUNT];
@@ -124,7 +122,7 @@ extern unsigned char u2_rcv_char[UARTX_BUFFER_SIZE];
 #endif
 
 int available(uart_struct *uart_instance);
-void uart_init(int uart_num);
+int uart_init(int uart_num);
 void set_baud_rate(uart_struct * uart_instance, unsigned int baudrate);
 void set_baud_rate_sim(uart_struct *instance, unsigned int baudrate);
 void config_uart(uart_struct * uart_instance, int stop_bits, int parity, int char_size, unsigned short delay);
@@ -135,6 +133,8 @@ uint32_t write_uart_string(uart_struct * uart_instance, uint8_t * ptr_string);
 uint8_t read_uart_character(uart_struct * uart_instance, char * prn_character);
 uint8_t read_uart_string(uart_struct * uart_instance, char * ptr_string) ;
 void flush_uart(uart_struct * instance);
+uint8_t rx_polling(uint8_t uart_num);
+
 
 #ifdef USE_INTERRUPT
 unsigned char uart0_isr(void);

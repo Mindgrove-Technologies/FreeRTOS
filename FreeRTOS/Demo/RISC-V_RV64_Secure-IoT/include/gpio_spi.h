@@ -29,6 +29,10 @@
 #ifndef GPIO_SPI_H
 #define GPIO_SPI_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define IR_1 (1 << 4)
 #define IR_2 (1 << 5)
 #define IR_3 (1 << 6)
@@ -44,6 +48,10 @@
 // function prototype
  unsigned char readbyte(unsigned char delay);
  int config();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif/* GPIO_SPI_H*/
 

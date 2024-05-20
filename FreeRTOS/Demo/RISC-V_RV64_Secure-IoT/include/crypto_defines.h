@@ -1,6 +1,10 @@
 #ifndef CRYPTO_DEFINES_INCLUDED
 #define CRYPTO_DEFINES_INCLUDED
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Commonly used variables
 #define byte_length 8
 #define address_bus_length 64
@@ -66,5 +70,9 @@
 // RSA Encryption mode
 #define rsa_encrypt_mode 1
 #define rsa_decrypt_mode 0
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

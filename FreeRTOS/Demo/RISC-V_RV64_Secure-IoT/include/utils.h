@@ -31,12 +31,6 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdarg.h>
-#include <math.h>
-
-#define SECURE_IOT_PRINTF printf
-#define SECURE_IOT_SCANF scan
-#define SECURE_IOT_SPRINTF sprintf
-#define SECURE_IOT_SSCANF sscanf
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,6 +41,7 @@ void mcycle_init();
 extern inline uint64_t get_mcycle_start();
 extern inline uint64_t get_mcycle_stop();
 extern int millis(int total_cycles);
+void delayms(long delay);
 void waitfor(unsigned int secs);
 void delay(unsigned long seconds);
 float pow_10(unsigned int y);
@@ -58,11 +53,6 @@ void delay_loop(unsigned long cntr1, unsigned long cntr2);
 unsigned long read_word(size_t *addr);
 void write_word(size_t *addr, unsigned long val);
 int int_to_string(int number, char str[], unsigned int afterpoint);
-static int vsnprintf_internal(char *buf, size_t size, const char *fmt,va_list ap);
-int vsprintf(char *buf, const char *fmt, va_list args);
-int sprintf(char *buf, const char *fmt, ...);
-int vsnprintf(char *buf, size_t size, const char *fmt,va_list args);
-int snprintf(char *buf, size_t size, const char *fmt, ...);
 void _printf_(const char *fmt, va_list ap);
 int printf(const char* fmt, ...);
 int vsscanf(const char *inp, char const *fmt0, va_list ap);
@@ -82,7 +72,6 @@ void arithops_perf_init();
 void print_arithops_perf();
 void disable_all_perf();
 void clear_all_perf();
-
 
 #ifdef __cplusplus
 }

@@ -28,6 +28,10 @@
  Level 3 is the default level of logging.
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdarg.h>
 
 // Log Levels
@@ -47,3 +51,7 @@ void log_debug(const char*fmt, ...);
 void log_warn(const char*fmt, ...);
 void log_error(const char*fmt, ...);
 void log_fatal(const char*fmt, ...);
+
+#ifdef __cplusplus
+}
+#endif

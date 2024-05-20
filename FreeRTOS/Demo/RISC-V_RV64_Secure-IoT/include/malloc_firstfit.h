@@ -1,6 +1,10 @@
 #ifndef MALLOC_H
 #define MALLOC_H 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 #include <stdio.h>
 
@@ -17,5 +21,9 @@ extern void *malloc (size_t size);
 
 /* Free a block allocated by `malloc', `realloc' or `calloc'.  */
 extern void free (void *ptr);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

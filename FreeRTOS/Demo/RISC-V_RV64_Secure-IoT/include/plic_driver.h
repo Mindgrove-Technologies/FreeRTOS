@@ -29,6 +29,12 @@
 
 #ifndef PLIC_DRIVER_H
 #define PLIC_DRIVER_H
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "platform.h"
 #include "traps.h"
 
@@ -40,14 +46,14 @@
 #define PLIC_PENDING_OFFSET             0x1000UL
 #define PLIC_ENABLE_OFFSET              0x2000UL
 
-#if defined(SOS) 
+//#if defined(SOS) 
 #define PLIC_THRESHOLD_OFFSET           0x200000UL
 #define PLIC_CLAIM_OFFSET               0x200004UL
-#else
-/*Only context 0 supported*/
-#define PLIC_THRESHOLD_OFFSET           0x10000UL
-#define PLIC_CLAIM_OFFSET               0x10010UL
-#endif
+/*#else
+//Only context 0 supported*/
+//#define PLIC_THRESHOLD_OFFSET           0x10000UL
+//#define PLIC_CLAIM_OFFSET               0x10010UL
+//#endif
 
 /* The priority value for each int src can be found at addresses 4 bytes apart
    starting from base address + priority offset */
@@ -103,5 +109,9 @@ void set_interrupt_priority(uint32_t priority_value, uint32_t int_id);
 void configure_interrupt_pin(uint32_t pin);
 void plic_init(void);
 void configure_interrupt(uint32_t int_id);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
