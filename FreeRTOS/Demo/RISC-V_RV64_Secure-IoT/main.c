@@ -30,6 +30,7 @@
 #include "gpio.h"
 #include "gpiov2.h"
 #include "utils.h"
+#include <semphr.h>
 
 /* Run a simple demo just prints 'Blink' */
 #define DEMO_BLINKY    1
@@ -49,77 +50,193 @@ static void prvSetupSpike( void );
 
 int main_blinky( void );
 
-/*-----------------------------------------------------------*/
+static SemaphoreHandle_t idle_wakeup;
 
-int main( void )
-{
-    int ret;
-
-    prvSetupSpike();
-
-    #if defined( DEMO_BLINKY )
-        ret = main_blinky();
-    #else
-    #error "Please add or select demo."
-    #endif
-
-    return ret;
+void vTask1(void *pvParameters) {
+  while (1) {
+    printf("Task 1 running...\n");
+    vTaskDelay(pdMS_TO_TICKS(100)); // Simulate task execution time
+    printf("Task 1 yielding...\n");
+    taskYIELD();
+  }
 }
+
+void vTask2(void *pvParameters) {
+  while (1) {
+    printf("Task 2 running...\n");
+    vTaskDelay(pdMS_TO_TICKS(200)); // Simulate task execution time
+  }
+}
+
+void vIdleTask(void *pvParameters) {
+  while (1) {
+    // Simulate idle task doing nothing (low priority operations)
+    vTaskDelay(pdMS_TO_TICKS(1));
+    xSemaphoreGive(idle_wakeup); // Signal scheduler when idle task wakes up
+  }
+}
+
+int main(void) {
+  prvSetupSpike();
+  idle_wakeup = xSemaphoreCreateBinary();
+
+  // Create tasks with different priorities
+  xTaskCreate(vTask1, "Task 1", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+  xTaskCreate(vTask2, "Task 2", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
+
+  // Start the idle task (lower priority than other tasks)
+  xTaskCreate(vIdleTask, "Idle Task", configMINIMAL_STACK_SIZE, NULL, configIDLE_PRIORITY, NULL);
+
+  // Start the scheduler
+  vTaskStartScheduler();
+
+  // Should not reach here as control is handed over to scheduler
+  while (1);
+}
+
+
+
+/*-----------------------------------------------------------------------------------------------------------------*/
+// Task function to print Hello World
+// static void prvHelloWorldTask(void* pvParameters) {
+//   gpiov2_init();
+//   gpiov2_set_direction(9,1);
+//   for (int i =0; i<10; i++){
+//     gpiov2_set(9);
+//     delay(2);
+//     gpiov2_clear(9);
+//     delay(2);
+//     printf("Hello World from task 1!\n");
+//     // Simulate some work (optional delay)
+//     // vTaskDelay(pdMS_TO_TICKS(1));
+//   }
+// }
+// // Task function to print goodbye
+// static void prvGoodbyeTask(void* pvParameters) {
+//   gpiov2_init();
+//   gpiov2_set_direction(10,1);
+//   for (int i= 0 ; i<10 ; i++) {
+//     gpiov2_set(10);
+//     delay(2);
+//     gpiov2_clear(10);
+//     delay(2);
+
+//     printf("Goodbye from Task 2!\n");
+//     // vTaskDelay(pdMS_TO_TICKS(10));
+//     // vTaskDelay(pdMS_TO_TICKS(1));
+//   }
+// }
+
+// static void prvblink ( void * pvParamters) {
+//   gpiov2_init();
+//   gpiov2_set_direction(10, 0);
+//   while (1) {
+//     // gpiov2_set(10);
+//     // delay(2);
+//     gpiov2_clear(10);
+//   }
+// }
+
+// static void prvToggleLED( void* pvParameters )
+// {
+//     gpiov2_init();
+//     //Assumption 1 ---> output, 0 ---> input
+//     gpiov2_set_direction(9, 1);
+//     gpiov2_set_direction(10, 1);
+//     gpiov2_set_direction(8, 1);
+//     gpiov2_set_direction(11, 1);
+
+//       // delay_loop(500,500);
+//      for(int i=0; i< 3; i++){
+//       switch(i){
+//           case 0: 
+//             printf("Blinking 0");
+//             gpiov2_set(9);
+//             delay(2);
+//             // vTaskDelay(pdMS_TO_TICKS(10));
+//             gpiov2_clear(9);
+//             break;
+//           case 1:
+//             printf("Blinking 1");
+//             gpiov2_set(10);
+//             delay(2);
+//             // vTaskDelay(pdMS_TO_TICKS(10));
+//             gpiov2_clear(10);
+//             break;
+//           case 2:
+//             printf("Blinking 2");
+//             gpiov2_set(11);
+//             delay(2);
+//             // vTaskDelay(pdMS_TO_TICKS(10));
+//             gpiov2_clear(11);
+//             break;
+//           case 3:
+//             printf("Blinking 3");
+//             gpiov2_set(8);
+//             delay(2);
+//             // vTaskDelay(pdMS_TO_TICKS(10));
+//             gpiov2_clear(8);
+//             break;
+//       }
+//     }
+// }
+
+// int main(void) {
+
+//   prvSetupSpike();
+//   // Create the Hello World task
+//   xTaskCreate(prvHelloWorldTask,
+//               "Hello World Task",
+//               configMINIMAL_STACK_SIZE,
+//               NULL,
+//               1, // Set a low priority (optional)
+//               NULL);
+
+//    // Create the Goodbye task with a higher priority
+//   xTaskCreate(prvGoodbyeTask,
+//               "Goodbye Task",
+//               configMINIMAL_STACK_SIZE,
+//               NULL,
+//               2,
+//               NULL);
+
+//     // xTaskCreate(prvblink,
+//     //           "Toggle LED Task",
+//     //           configMINIMAL_STACK_SIZE,
+//     //           NULL,
+//     //           1,
+//     //           NULL);
+
+//   // Start the FreeRTOS scheduler
+//   vTaskStartScheduler();
+
+//   // We should never get here! If vTaskStartScheduler returns, there was an error.
+//   return 1;
+// }
+/*-----------------------------------------------------------------------------------------------------------------*/
+
+// int main( void )
+// {
+//     int ret;
+
+//     prvSetupSpike();
+
+//     #if defined( DEMO_BLINKY )
+//         ret = main_blinky();
+//     #else
+//     #error "Please add or select demo."
+//     #endif
+
+//     return ret;
+// }
 /*-----------------------------------------------------------*/
+
 static void prvSetupSpike( void )
 {
     __asm__ volatile ( "csrw mtvec, %0" : : "r" ( freertos_risc_v_trap_handler ) );
 }
 
 /*-----------------------------------------------------------*/
-
-void vToggleLED( void )
-{
-    gpiov2_init();
-    //Assumption 1 ---> output, 0 ---> input
-    gpiov2_write_word(GPIO_DIRECTION_CNTRL_REG, GPIO0);
-
-   while(1){
-      delay_loop(500,500);
-     for(int i=0; i< 8; i++){
-      switch(i){
-          case 0: 
-            gpiov2_write_word(GPIO_DATA_REG, GPIO0);
-            delay(2);
-            break;
-          case 1: 
-            gpiov2_write_word(GPIO_DATA_REG, GPIO1);
-            delay(2);
-            break;
-          case 2:
-            gpiov2_write_word(GPIO_DATA_REG, GPIO2);
-            delay(2);
-            break;
-          case 3:
-            gpiov2_write_word(GPIO_DATA_REG, GPIO3);
-            delay(2);
-            break;
-          case 4:
-            gpiov2_write_word(GPIO_DATA_REG, GPIO4);
-            delay(2);
-            break;
-          case 5:
-            gpiov2_write_word(GPIO_DATA_REG, GPIO5);
-            delay(2);
-            break;
-          case 6:
-            gpiov2_write_word(GPIO_DATA_REG, GPIO6);
-            delay(2);
-            break;
-          case 7:
-            gpiov2_write_word(GPIO_DATA_REG, GPIO7);
-            delay(2);
-            break;
-      }
-    }
-   }
-    
-}
 
 /*-----------------------------------------------------------*/
 
