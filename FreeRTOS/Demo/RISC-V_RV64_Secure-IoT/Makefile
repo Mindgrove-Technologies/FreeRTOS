@@ -22,7 +22,7 @@ ifeq ($(XLEN), 64)
 	STACK_SIZE = 600
 endif
 
-BUILD_DIR       = build
+BUILD_DIR       = $(APP)/build
 RTOS_SOURCE_DIR = $(abspath ../../Source)
 DEMO_SOURCE_DIR = $(abspath ../Common/Minimal)
 LIB_DIR = $(PWD)/lib
@@ -54,7 +54,7 @@ else
     CFLAGS += -Os
 endif
 
-SRCS = main.c main_blinky.c\
+SRCS = $(APP)/main.c $(APP)/main_$(APP).c\
 	$(DEMO_SOURCE_DIR)/EventGroupsDemo.c \
 	$(DEMO_SOURCE_DIR)/TaskNotify.c \
 	$(DEMO_SOURCE_DIR)/TimerDemo.c \

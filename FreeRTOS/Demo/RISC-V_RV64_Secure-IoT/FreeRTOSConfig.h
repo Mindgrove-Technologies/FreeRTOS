@@ -53,6 +53,7 @@
 #define configCPU_CLOCK_HZ				( CLOCK_FREQUENCY )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES			( 7 )
+#define configIDLE_PRIORITY				( 0 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 512 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) 64500 )
 #define configMAX_TASK_NAME_LEN			( 16 )
@@ -69,6 +70,8 @@
 #define configGENERATE_RUN_TIME_STATS	0
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 
+
+#define configSUPPORT_DYNAMIC_ALLOCATION  1
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 			0
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
