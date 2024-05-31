@@ -27,11 +27,10 @@
 /* FreeRTOS kernel includes. */
 #include <FreeRTOS.h>
 #include <task.h>
-#include "gpio.h"
-#include "gpiov2.h"
 #include "utils.h"
 
-#define DEMO_LCD    1
+/* Run a simple demo just prints 'Blink' */
+#define DEMO_BLINKY    1
 
 extern void freertos_risc_v_trap_handler( void );
 
@@ -46,32 +45,44 @@ void vApplicationTickHook( void );
  */
 static void prvSetupSpike( void );
 
-int main_blinky( void );
+// int main_blinky( void );
+void Task1( void *pvParameters );
+void Task2( void *pvParameters );
+void idleTask( void *pvParamters);
 
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
-    int ret;
+    // while(1)
+    // {
+        printf("while\n");
+        prvSetupSpike();
+        
+        TaskHandle_t xTask1Handle = NULL;
+        TaskHandle_t xTask2Handle = NULL;
 
-    prvSetupSpike();
+        const uint32_t ulTask1StackSize = configMINIMAL_STACK_SIZE * 2;
+        const uint32_t ulTask2StackSize = configMINIMAL_STACK_SIZE * 2;
 
-    #if defined( DEMO_LCD )
-        ret = main_lcd();
-    #else
-    #error "Please add or select demo."
-    #endif
+        BaseType_t xTask1RetVal, xTask2RetVal ;
 
-    return ret;
+        xTaskCreate(Task1, "Task1", 100, NULL, 1, &xTask1Handle);
+        xTaskCreate(Task2, "Task2", 100, NULL, 2, &xTask2Handle);
+
+        /* Start the scheduler */
+        vTaskStartScheduler();
+        
+        
+        for(;;){printf("error\n");}
+
+    // }
 }
 /*-----------------------------------------------------------*/
 static void prvSetupSpike( void )
 {
     __asm__ volatile ( "csrw mtvec, %0" : : "r" ( freertos_risc_v_trap_handler ) );
 }
-
-/*-----------------------------------------------------------*/
-
 
 /*-----------------------------------------------------------*/
 

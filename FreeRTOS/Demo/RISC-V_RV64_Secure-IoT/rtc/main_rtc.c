@@ -35,9 +35,14 @@
 /*-----------------------------------------------------------*/
 // FreeRTOS application includes.
 /*-----------------------------------------------------------*/
+// #include "utils.h"
+// #include "lcd_driver.h"
+// #include "i2c_v2.h"
+
+#include <stdint.h>
+#include "rtc_driver.h"
+#include"i2c_v2.h"
 #include "utils.h"
-#include "lcd_driver.h"
-#include "i2c_v2.h"
 
 /*-----------------------------------------------------------*/
 // Functions
@@ -80,30 +85,26 @@ int id;
 /*-----------------------------------------------------------*/
 // Main Code.
 /*-----------------------------------------------------------*/
-#define LCD1 I2C0,0x27
-int main_lcd( void )
+
+#define PRESCALE_DIV 39
+#define SCL_DIV 19
+#define I2C_DEBUG 1
+
+int main_rtc()
 {
-    lcd_init(LCD1,2,0);
-    lcd_clear(LCD1);
-    lcd_setCursor(LCD1,0,0);
-    lcd_printf(LCD1,"Hello world");
+  uint8_t hr;
+  uint8_t min;
+  uint8_t secs;
+     DS3231_begin(I2C0,PRESCALE_DIV,SCL_DIV);
+      DS3231_setSeconds(I2C0,56);
+      DS3231_setHours(I2C0,18);
+       DS3231_setMinutes(I2C0,30);
+    while(1){
+      	//DS3231_begin(I2C0,PRESCALE_DIV,SCL_DIV);
+      hr=DS3231_getHours(I2C0);
+     	min=DS3231_getMinutes(I2C0);
+     	secs=DS3231_getSeconds(I2C0);
+       	printf("\n %d:%d:%d PM",hr,min,secs); 
+ 	}
+   return 0;
 }
-
-
-/*-----------------------------------------------------------*/
-
-// #define LCD1 I2C0,0x27
-
-// void vmain_lcd_hello(void *pvParameters){
-//     lcd_init(LCD1,2,0);
-//     lcd_clear(LCD1);
-//     lcd_setCursor(LCD1,0,0);
-//     lcd_printf(LCD1,"Hello world");
-// }
-
-// void vmain_lcd_bye(void *pvParameters){
-//     lcd_init(LCD1,2,0);
-//     lcd_clear(LCD1);
-//     lcd_setCursor(LCD1,0,1);
-//     lcd_printf(LCD1,"Bye world");
-// }

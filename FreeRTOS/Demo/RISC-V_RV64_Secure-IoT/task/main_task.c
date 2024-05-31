@@ -66,44 +66,26 @@ static QueueHandle_t xQueue = NULL;
 
 /*-----------------------------------------------------------*/
 
-int xGetCoreID( void )
+void Task1( void *pvParameters )
 {
-int id;
-
-	__asm ("csrr %0, mhartid" : "=r" ( id ) );
-
-	return id;
+    while(1)
+    {
+        printf("hello from task1 \n");
+        // vTaskDelay(pdMS_TO_TICKS(1));
+    }
 }
 
-/*-----------------------------------------------------------*/
-
-/*-----------------------------------------------------------*/
-// Main Code.
-/*-----------------------------------------------------------*/
-#define LCD1 I2C0,0x27
-int main_lcd( void )
+void Task2( void *pvParameters )
 {
-    lcd_init(LCD1,2,0);
-    lcd_clear(LCD1);
-    lcd_setCursor(LCD1,0,0);
-    lcd_printf(LCD1,"Hello world");
+    for(int i=0; i<10; i++)
+    {
+        printf("hello from task2 \n");
+        // vTaskDelay(pdMS_TO_TICKS(2));
+    }
+    printf("****************\n");
 }
 
-
-/*-----------------------------------------------------------*/
-
-// #define LCD1 I2C0,0x27
-
-// void vmain_lcd_hello(void *pvParameters){
-//     lcd_init(LCD1,2,0);
-//     lcd_clear(LCD1);
-//     lcd_setCursor(LCD1,0,0);
-//     lcd_printf(LCD1,"Hello world");
-// }
-
-// void vmain_lcd_bye(void *pvParameters){
-//     lcd_init(LCD1,2,0);
-//     lcd_clear(LCD1);
-//     lcd_setCursor(LCD1,0,1);
-//     lcd_printf(LCD1,"Bye world");
-// }
+void idleTask( void *pvParamters)
+{
+    while (1){printf("Running idle task\n");}
+}

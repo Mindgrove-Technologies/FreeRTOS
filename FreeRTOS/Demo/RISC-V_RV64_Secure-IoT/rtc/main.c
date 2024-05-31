@@ -27,11 +27,13 @@
 /* FreeRTOS kernel includes. */
 #include <FreeRTOS.h>
 #include <task.h>
-#include "gpio.h"
+#include "i2c_v2.h"
 #include "gpiov2.h"
+#include "rtc_driver.h"
 #include "utils.h"
 
-#define DEMO_LCD    1
+
+#define DEMO_RTC  1
 
 extern void freertos_risc_v_trap_handler( void );
 
@@ -46,23 +48,23 @@ void vApplicationTickHook( void );
  */
 static void prvSetupSpike( void );
 
-int main_blinky( void );
+int main_rtc( void );
 
 /*-----------------------------------------------------------*/
 
-int main( void )
+int main( void)
 {
-    int ret;
+   int ret;
+   prvSetupSpike();
 
-    prvSetupSpike();
+   #if defined( DEMO_RTC )
+      ret = main_rtc();
+   #else
+   #error "Please add or select demo."
+   #endif
 
-    #if defined( DEMO_LCD )
-        ret = main_lcd();
-    #else
-    #error "Please add or select demo."
-    #endif
+   return ret;
 
-    return ret;
 }
 /*-----------------------------------------------------------*/
 static void prvSetupSpike( void )
