@@ -1,65 +1,166 @@
-
 /**
- * @file  gpio.h
- * @project shakti devt board
- * @brief  header file for gpio driver
+ * Project                           : Secure IoT SoC
+ * Name of the file                  : gpio.h
+ * Brief Description of file         : Header to Standard gpio driver
+ * Name of Author                    : Kapil Shyam. M, Shri Mahaalakshmi S J
+ * Email ID                          : kapilshyamm@gmail.com, mahaalakshmi@mindgrovetech.in 
+ * 
+ * @file gpio.h
+ * @author Kapil Shyam. M (kapilshyamm@gmail.com)
+ * @author Shri Mahaalakshmi S J (mahaalakshmi@mindgrovetech.in)
+ * @brief This is a Baremetal GPIO Driver's Header file for Mindgrove Silicon's GPIO Peripheral
+ * @version 0.2
+ * @date 2024-09-23
+ * 
+ * @copyright Copyright (c) Mindgrove Technologies Pvt. Ltd 2024. All rights reserved.
+ * 
  */
 
+#ifndef GPIO_H
+#define GPIO_H
+
 #include <stdint.h>
-#include "platform.h"
-
-#define GPIO_DIRECTION_CNTRL_REG  (GPIO_START + (0 * GPIO_OFFSET ))
-#define GPIO_DATA_REG             (GPIO_START + (1 * GPIO_OFFSET ))
-#define GPIO_SET_REG              (GPIO_START + (2 * GPIO_OFFSET ))
-#define GPIO_CLEAR_REG            (GPIO_START + (3 * GPIO_OFFSET ))
-#define GPIO_TOGGLE_REG           (GPIO_START + (4 * GPIO_OFFSET ))
-#define GPIO_QUAL_REG             (GPIO_START + (5 * GPIO_OFFSET ))
-#define GPIO_INTERRUPT_CONFIG_REG (GPIO_START + (6 * GPIO_OFFSET ))
-
-#define GPIO_IN  0x00000000
-#define GPIO_OUT 0xFFFFFFFF
-#define GPIO_QUAL_MAX_CYCLES 15
-#define ALL_GPIO_PINS -1
+#include <stdarg.h>
+#include <stdbool.h>
+#include "secure_iot.h"
+#include "pinmux.h"
+#include "log.h"
+#include "errors.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* Struct to access GPIO registers as 16 bit registers */
-typedef struct
-{
-	uint32_t  direction;	           /*! direction register */
-	uint32_t  reserved0;                /*! reserved for future use */
-	uint32_t  data;	        		   /*! data register */
-	uint32_t  reserved1;                /*! reserved for future use */
-	uint32_t  set;	         	   /*! set register */
-	uint32_t  reserved2;                /*! reserved for future use */
-	uint32_t  clear;	         	   /*! clear register */
-	uint32_t  reserved3;                /*! reserved for future use */
-	uint32_t  toggle;	            /*! toggle register */
-	uint32_t  reserved4;                /*! reserved for future use */
-	uint8_t  qualification;	   /*! qualification register */
-	uint8_t  reserved5;                /*! reserved for future use */
-	uint16_t  reserved6;              /*! reserved for future use */
-	uint32_t  reserved12;              /*! reserved for future use */
-	uint32_t  intr_config;	   /*! interrupt configuration register */
-//	uint16_t  reserved13;              /*! reserved for future use */
-	uint32_t  reserved7;              /*! reserved for future use */
-} gpio_struct;
 
-extern gpio_struct *gpio_instance;
+#define GPIO_IN  0
+#define GPIO_OUT 1
+#define ALL_GPIO_PINS -1
 
-extern void check_gpio();
-extern void gpio_init();
-extern long int gpio_read_word(int *addr);
-extern void gpio_write_word(int *addr, unsigned long val);
-extern void gpio_set_direction(unsigned long gpio_pin,int direction);
-extern void gpio_set(unsigned long);
-extern void gpio_clear(unsigned long);
-extern void gpio_toggle(unsigned long);
-extern void gpio_interrupt_config(unsigned long, int toggleInterupt);
-extern void gpio_set_qualification_cycles(unsigned int);
-extern long int gpio_read_data_register();
+#define GPIO_PINS(x) (1 << x)
+
+/**
+ * @fn GPIO_Config(bool direction, uint32_t gpio_pins)
+ *
+ * @brief The function `GPIO_Config` initializes the GPIO instance and set the direction.
+ * 
+ * @details The function `GPIO_Config` configures GPIO pins based on the specified direction and pin mask,
+ * checking for PWM configuration on certain pins.
+ * 
+ * @param direction The `direction` parameter in the `GPIO_Config` function is a boolean value that
+ * specifies the direction of the GPIO pins. 
+ * 
+ * @param gpio_pins The `gpio_pins` parameter is a 32-bit unsigned integer that represents a bitmask
+ * where each bit corresponds to a specific GPIO pin. 
+ * 
+ * @return The function `GPIO_Config` returns a value of `SUCCESS` if the configuration is successful.
+ * If the condition meets pinmux, it logs an error message and returns `EPERM`.
+ */
+uint8_t GPIO_Config(bool direction, uint32_t gpio_pins);
+
+/**
+ * @fn GPIO_Pin_Set(uint32_t gpio_pins)
+ * 
+ * @brief The function `GPIO_Pin_Set` sets multiple GPIO pins based on the input arguments provided.
+ * 
+ * @details The function GPIO_Pin_Set sets the specified GPIO pins to high.
+ * 
+ * @param gpio_pins The `gpio_pins` parameter is a 32-bit unsigned integer that represents a bitmask
+ * where each bit corresponds to a specific GPIO pin. 
+ * 
+ * @return The function `GPIO_Pin_Set` is returns the value `SUCCESS`.
+ */
+uint8_t GPIO_Pin_Set(uint32_t gpio_pins);
+
+/**
+ * @fn GPIO_Pin_Clear(uint32_t gpio_pins)
+ * 
+ * @brief The function `GPIO_Pin_Clear` clears multiple GPIO pins based on the input arguments provided.
+ * 
+ * @details The function GPIO_Pin_Clear clears the specified GPIO pins.
+ * 
+ * @param gpio_pins The `gpio_pins` parameter is a 32-bit unsigned integer that represents a bitmask
+ * where each bit corresponds to a specific GPIO pin. 
+ * 
+ * @return The function `GPIO_Pin_Set` is returns the value `SUCCESS`.
+ */
+uint8_t GPIO_Pin_Clear(uint32_t gpio_pins);
+
+/**
+ * @fn GPIO_Pin_Toggle(uint32_t gpio_pins)
+ * 
+ * @brief The function `GPIO_Pin_Toggle` toggles multiple GPIO pins based on the input arguments provided.
+ * 
+ * @details The function GPIO_Pin_Toggle toggles the specified GPIO pins.
+ * 
+ * @param gpio_pins The `gpio_pins` parameter is a 32-bit unsigned integer that represents a bitmask
+ * where each bit corresponds to a specific GPIO pin. 
+ * 
+ * @return The function `GPIO_Pin_Toggle` is returns the value `SUCCESS`.
+ */
+uint8_t GPIO_Pin_Toggle(uint32_t gpio_pins);
+
+/**
+ * @fn GPIO_Interrupt_Config(uint32_t gpio_pins, uint8_t low_ena)
+ *
+ * @brief The function `GPIO_Interrupt_Config` configures the interrupt for a specific GPIO pin 
+ *
+ * @details The function `GPIO_Interrupt_Config` configures GPIO interrupt settings based on the input
+ * parameters.
+ * 
+ * @param gpio_pins The `gpio_pins` parameter is a 32-bit unsigned integer that represents a bitmask
+ * where each bit corresponds to a specific GPIO pin. 
+ * 
+ * @param low_ena The `low_ena` parameter is a flag that indicates whether the interrupt should be
+ * enabled for low-level triggering.
+ * 
+ * @return The function `GPIO_Interrupt_Config` is returning the value `SUCCESS`.
+ */
+uint8_t GPIO_Interrupt_Config(uint32_t gpio_pins, uint8_t low_ena);
+
+/**
+ * @fn GPIO_Read_Data()
+ *
+ * @brief The function `GPIO_Read_Data` returns the value of the data register in a GPIO instance.
+ * 
+ * @details The function GPIO_Read_Data reads and returns the data from the GPIO data register.
+ * 
+ * @return The function `GPIO_Read_Data()` is returning the value stored in the `GPIO_DATA` register of
+ * the GPIO peripheral.
+ */
+uint32_t GPIO_Read_Data();
+
+/**
+ * @fn GPIO_Read_Pin_Status(uint32_t gpio_pin)
+ * 
+ * @brief The function `GPIO_Read_Pin_Status` reads the status of GPIO instance.
+ * 
+ * @details The function `GPIO_Read_Pin_Status` reads the status of a specific GPIO pin and returns 1 if the pin
+ * is high and 0 if the pin is low.
+ * 
+ * @param gpio_pins The `gpio_pins` parameter is a 32-bit unsigned integer that represents a bitmask
+ * where each bit corresponds to a specific GPIO pin. 
+ * 
+ * @return The function `GPIO_Read_Pin_Status` returns 1 if the specified GPIO pin is high (set) and
+ * returns 0 if the pin is low (clear).
+ */
+uint32_t GPIO_Read_Pin_Status(uint32_t gpio_pin);
+
+/**
+ * @fn GPIO_Write_Data(uint32_t data_word)
+ *
+ * @brief The function `GPIO_Write_Data` sets the data register of a GPIO instance to a given data.
+ * 
+ * @details The function `GPIO_Write_Data` sets the GPIO data register to the specified data word and returns a
+ * success status.
+ * 
+ * @param data_word The `data_word` parameter in the `GPIO_Write_Data` function is a 32-bit unsigned
+ * integer that represents the data to be written to the GPIO data register.
+ * 
+ * @return The function `GPIO_Write_Data` is returns the value `SUCCESS`.
+ */
+uint32_t GPIO_Write_Data(uint32_t data_word);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif

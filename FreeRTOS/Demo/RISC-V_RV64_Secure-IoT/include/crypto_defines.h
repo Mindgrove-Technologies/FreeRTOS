@@ -1,6 +1,10 @@
 #ifndef CRYPTO_DEFINES_INCLUDED
 #define CRYPTO_DEFINES_INCLUDED
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Commonly used variables
 #define byte_length 8
 #define address_bus_length 64
@@ -39,22 +43,22 @@
 
 
 // Error messages
-#define error_calloc_memory_unavailable "Memory not allocated.\n"
+#define error_calloc_memory_unavailable "Memory not allocated.\n\r"
 // RSA
-#define rsa_error_message_too_long "Error : Input text, exp_text, and mod_text should be less than 2048 bits.\n"
-#define rsa_error_mod_cannot_be_lte_byte "Error : Mod length cannot be less than 8 bits.\n"
-#define rsa_error_input_messsage_too_long "Error : Message too long\n"
-#define rsa_error_integer_too_large "Error : Integer too large"
-#define rsa_error_message_rsa_odd_mode "Error : Mod text should be Odd.\n"
-#define rsa_error_memory_unavailable "Error : Memory unavailable. %s\n"
-#define rsa_error_decryption_error "Error : Decryption error.\n"
+#define rsa_error_message_too_long "Input text, exp_text, and mod_text should be less than 2048 bits.\n\r"
+#define rsa_error_mod_cannot_be_lte_byte "Mod length cannot be less than 8 bits.\n\r"
+#define rsa_error_input_messsage_too_long "Message too long\n\r"
+#define rsa_error_integer_too_large "Integer too large"
+#define rsa_error_message_rsa_odd_mode "Mod text should be Odd.\n\r"
+#define rsa_error_memory_unavailable "Memory unavailable. %s\n\r"
+#define rsa_error_decryption_error "Decryption error.\n\r"
 // SHA
-#define sha_error_message_input_length "Error : Length of a block is not 512.\n"
-#define sha_error_message_input_length_multishot "Error : Length of input should be between 0 and 512. \n"
+#define sha_error_message_input_length "Length of a block is not 512.\n\r"
+#define sha_error_message_input_length_multishot "Length of input should be between 0 and 512. \n\r"
 // AES
-#define aes_error_message_only_128bitx_input "Error : The input should contain multiples of 128 bits. In other words multiples of 16 characters. Ensure the string is null appended.\n"
-#define aes_error_message_only_spefic_keylengths "Error : The key should have a length of 128, 192, or 256 bits. Ensure the string is null appended.\n"
-#define aes_error_message_incorrect_mode "Error : The mode should be inclusively between 0 and 4.\n"
+#define aes_error_message_only_128bitx_input "The input should contain multiples of 128 bits. In other words multiples of 16 characters. Ensure the string is null appended.\n\r"
+#define aes_error_message_only_spefic_keylengths "The key should have a length of 128, 192, or 256 bits. Ensure the string is null appended.\n\r"
+#define aes_error_message_incorrect_mode "The mode should be inclusively between 0 and 4.\n\r"
 
 
 // RSA Padding type
@@ -66,5 +70,9 @@
 // RSA Encryption mode
 #define rsa_encrypt_mode 1
 #define rsa_decrypt_mode 0
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

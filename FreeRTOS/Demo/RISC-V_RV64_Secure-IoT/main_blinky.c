@@ -36,6 +36,7 @@
 // FreeRTOS application includes.
 /*-----------------------------------------------------------*/
 #include "utils.h"
+#include "io.h"
 
 /*-----------------------------------------------------------*/
 // Functions
@@ -73,19 +74,54 @@ int id;
 	return id;
 }
 
+volatile int task1_counter = 0;
+volatile int task2_counter = 0;
+
+void vTask1(void *pvParameters)
+{
+    for (;;)
+    {
+        task1_counter++;
+        printf("[Task 1] Hello from Task1\n\r");
+
+        vTaskDelay(pdMS_TO_TICKS(500)); // Delay 500ms
+    }
+}
+
+// Task 2
+void vTask2(void *pvParameters)
+{
+    for (;;)
+    {
+        task2_counter++;
+        printf("[Task 2] Hello from Task2\n\r");
+
+        vTaskDelay(pdMS_TO_TICKS(1000)); // Delay 1s
+    }
+}
+
 /*-----------------------------------------------------------*/
 
 /*-----------------------------------------------------------*/
 // Main Code.
 /*-----------------------------------------------------------*/
 
-int main_blinky( void )
+int main_hello( void )
 {
     int hartid;
     printf( "\n Hello World from FreeRTOS on Secure-IoT SoC!\n" );
     hartid = xGetCoreID();
     printf( "\n Running on Core: %d", hartid);
     // vToggleLED();
+    asm volatile("fence.i");
+    xTaskCreate(vTask1, "Task1", 256, NULL, 1, NULL);
+    asm volatile("fence.i");
+    xTaskCreate(vTask2, "Task2", 256, NULL, 1, NULL);
+
+    // Start scheduler
+    vTaskStartScheduler();
+
+    while(1);
 
     return 0;
 }

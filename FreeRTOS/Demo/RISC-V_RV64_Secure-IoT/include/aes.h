@@ -1,18 +1,44 @@
-/**************************************************************************
- * Project                      : Mindgrove Silicon
- * Name of the file             : aes_app.h
- * Brief Description of file    : Contains the header files for aes256 application.
- * Name of Author               : Siddhanth Ramani
- * Email ID                     : siddhanth@mindgrovetech.in
+/*
+ * Project                           : Secure IoT SoC
+ * Name of the file                  : aes.h
+ * Brief Description of file         : Header to Standard AES Driver
+ * Name of Author                    : Jennifer Vinita  
+ * Email ID                          : jennifer@mindgrovetech.in 
+ * 
+ * @file aes.h
+ * @author Jennifer Vinita J (jennifer@mindgrovetech.in)
+ * @brief This is a Baremetal AES Driver's Header file for Mindgrove Silicon's AES Peripheral
+ * @version 0.2
+ * @date 2025-12-24
+ * 
+ * @copyright Copyright (c) Mindgrove Technologies Pvt. Ltd 2025. All rights reserved.
+ * 
+ */
 
- Copyright (C) 2021 Mindgrovetech Pvt Ltd. All rights reserved.
- ***************************************************************************/
-/**
-  @file aes_app.h
-  @brief Contains the header files for aes256 application.
-*/
 
-// Functions
+#ifndef AES_DRIVER_INCLUDED
+#define AES_DRIVER_INCLUDED
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// Includes
+#include "io.h"
+
+typedef enum{
+  AES_ENCRYPT,
+  AES_DECRYPT
+}AES_EXECUTE_MODE;
+
+typedef enum{
+  AES_ECB,
+  AES_CBC,
+  AES_CFB,
+  AES_OFB,
+  AES_CTR
+}AES_TYPE_MODE;
+
 
 /** @fn void run_ascii_aes_singleshotram(unsigned char *aes_output
                                 , unsigned char *input_text, unsigned char *key, unsigned char *iv
@@ -38,9 +64,9 @@
  * @param long int key_len_bits : length of key in bits
  * @param int mode : AES mode. (same as h/w) mode=0 -> ECB, mode=1 -> CBC, mode=2 -> CFB, mode=3 -> OFB, mode=4 -> CTR
  * @param int encrypt_or_decrypt : (same as h/w) =1 -> decrypt, =0 -> encrypt
- * @return Returns nothing. Changes aes_output inplace.
+ * @return int  Returns error code.
  */
-void run_ascii_aes_singleshotram(unsigned char *aes_output
+int AES_Single_Run(unsigned char *aes_output
                                             , unsigned char *input_text, unsigned char *key, unsigned char *iv
                                             , long int input_len_bits , long int key_len_bits
                                             , int mode, int encrypt_or_decrypt);
@@ -78,11 +104,18 @@ void run_ascii_aes_singleshotram(unsigned char *aes_output
  * @param long int iterated_length_bits : number of bits in message which have already been processed by the aes h/w
  * @return Returns the number of bits which have been processed by AES hardware. 
  */
-int run_ascii_aes_multishotram(unsigned char *aes_output
+long int AES_Multi_Run(unsigned char *aes_output
                                 , unsigned char *input_text
                                 , unsigned char *key
                                 , unsigned char *iv 
                                 , long int key_len_bits 
                                 , int mode
                                 , int encrypt_or_decrypt
-                                , int iterated_length_bits);
+                                , long int iterated_length_bits);
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

@@ -30,6 +30,7 @@
 #include "secure-iot.h"
 #include "include/uart.h"
 #include "include/utils.h"
+#include "clint.h"
 
 /*-----------------------------------------------------------
  * Application specific definitions.
@@ -44,13 +45,13 @@
  *----------------------------------------------------------*/
 
 /* See https://www.freertos.org/Using-FreeRTOS-on-RISC-V.html */
-#define configMTIME_BASE_ADDRESS		( MTIME )
-#define configMTIMECMP_BASE_ADDRESS		( MTIMECMP )
+#define configMTIME_BASE_ADDRESS      0x0200BFF8UL   
+#define configMTIMECMP_BASE_ADDRESS   0x02004000UL
 
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				1
-#define configCPU_CLOCK_HZ				( CLOCK_FREQUENCY )
+#define configCPU_CLOCK_HZ				( CLOCK_FREQUENCY/256UL )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES			( 7 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 512 )
@@ -67,7 +68,7 @@
 #define configUSE_APPLICATION_TASK_TAG	0
 #define configUSE_COUNTING_SEMAPHORES	1
 #define configGENERATE_RUN_TIME_STATS	0
-#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 			0
@@ -104,7 +105,7 @@ to exclude the API function. */
 
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
-#define configASSERT( x )                           if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); __asm volatile( "ebreak" ); for( ;; ); }
+#define configASSERT( x )   if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
 
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION     0
 #define configKERNEL_INTERRUPT_PRIORITY             7

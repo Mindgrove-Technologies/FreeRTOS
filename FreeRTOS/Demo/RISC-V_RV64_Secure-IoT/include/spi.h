@@ -1,120 +1,113 @@
-/***************************************************************************
- * Project                          : shakti devt board
- * Name of the file                 : spi.h
- * Brief Description of file        : Header to spi spansion driver
- * Name of Author                   : Kaustubh Ghormade
- * Email ID                         : kaustubh4347@gmail.com
-
- Copyright (C) 2019  IIT Madras. All rights reserved.
-
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https://www.gnu.org/licenses/>.
- ***************************************************************************/
 /**
+ * Project                           : Secure IoT SoC
+ * Name of the file                  : spi.h
+ * Brief Description of file         : Header to Standard spi driver
+ * Name of Author                    : Kapil Shyam. M
+ * Email ID                          : kapilshyamm@gmail.com
+ * 
  * @file spi.h
- * @brief Header to spi spansion driver
- * @details this is the header file for spi_flash_w25q32.c,spi_spansion.c
+ * @author Kapil Shyam. M (kapilshyamm@gmail.com)
+ * @brief This is a Baremetal SSPI Driver's Header file for Mindgrove Silicon's SPI Peripheral
+ * @version 0.2
+ * @date 2023-07-20
+ * 
+ * @copyright Copyright (c) Mindgrove Technologies Pvt. Ltd 2023. All rights reserved.
+ * 
  */
+
 #ifndef SPI_H
 #define SPI_H
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#include<stdlib.h>
-/*By default SPI0 is enabled at initialization.
-  SPI0 is not available externally in TARGET=artix7_35t*/
-#define SPI0_OFFSET 0x00000000
-#define SPI1_OFFSET 0x00000100
-#define SPI2_OFFSET 0x00000200
+#include <stdint.h>
+#include "log.h"
+#include "errors.h"
+#include "secure_iot.h"
+#include <stdbool.h>
+#include "gptimer.h"
 
-#define SPI_CR1	     0x00020000
-#define SPI_CR2	     0x00020004
-#define SPI_SR       0x00020008
-#define SPI_DR1	     0x0002000C
-#define SPI_DR2	     0x00020010
-#define SPI_DR3	     0x00020014
-#define SPI_DR4	     0x00020018
-#define SPI_DR5      0x0002001C
-#define SPI_CRCPR    0x00020020
-#define SPI_RXCRCR   0x00020024
-#define SPI_TXCRCR   0x00020028
+#define FIFO_DEPTH_8  32
+#define FIFO_DEPTH_16 FIFO_DEPTH_8/2
+#define FIFO_DEPTH_32 FIFO_DEPTH_8/4
 
-// defining SPI_CR1 register
-#define SPI_CPHA	      (1 << 0)
-#define SPI_CPOL	      (1 << 1)
-#define SPI_MSTR	      (1 << 2)
-#define SPI_BR(x)	      (x << 3)
-#define SPI_SPE		      (1 << 6)
-#define SPI_LSBFIRST	      (1 << 7)
-#define SPI_SSI		      (1 << 8)
-#define SPI_SSM		      (1 << 9)
-#define SPI_RXONLY	      (1 << 10)
-#define SPI_CRCL	      (1 << 11)
-#define SPI_CCRCNEXT	      (1 << 12)
-#define SPI_CRCEN	      (1 << 13)
-#define SPI_BIDIOE	      (1 << 14)
-#define SPI_BIDIMODE	      (1 << 15)
-#define SPI_TOTAL_BITS_TX(x)  (x << 16)
-#define SPI_TOTAL_BITS_RX(x)  (x << 24)
+#define MASTER 1
+#define SLAVE 0
 
-// defining SPI_CR2 register
-#define SPI_RX_IMM_START   (1 << 16)
-#define SPI_RX_START	   (1 << 15)
-#define SPI_LDMA_TX	   (1 << 14)
-#define SPI_LDMA_RX	   (1 << 13)
-#define SPI_FRXTH	   (1 << 12)
-#define SPI_DS(x)	   (x << 8)
-#define SPI_TXEIE	   (1 << 7)
-#define SPI_RXNEIE	   (1 << 6)
-#define SPI_ERRIE	   (1 << 5)
-#define SPI_FRF		   (1 << 4)
-#define SPI_NSSP	   (1 << 3)
-#define SPI_SSOE	   (1 << 2)
-#define SPI_TXDMAEN	   (1 << 1)
-#define SPI_RXDMAEN	   (1 << 0)
+#define DISABLE 0
+#define ENABLE 1
 
-//defining SR register
-#define SPI_FTLVL(x)	(x << 11)
-#define SPI_FRLVL(x)	(x << 9)
-#define SPI_FRE		(1 << 8)
-#define SPI_OVR		(1 << 6)
-#define SPI_MODF	(1 << 5)
-#define SPI_CRCERR	(1 << 4)
-#define TXE		(1 << 1)
-#define RXNE		(1 << 0)
+#define LSB_FIRST 1
+#define MSB_FIRST 0
 
-// function prototype
+#define SIMPLEX_TX 0
+#define SIMPLEX_RX 1
+#define HALF_DUPLEX 2
+#define FULL_DUPLEX 3
 
-void configure_spi(int offset);
-void spi_init(void);
-void set_spi(int* addr, int val);
-void bin(unsigned n);
-void spi_tx_rx_start(void);
-void spi_enable(void);
-void spi_rx_enable(void);
-void flash_cmd_addr_data(int command, int addr, int data);
-void flash_write(int address, int data);
-void flash_erase(int address);
-int get_spi(int* addr);
-int bitExtracted(int number, int k, int p) ;
-int concat(int x, int y) ;
-int spi_rxne_enable(void);
-int spi_notbusy(void);
-int flash_write_enable(void);
-int flash_clear_sr(void);
-int flash_cmd_addr(int command, int addr);
-int flash_cmd_to_read(int command, int addr);
-int flash_read(int address);
-int flash_cmd_read(int command);
-int flash_status_register_read(void);
-int flash_device_id(void);
+#define FAILURE -1
+#define TIMEOUT1 -2
 
+#define SPI0 0
+#define SPI1 1
+#define SPI2 2
+#define SPI3 3
+
+#define DATA_SIZE_8 8
+#define DATA_SIZE_16 16
+#define DATA_SIZE_32 32
+
+
+typedef struct 
+{
+    uint8_t spi_number;
+    uint8_t pol             :1;
+    uint8_t pha             :1;
+    uint8_t prescale;
+    uint8_t setup_time;
+    uint8_t hold_time;
+    uint8_t spi_mode        :1;
+    uint8_t lsb_first       :1;
+    uint8_t comm_mode;
+    uint8_t spi_size;
+    uint8_t bits;
+    uint8_t configure       :1;
+}SPI_Config_t;
+
+
+struct spi_buf {
+	void *buf;
+	int len;
+};
+struct spi_buf_set {
+	const struct spi_buf *buffers;
+	int count;
+};
+
+/**
+ * @fn The function SPI_Transceive(SPI_Config_t *config, const struct spi_buf_set *tx_bufs, const struct spi_buf_set *rx_bufs) 
+ * handles SPI communication based on the specified configuration and buffer sets for full duplex, simplex transmit, simplex receive, 
+ * and half duplex modes with different data sizes.
+ * 
+ * @param config The `config` parameter in the `SPI_Transceive` function is a pointer to a structure of
+ * type `SPI_Config_t`. This structure likely contains configuration settings for the SPI
+ * communication, such as communication mode (full duplex, simplex TX, simplex RX, half duplex) and
+ * data size (8-bit
+ * @param tx_bufs `tx_bufs` is a pointer to a struct `spi_buf_set` which contains information about the
+ * transmit buffers for SPI communication. It likely includes details such as the buffer length, buffer
+ * data, and any other necessary configuration for transmitting data over SPI.
+ * @param rx_bufs The `rx_bufs` parameter in the `SPI_Transceive` function is a pointer to a struct
+ * `spi_buf_set` which contains information about the receive buffers for the SPI communication. It
+ * allows the function to read data from the SPI bus into the specified receive buffers.
+ * 
+ * @return The function `SPI_Transceive` is returning a value `SUCCESS`.
+ */
+uint8_t SPI_Transceive(SPI_Config_t *config, const struct spi_buf_set *tx_bufs,
+			                    const struct spi_buf_set *rx_bufs);
+
+
+#ifdef __cplusplus
+}
+#endif
 #endif

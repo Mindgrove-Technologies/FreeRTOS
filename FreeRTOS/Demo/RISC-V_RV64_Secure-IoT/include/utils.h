@@ -1,11 +1,11 @@
 /****************************************************************************
- * Project           		: shakti devt board
- * Name of the file	     	: utils.h
- * Brief Description of file    : Header file for utils
- * Name of Author    	        : Sathya Narayanan N & Kapil Shyam. M
- * Email ID                     : sathya281@gmail.com, kapilshyamm@gmail.com
+ * Project           		    : Mindgrove Silicon's Secure-IoT SoC
+ * Name of the file	     	    : utils.h
+ * Brief Description of file    : Header file for Basic Utilites
+ * Name of Author    	        : Kapil Shyam. M
+ * Email ID                     : kapil@mindgrovetech.in
 
- Copyright (C) 2019  IIT Madras. All rights reserved.
+ Copyright (C) 2024 Mindgrove Technologies Pvt Ltd. All rights reserved.
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -22,67 +22,108 @@
 *******************************************************************************/
 /**
  * @file utils.h
- * @brief header file for utils
+ * @brief header file for basic utilities
  * @details This is the header file for util.c
  */
 
 #ifndef UTIL_H
 #define UTIL_H
-#include <stdio.h>
-#include <stdint.h>
-#include <stdarg.h>
-#include <math.h>
 
-#define SECURE_IOT_PRINTF printf
-#define SECURE_IOT_SCANF scan
-#define SECURE_IOT_SPRINTF sprintf
-#define SECURE_IOT_SSCANF sscanf
+#include <stdint.h>
+#include <stddef.h>
+#include "log.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* function prototype */
-void mcycle_init();
-extern inline uint64_t get_mcycle_start();
-extern inline uint64_t get_mcycle_stop();
-extern int millis(int total_cycles);
-void waitfor(unsigned int secs);
-void delay(unsigned long seconds);
-float pow_10(unsigned int y);
-void reverse(char *str, int len);
-void ftoa( float, char *, unsigned int);
-void ftoa1(double f, int precision);
-int atox(const char p[], int pos);
-void delay_loop(unsigned long cntr1, unsigned long cntr2);
-unsigned long read_word(size_t *addr);
-void write_word(size_t *addr, unsigned long val);
-int int_to_string(int number, char str[], unsigned int afterpoint);
-static int vsnprintf_internal(char *buf, size_t size, const char *fmt,va_list ap);
-int vsprintf(char *buf, const char *fmt, va_list args);
-int sprintf(char *buf, const char *fmt, ...);
-int vsnprintf(char *buf, size_t size, const char *fmt,va_list args);
-int snprintf(char *buf, size_t size, const char *fmt, ...);
-void _printf_(const char *fmt, va_list ap);
-int printf(const char* fmt, ...);
-int vsscanf(const char *inp, char const *fmt0, va_list ap);
-int sscanf(const char *inp, char const *fmt0, ...);
-int _scan_(const char * format, va_list vl);
-int scan(const char* format, ...);
-long strtol1(const char *nptr, char **endptr, int base);
-float strtof1(const char* str, char** endptr);
-void cache_perf_init();
-void print_cache_perf();
-void print_cache_miss_percentage();
-void stalls_perf_init();
-void print_stalls_perf();
-void branches_perf_init();
-void print_branches_perf();
-void arithops_perf_init();
-void print_arithops_perf();
-void disable_all_perf();
-void clear_all_perf();
+/** 
+ * @fn unsigned long int ReadData(size_t *addr)
+ * @brief Returns the value stored at a given address
+ * @param  addr The address at which value is located
+ * @return unsigned Long
+ */
+unsigned long ReadData(size_t *addr);
 
+/** @fn void WriteData(size_t *addr, unsigned long val)
+ * @brief  Writes a value to an address
+ * @param  addr The address to which data has to be written to
+ * @param  val  The value to be written.
+ * @return void
+ */
+ void WriteData(size_t *addr, unsigned long val);
+
+ /**
+ * @fn void millis_init() 
+ * @brief Initializes the millisecond counter.
+ * @details This function updates the *mtimecmp value, which is used for 
+ *          generating timer interrupts and calculates elapsed milliseconds.
+ */
+void millis_init();
+
+/** 
+ * @fn uint64_t millis()
+ * @brief Returns the number of milliseconds since the program started.
+ * @details It retrieves the current value of a millisecond counter variable, 
+ *          which is updated in the CLINT_Handler.
+ * @return The number of milliseconds.
+ */
+uint64_t millis();
+
+/**
+ * @brief Terminates the calling process with the specified exit status.
+ * 
+ * This function implements process termination for RISC-V architecture using
+ * the Supervisor Binary Interface (SBI). It performs necessary cleanup operations
+ * and attempts graceful termination through SBI, falling back to an infinite
+ * wait loop if SBI is unavailable.
+ * 
+ * @details The function performs the following operations in sequence:
+ * 1. Calls any registered exit handlers (implementation dependent)
+ * 2. Executes a memory fence to flush pending operations
+ * 3. Attempts termination via SBI exit syscall (function ID 93)
+ * 4. Falls back to infinite WFI (Wait For Interrupt) loop if SBI fails
+ * 
+ * @param[in] status Exit status code to be returned to the parent process.
+ *                   Conventionally, 0 indicates successful termination,
+ *                   non-zero values indicate error conditions.
+ * 
+ * @return This function does not return. Process termination is guaranteed
+ *         either through SBI exit syscall or infinite loop.
+ * 
+ * @note This implementation is specific to RISC-V architecture and requires:
+ *       - SBI (Supervisor Binary Interface) support for graceful termination
+ *       - Privilege level sufficient for executing ECALL instruction
+ * 
+ * @warning This function never returns. All cleanup operations must be
+ *          completed before calling this function.
+ * 
+ * @see atexit() for registering exit handlers
+ * @see _exit() for immediate process termination without cleanup
+ * 
+ * @since Version 1.0
+ * @author [Author Name]
+ * 
+ * @par Example Usage:
+ * @code
+ * int main() {
+ *     // Program logic here
+ *     
+ *     if (error_condition) {
+ *         exit(1);  // Exit with error status
+ *     }
+ *     
+ *     exit(0);  // Normal termination
+ * }
+ * @endcode
+ * 
+ * @par Implementation Notes:
+ * - Uses RISC-V FENCE instruction for memory synchronization
+ * - SBI exit syscall number 93 follows RISC-V SBI specification
+ * - WFI instruction reduces power consumption during infinite wait
+ * - Assembly constraints ensure proper register allocation for SBI call
+ */
+void exit(int status);
 
 #ifdef __cplusplus
 }

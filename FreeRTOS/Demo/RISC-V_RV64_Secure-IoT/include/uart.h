@@ -1,79 +1,30 @@
-/************************************************************************
- * Project           			: Secure IoT SoC
- * Name of the file	     		: uart.h
- * Brief Description of file    : This is a Baremetal UART Driver's Header file for Mindgrove Silicon's UART Peripheral
- * Name of Author               : Kapil Shyam. M, Santhosh Pavan. S
- * Email ID                     : <kapilshyamm@gmail.com>  <santhosh@mindgrovetech.in>
-
-Copyright (C) 2019  IIT Madras. All rights reserved.
-Copyright (C) 2023 Mindgrove Technologies Pvt. Ltd. All rights reserved.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-************************************************************************/
+/**
+ * Project                               : Secure IoT SoC
+ * Name of the file                      : uart_driver.c
+ * Brief Description of file             : This is a Baremetal UART Driver file for Mindgrove Silicon's UART Peripheral.
+ * Name of Author                        : Kapil Shyam. M, Santhosh Pavan. S, Vignesh Kumar. J 
+ * Email ID                              : <kapilshyamm@gmail.com>  <santhosh@mindgrovetech.in>  <vigneshkumar@mindgrovetech.in>
+ */
 /**
  * @file uart.h
  * @brief Header file for uart
- * @details this is the header file for uart_driver.c   
+ * @details this is the header file for uart_driver.c 
+ * @version 1.0
+ * @date 2024-10-08
+ * @copyright Copyright (c) Mindgrove Technologies Pvt. Ltd 2024. All rights reserved.  
  */
 
 #ifndef UART_H
 #define UART_H
 #include <stdint.h>
-#include "platform.h"
-
-#define SECURE_IOT_PUTCHAR putchar
-#define SECURE_IOT_GETCHAR getchar
-
+#include"secure_iot.h"
+#include "plic.h"
+#include"errors.h"
+#include "log.h"
+#define MAX_UART_COUNT 3
 #ifdef __cplusplus
 extern "C" {
 #endif
-//#define USE_INTERRUPT 1 //Uncomment or add this line when interrupts are unused
-//#define USE_RX_THRESHOLD 1 //Uncomment or add this line when rx_threshold is required
-
-
-/** 
- * This code defines a structure named `uart_struct` which contains various registers and configuration parameters for UART communication. The structure includes 
- * fields for baud rate configuration, transmit and receive registers, status register, control register, interrupt enable register, 
- * and other reserved fields. The structure also includes an optional field for RX FIFO size configuration, which is enabled by 
- * defining the macro `USE_RX_THRESHOLD`. This structure is used in the implementation of UART communication in the code.*/
-typedef struct
-{
-	unsigned short baud;	 /*! Baud rate configuration Register -- 16 bits*/
-	unsigned short reserv0;	 /*! reserved */
-	unsigned int  tx_reg;	 /*! Transmit register -- the value that needs to be tranmitted needs to be written here-32 bits*/
-	unsigned int  rcv_reg;	 /*! Receive register -- the value that received from uart can be read from here --32 bits*/
-	unsigned short  status;	 /*! Status register -- Reads various transmit and receive status - 16 bits*/
-	unsigned short  reserv1; /*! reserved */
-	unsigned short delay;    /*! Delays the transmit with specified clock - 16bits*/
-	unsigned short reserv2;  /*! reserved */
-	unsigned short control;   /*! Control Register -- Configures the no. of bits used, stop bits, parity enabled or not - 16bits*/
-	unsigned short reserv3;  /*! reserved */
-	unsigned short ien;	     /*! Enables the required interrupts - 16 bits*/
-	unsigned short reserv4;  /*! reserved */
-	unsigned char  iqcycles; /*! 8-bit register that indicates number of input qualification cycles - 8 bits*/
-	unsigned char reserv5;   /*! reserved */
-	unsigned short reserv6;  /*! reserved */
-#ifdef USE_RX_THRESHOLD
-	unsigned char rx_threshold;	/*! RX FIFO size configuration register - 8 bits*/
-	unsigned char reserv7;    /*! reserved */
-	unsigned short reserv8;    /*! reserved */
-#endif
-} uart_struct;
-
-#define UART0 0
-#define UART1 1
-#define UART2 2
 
 #define STS_RX_THRESHOLD    0x1 << 8
 #define BREAK_ERROR	    1 << 7
@@ -100,54 +51,334 @@ typedef struct
 /* UART control register */
 #define STOP_BITS(x) ( (x & 3) << 1) 				/*! 00 - 1 stop bits, 01 - 1.5 stop bits; 10 - 2 stop bits; 11 unused */
 #define PARITY(x) ( (x & 3)  << 3 ) 				/*! 00 --- No parity; 01 -Odd Parity; 10 - Even Parity;  11 - Unused */
-#define UART_TX_RX_LEN(x)       ( (x & 0x1F) << 5) 	/*! Maximum length 32 bits */
+#define UART_TX_RX_LEN(x)       ( (x & 0x3) << 5) 	/*! Maximum length 32 bits */
 
-#ifdef UART_DRIVER
-extern volatile uart_struct *uart_instance[MAX_UART_COUNT];
-#else
-extern volatile uart_struct *uart_instance[];
-#endif
-extern unsigned char uart0_complete;
-extern unsigned char uart1_complete;
-extern unsigned char uart2_complete;
-extern unsigned int uart0_tx_isr_count ;
-extern unsigned int uart0_rcv_isr_count ;
-extern unsigned int uart1_tx_isr_count ;
-extern unsigned int uart1_rcv_isr_count ;
-extern unsigned int uart2_tx_isr_count ;
-extern unsigned int uart2_rcv_isr_count ;
+// UART Instance number
+enum {
+    UART_0,
+    UART_1,
+    UART_2
+} ;
 
-#ifdef USE_INTERRUPT
-extern unsigned char u0_rcv_char[UARTX_BUFFER_SIZE];
-extern unsigned char u1_rcv_char[UARTX_BUFFER_SIZE];
-extern unsigned char u2_rcv_char[UARTX_BUFFER_SIZE];
-#endif
+// Stopbits Values
+enum {
+    STOP_BIT_1,
+    STOP_BIT_1_5,
+    STOP_BIT_2
+} ;
 
-int available(uart_struct *uart_instance);
-void uart_init(int uart_num);
-void set_baud_rate(uart_struct * uart_instance, unsigned int baudrate);
-void set_baud_rate_sim(uart_struct *instance, unsigned int baudrate);
-void config_uart(uart_struct * uart_instance, int stop_bits, int parity, int char_size, unsigned short delay);
-void enable_uart_interrupts(uart_struct * uart_instance, unsigned short interrupt);
-void set_uart_rx_threshold(uart_struct * uart_instance, unsigned char rxthreshold);
-uint32_t write_uart_character(uart_struct * uart_instance, uint8_t prn_character);
-uint32_t write_uart_string(uart_struct * uart_instance, uint8_t * ptr_string);
-uint8_t read_uart_character(uart_struct * uart_instance, char * prn_character);
-uint8_t read_uart_string(uart_struct * uart_instance, char * ptr_string) ;
-void flush_uart(uart_struct * instance);
+//Parity values
+enum {
+    NO_PARITY  ,
+    ODD_PARITY ,
+    EVEN_PARITY
+} ;
 
-#ifdef USE_INTERRUPT
-unsigned char uart0_isr(void);
-unsigned char uart1_isr(void);
-unsigned char uart2_isr(void);
-#endif
+#define UART_CIRCULAR_BUFF 1//enabling circular buffer of RX
+#define UART_BUILTIN_BUFF 0//enabling built-in buffer of RX
+typedef struct 
+{
+	
+	uint8_t uart_num:2;/*An Integer type parameter, which gets the uart number 
+	* from the user needed to be initialized. This is usually, 1 and 2, as
+	* the 0th instance is occupied for the serial communication.*/
 
-int is_empty(void);
+	unsigned int baudrate; //The desired baud rate for the UART communication.
+
+	uint8_t stop_bits :2; //An integer type, which is of 2 bits. The value can be from 0-2, and 3 is undefined.
+
+	uint8_t parity:2; //An integer type, which is again of 2 bits. The value can be from 0-2, and 3 is undefined.
+
+	uint8_t char_size:6; //An integer type, which is of 6 bits. The values to be given are 5,6,7 and 8.
+
+	unsigned short delay; // Delay value
+
+	unsigned char rxthreshold;/*The value of the receive (RX) threshold for a UART instance. This 
+    * value is used to set the RX Threshold value of RX FIFO.*/
+   
+    uint8_t buffer_enable:1;/*This enables the circular buffer when 1 is set and 0 to use the builtin buffer*/
+
+}UART_Config_t;
+
+/**
+ * @fn uint8_t UART_Available(UART_Config_t *uart_config)
+ * 
+ * @brief Check if the UART instance is available.
+ * 
+ * @details Checks the STATUS_REG register and the RX_BUFFER. If the buffer is empty
+ * then the UART is labeled as available.
+ *
+ * @param  uart_config A struct which consists of \a uart_num \a baudrate \a stop_bits \a parity \a char_size \a delay 
+ *
+ * @return It returns either 1, if available or 0, if not available.
+ */
+
+uint8_t UART_Available(UART_Config_t *uart_config);
+
+/**
+ * @fn uint8_t UART_Init(UART_Config_t *uart_config)
+ * 
+ * @brief Initialise specific UART. ANd sets the specified baudrate
+ * 
+ * @details Initialises the UART instance which is specified by 
+ * the user as \a uart_num, sets the baudrate \a baudrate and cofigure the stopbits,
+ * parity, charcter size from \a stopbits \a parity \a char_size where these 
+ * parameters will be present the UART_Config_t structure, while calling this function.
+ *
+ * @param uart_config A struct which consists of \a uart_num \a baudrate \a stop_bits \a parity \a char_size \a delay 
+ * 
+ * @return It returns 0 which means operation is success.
+ */
+
+uint8_t UART_Init(UART_Config_t const *uart_config);
+
+/**
+ * @fn uint8_t UART_Set_Baudrate(UART_Config_t *uart_config)
+ * 
+ * @brief The function sets the baud rate of a UART instance based on a given baud rate value.
+ * 
+ * @details This function will be called to initialize a specific UART by passing baudrate value(through the structure)
+ * which in turn used to calculate the baud_count to set the baudrate.
+ * 
+ * @param uart_config A struct which consists of \a uart_num \a baudrate \a stop_bits \a parity \a char_size \a delay 
+ * 
+ * @return It returns 0 which means operation is success.
+ */
+
+uint8_t UART_Set_Baudrate(UART_Config_t *uart_config);
+
+
+/**
+ * @fn uint8_t UART_Config( UART_Config_t *uart_config)
+ * 
+ * @brief Function to configure uart with no. of stop bits, type of parity and character size.
+ * 
+ * @details This function will be called to configure control register with the user-defined \a stop_bits, \a parity and \a char_size in the structure.
+ *
+ * @param uart_config A struct which consists of \a uart_num \a baudrate \a stop_bits \a parity \a char_size \a delay 
+ * 
+ * @return It returns 0 which means operation is success.
+ */
+
+uint8_t UART_Config( UART_Config_t *uart_config);
+
+/**
+ * @fn uint8_t UART_Write(UART_Config_t *uart_config , uint8_t * ptr_string, int uart_len)
+ * 
+ * @brief Function to transmit a string to a specific UART instance based on the \a uart_num in the UART_Config_t.
+ * 
+ * @details This function will be called to transmit a string to the specified UART instance.
+ * 
+ * @param uart_config A struct which consists of \a uart_num \a baudrate \a stop_bits \a parity \a char_size \a delay 
+ * 
+ * @param string_data A pointer to the string that needs to be transmitted via UART.
+ * 
+ * @param uart_len A integer value that specifies the length of the string that need to be transmitted
+ * 
+ * @return It returns 0 which means operation is success.
+ */
+
+uint8_t UART_Write(UART_Config_t *uart_config , uint8_t * string_data, int uart_len);
+
+/**
+ * @fn uint8_t UART_Buffer_Read_Character(UART_Config_t *uart_config, uint8_t *data)
+ * 
+ * @brief This function reads a character from a UART instance and returns it through a pointer.
+ * 
+ * @details This function will be called to read a character from a specific uart instance by passing the
+ * character pointer to store the character in the software buffer.
+ * 
+ * @param uart_config A struct which consists of \a uart_num \a baudrate \a stop_bits \a parity \a char_size \a delay 
+ * 
+ * @param data A pointer to a char variable where the read character will be stored.
+ * 
+ * @return It returns 0 which means operation is success.
+ */
+
+uint8_t UART_Buffer_Read_Character(UART_Config_t *uart_config, uint8_t *character_data);
+
+/**
+ * @fn uint8_t UART_Buffer_Read_String(UART_Config_t *uart_config, uint8_t *data)
+ * 
+ * @brief The function reads a string from a UART instance and returns the length of the string.
+ * 
+ * @details This function will be called to read a string, one character at a time from a
+ * specific uart instance's buffer by passing the array in which to store the string by reference using pointers.
+ * The values will be stored in the software buffer.
+ * 
+ * @param uart_config A struct which consists of \a uart_num \a baudrate \a stop_bits \a parity \a char_size \a delay 
+ * 
+ * @param ptr_string A pointer to a character array where the received UART string will be stored.
+ * 
+ * @return It returns 0 which means operation is success.
+ */
+
+uint8_t UART_Buffer_Read_String(UART_Config_t *uart_config, uint8_t *string_data);
+
+/**
+ * @fn void UART_Interrupt_Enable(UART_Config_t *uart_config,unsigned short interrupt)
+ * 
+ * @brief This function enables UART interrupts for a given instance.
+ * 
+ * @param uart_config A struct which consists of \a uart_num \a baudrate \a stop_bits \a parity \a char_size \a delay 
+ * 
+ * @param interrupt The "interrupt" parameter is an unsigned short that represents the specific UART
+ * interrupt(s) to be enabled. It is likely a bitfield where each bit corresponds to a specific
+ * interrupt source. By setting the appropriate bits in this parameter, the corresponding interrupts
+ * will be enabled for the UART instance.
+ * 
+ * @return It returns 0 which means operation is success.
+ */
+
+uint8_t UART_Interrupt_Enable(UART_Config_t *uart_config,unsigned short interrupt);
+
+/**
+ * @fn void UART_RX_Threshold(UART_Config_t *uart_config, unsigned char rxthreshold)
+ * 
+ * @brief The function sets the receive threshold for a UART instance.
+ * 
+ * @details This function has a register called RX_THRESHOLD which will contain 
+ * the information regarding whether the RX FIFO is Full or not. The depth of the UART RX buffer is 16.
+ * When the 80% (i.e 12) of the blocks gets filled in the RX FIFO, then an interrupt is generated.
+ * 
+ * @param uart_config A struct which consists of \a uart_num \a baudrate \a stop_bits \a parity \a char_size \a delay 
+ * 
+ * @param rxthreshold The value of the receive (RX) threshold for a UART instance. This 
+ * value is used to set the RX Threshold value of RX FIFO.
+ * 
+ * @return It returns 0 which means operation is success.
+ */
+
+uint8_t UART_RX_Threshold(UART_Config_t *uart_config, unsigned char rxthreshold);
+
+/**
+ * @fn void UART_Flush(UART_Config_t  uart_config)
+ * 
+ * @brief The function flushes the receive buffer (i.e RX FIFO) of a UART instance.
+ * 
+ * @details This function will be called to flush the previous values stored in the 
+ * UART RX FIFO for the specified UART instance.
+ *  
+ * @param uart_config A struct which consists of \a uart_num \a baudrate \a stop_bits \a parity \a char_size \a delay 
+ *
+ *  @return It returns 0 which means operation is success.
+ */
+
+uint8_t UART_Flush(UART_Config_t *uart_config);
+
+/**
+ * @fn uint8_t UART_Rx_Polling(UART_Config_t  uart_config)
+ * 
+ * @brief Check if the UART instance has received any data.
+ * 
+ * @details Checks the STATUS_REG register and the RX_BUFFER to see if any data has been received. 
+ *
+ * @param  uart_config A struct which consists of \a uart_num \a baudrate \a stop_bits \a parity \a char_size \a delay 
+ *
+ * @return It returns either 1, if received or 0, if not received.
+ */
+
+uint8_t UART_Rx_Polling(UART_Config_t *uart_config);
+
+/**
+ * @fn int UART_Read_Character(UART_Config_t *uart_config, uint8_t *data)
+ * 
+ * @brief This function reads a character from a UART instance and returns it through a pointer.
+ * 
+ * @details This function will be called to read a character from a specific uart instance by passing the
+ * character pointer to store the character in the RX register.
+ * 
+ * @param uart_config A struct which consists of \a uart_num \a baudrate \a stop_bits \a parity \a char_size \a delay 
+ * 
+ * @param data A pointer to a char variable where the read character will be stored.
+ * 
+ * @return It returns 0 which means operation is success.
+ */
+
+uint8_t UART_Read_Character(UART_Config_t *uart_config , uint8_t * character_data);
+
+/**
+ * @fn void UART_Read_String(UART_Config_t *uart_config, uint8_t *data)
+ * 
+ * @brief The function reads a string from a UART instance and returns the length of the string.
+ * 
+ * @details This function will be called to read a string, one character at a time from a
+ * specific uart instance by passing the array in which to store the string by reference using pointers.
+ * The values will be stored in the RX FIFO. And '\r' should be  appended at the end of transmitted 
+ * string to exit from this function
+ * 
+ * @param uart_config A struct which consists of \a uart_num \a baudrate \a stop_bits \a parity \a char_size \a delay 
+ * 
+ * @param ptr_string A pointer to a character array where the received UART string will be stored.
+ * 
+ * @return It returns 0 which means operation is success.
+ */
+
+uint8_t UART_Read_String(UART_Config_t *uart_config , char * string_data);
+
+/**
+ * @fn uint8_t UART_Write_Wait(UART_Config_t *uart_config)
+ * 
+ * @brief The function waits till the TX buffer is empty
+ * 
+ * @details This function will be called to wait till the transmission completes
+ * 
+ * @param uart_config A struct which consists of \a uart_num \a baudrate \a stop_bits \a parity \a char_size \a delay 
+ * 
+ * @return It returns 0 for there is nothing TX buff.
+ */
+
+uint8_t UART_Write_Wait(UART_Config_t *uart_config);
+
+/**
+ * @fn uint8_t UART_Read(UART_Config_t *uart_config , char * string_data, uint8_t num)
+ * 
+ * @brief This function reads the specified number of characters from a UART instance and returns it through a character pointer.
+ * 
+ * @param uart_config A struct which consists of \a uart_num \a baudrate \a stop_bits \a parity \a char_size \a delay 
+ * 
+ * @param string_data This is a pointer to a character array where the read characters will be stored.
+ * 
+ * @param num  This represents the number of characters to read from the UART RX built-in buffer.
+ * 
+ * @return It returns 0 which means operation is success.
+ * 
+ */
+
+ uint8_t UART_Read(UART_Config_t *uart_config , char * string_data, uint8_t num, uint32_t time_out);
 
 #undef putchar
+
+/**
+ * @fn int putchar(int ch)
+ * 
+ * @brief The function sends a character over UART communication.
+ * 
+ * @details This function will be called to printf a single character to the stdout by passing
+ * character as an integer.
+ * 
+ * @param ch The parameter "ch" is of type int and represents the character to be transmitted over UART
+ * (Universal Asynchronous Receiver/Transmitter).
+ * 
+ * @return An integer value of 0.
+ */
+
+
+
 int putchar(int ch);
 
 #undef getchar
+
+/**
+ * @fn int getchar()
+ * 
+ * @brief Function to read a single character from the standard input device.
+ * 
+ * @details The function reads a character from a UART instance and waits until a character is available.
+ * 
+ * @return A character received through UART communication.
+ */
+
 int getchar(void);
 
 #ifdef __cplusplus

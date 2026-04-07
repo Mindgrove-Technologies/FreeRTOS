@@ -27,14 +27,23 @@
 
 #ifndef PINMUX_H
 #define PINMUX_H
-#include <stdint.h>
-#include "platform.h"
 
-volatile unsigned int* pinmux_config_reg = (volatile unsigned int* ) PINMUX_CONFIGURE_REG;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void pinmux_enable_gpio(int);
-void pinmux_enable_pwm(int);
-void pinmux_enable_all_pwm();
-void pinmux_enable_all_gpio();
+#include "io.h"
+#include"secure_iot.h"
+#include "log.h"
+
+uint32_t PINMUX_EnableGPIO(uint8_t);
+uint32_t PINMUX_EnablePWM(uint8_t);
+uint32_t ENABLE_Pwm(uint8_t count, uint32_t enable_pwm[]);
+uint32_t PINMUX_EnableAllPWM();
+uint32_t PINMUS_EnableAllGPIO();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
