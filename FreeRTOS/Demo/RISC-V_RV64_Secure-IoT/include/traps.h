@@ -29,6 +29,11 @@
 
 #ifndef TRAPS_H
 #define TRAPS_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 /*
@@ -98,33 +103,40 @@
 /* Traps */
 #define MAX_TRAP_VALUE                 16
 
-#define INSTRUCTION_ADDRESS_MISALIGNED  0
-#define INSTRUCTION_ACCESS_FAULT        1
-#define ILLEGAL_INSTRUCTION             2
-#define BREAKPOINT                      3
-#define LOAD_ADDRESS_MISALIGNED         4
-#define LOAD_ACCESS_FAULT               5
-#define STORE_AMO_ADDRESS_MISALIGNED    6
-#define STORE_AMO_ACCESS_FAULT          7
-#define ENVIRONMENT_CALL_FROM_U_MODE    8
-#define ENVIRONMENT_CALL_FROM_S_MODE    9
-#define RESERVED_TRAP1                 10
-#define ENVIRONMENT_CALL_FROM_M_MODE   11
-#define INSTRUCTION_PAGE_FAULT         12
-#define LOAD_PAGE_FAULT                13
-#define RESERVED_TRAP2                 14
-#define STORE_AMO_PAGE_FAULT           15
+typedef enum {
+    INSTRUCTION_ADDRESS_MISALIGNED = 0,
+    INSTRUCTION_ACCESS_FAULT,
+    ILLEGAL_INSTRUCTION,
+    BREAKPOINT,
+    LOAD_ADDRESS_MISALIGNED,
+    LOAD_ACCESS_FAULT,
+    STORE_AMO_ADDRESS_MISALIGNED,
+    STORE_AMO_ACCESS_FAULT,
+    ENVIRONMENT_CALL_FROM_U_MODE,
+    ENVIRONMENT_CALL_FROM_S_MODE,
+    RESERVED_TRAP1,
+    ENVIRONMENT_CALL_FROM_M_MODE,
+    INSTRUCTION_PAGE_FAULT,
+    LOAD_PAGE_FAULT,
+    RESERVED_TRAP2,
+    STORE_AMO_PAGE_FAULT
+} MCAUSE_REASON;
 
 /*
    Trap table -  Each entry in the table corresponds to a service routine for a Trap
  */
-
-typedef void (*mtrap_fptr_t) (uintptr_t trap_cause, uintptr_t epc);
+extern uint16_t interrupt_id;
+typedef void (*mtrap_fptr_t) (uintptr_t fptr);
 extern mtrap_fptr_t mcause_trap_table[MAX_TRAP_VALUE];
 extern mtrap_fptr_t mcause_interrupt_table[MAX_INTERRUPT_VALUE];
 
-void default_handler(uintptr_t cause, uintptr_t epc);
+void default_handler(uintptr_t cause);
 unsigned int extract_ie_code(unsigned int num);
-uintptr_t handle_trap(uintptr_t cause, uintptr_t epc);
+uintptr_t Trap_Handler(uintptr_t cause, uintptr_t epc);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

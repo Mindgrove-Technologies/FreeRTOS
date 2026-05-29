@@ -1,148 +1,225 @@
-/**************************************************************************
- * Project           	         : shakti devt board
- * Name of the file	         : i2c.h
- * Brief Description of file     : header file for i2c
- * Name of Author    	         : Kotteeswaran 
- * Email ID                      : kottee.1@gmail.com
- 
- Copyright (C) 2019  IIT Madras. All rights reserved.
-
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*****************************************************************************/
 /**
+ * SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (c) 2021-2026 Mindgrove Technologies. All rights reserved.
+ * 
+ * @license Licensed under the Apache License, Version 2.0 (see LICENSE).
+ * @licenseblock
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * @endlicenseblock
+ * 
+ * Project                   : Secure IoT SoC
  * @file i2c.h
- * @brief  Header file for i2c
- * @details this is the header file for i2c_driver.c
+ * @brief  This is a Baremetal I2C Driver header file for I2C Peripheral.
+ * @details Provides prototypes for initializing the I2C peripheral and 
+ *          performing transmit and receive operations.
+ * @version 1.1
+ * @authors Vishwajith.N.S (vishwajith@mindgrovetech.in),
+ *          Harini P (harinip@mindgrovetech.in)
+ * @date 13-11-2025
+ * 
+ * @section History
+ * -----------------------------------------------------------------------------
+ * Date       | Version | Modified by           | Description                   
+ * -----------|---------|-----------------------|-------------------------------
+ * 17-10-2024 | 1.0     | Vishwajith.N.S        | Initial release.              
+ * 13-11-2025 | 1.1     | Harini P              | Updated the header file for 
+ *            |         |                       | MISRA-C compliance.
+ * -----------------------------------------------------------------------------
  */
 
-#ifndef I2C_H
-#define I2C_H
-
-#include "platform.h"
-
-#define ETIMEOUT -60
-#define DEF_TIMEOUT 60
-#define ETIMEDOUT -80
-#define ENXIO -82
-#define EREMOTEIO -81
-
-#define I2C_SUCCESS 0
-#define EAXI_ERROR -1
-#define EI2C_BUS_ERROR -2
-#define EI2C_PIN_ERROR -3
-#define EI2C_LRB_ERROR -4
-
-#define I2C_PIN	0x80
-#define I2C_ESO	0x40
-#define I2C_ES1	0x20
-#define I2C_ES2	0x10
-#define I2C_ENI	0x08
-#define I2C_STA	0x04
-#define I2C_STO	0x02
-#define I2C_ACK	0x01
-
-#define I2C_INI 0x40   /* 1 if not initialized */
-#define I2C_STS 0x20
-#define I2C_BER 0x10
-#define I2C_AD0 0x08
-#define I2C_LRB 0x08
-#define I2C_AAS 0x04
-#define I2C_LAB 0x02
-#define I2C_BB  0x01
-
-#define I2C_START         (I2C_PIN | I2C_ESO | I2C_STA | I2C_ACK)
-#define I2C_START_ENI     (I2C_PIN | I2C_ESO | I2C_STA | I2C_ACK | I2C_ENI)
-#define I2C_STOP          (I2C_PIN | I2C_ESO | I2C_STO | I2C_ACK)
-#define I2C_REPSTART      (                 I2C_ESO | I2C_STA | I2C_ACK)
-#define I2C_REPSTART_ENI  (                 I2C_ESO | I2C_STA | I2C_ACK | I2C_ENI)
-#define I2C_IDLE          (I2C_PIN | I2C_ESO                  | I2C_ACK)
-#define I2C_NACK          (I2C_ESO  )
-#define I2C_STOP_ENI          (I2C_PIN | I2C_ESO | I2C_STO | I2C_ACK | I2C_ENI)
-
-#define I2C_READ 1
-#define I2C_WRITE 0
-
-/*
-`define     S2             8'h00
-`define     Control        8'h08
-`define     S0             8'h10
-`define     Status         8'h18
-`define     S01            8'h20
-`define     S3             8'h28
-`define     Time           8'h30
-`define     SCL            8'h38
-*/
-
-extern unsigned char i2c_complete_flag;
-extern unsigned int i2c_read_value;
-
-/* Struct to access I2C registers as 32 bit registers */
-typedef struct
-{
-/* 0x00 */
-	unsigned int  prescale;     /*! Prescale Register */
-	unsigned int   prescale_rsvd;
-
-/* 0x08 */
-	unsigned int   control;
-	unsigned int   control_rsvd;
-
-/* 0x10 */
-	unsigned int  data;	 /*! Prescale Register */
-	unsigned int   data_rsvd;
-
-/* 0x18 */
-	unsigned int  status;	 /*! Prescale Register */
-	unsigned int   status_rsvd;
-
-/* 0x20 */
-	unsigned int  s01;	 /*! Prescale Register */
-	unsigned int   s01_rsvd;
-
-/* 0x28 */
-	unsigned int  s3;	 /*! Prescale Register */
-	unsigned int   s3_rsvd;
-
-/* 0x30 */
-	unsigned int  time;	 /*! Prescale Register */
-	unsigned int   time_rsvd;
-
-/* 0x38 */
-	unsigned int  scl;	 /*! Prescale Register */
-	unsigned int   scl_rsvd;
-} i2c_struct;
-
-void i2c_init(void);
-int config_i2c(i2c_struct *,unsigned char prescale_div, unsigned char scl_div);
-int wait_till_I2c_bus_free(i2c_struct *);
-int wait_till_txrx_operation_Completes(i2c_struct *,int *status);
-int sendbytes(i2c_struct *, const char *buf, int count, int last, int eni);
-int readbytes(i2c_struct *,char *buf, int count, int last);
-int i2c_send_slave_address(i2c_struct *,unsigned char slaveAddress, unsigned
-			   char rdWrCntrl, unsigned long delay);
-int i2c_write_data(i2c_struct *,unsigned char writeData, unsigned char delay);
-int i2c_read_data(i2c_struct *,unsigned char *read_data, unsigned char delay);
-int i2c_send_interrupt_slave_address(i2c_struct * instance, unsigned char
-				     slaveAddress, unsigned char rdWrCntrl,
-				     unsigned long delay);
-int i2c_read_interrupt_data(i2c_struct * instance, unsigned char *read_data,
-			    unsigned char delay, unsigned char last);
-int i2c_write_interrupt_data(i2c_struct * instance, unsigned char writeData,
-			     unsigned char delay, unsigned char last);
-int i2c_read_data_nack(i2c_struct * instance, unsigned char *read_data, unsigned
-		       char delay);
-
-extern i2c_struct *i2c_instance[MAX_I2C_COUNT];
-
+#ifndef BSP_INCLUDE_I2C_H_
+#define BSP_INCLUDE_I2C_H_
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+#include <stdint.h>
+
+/**
+ * @defgroup I2C_Modes I2C Mode Macros
+ *
+ * @brief Macros used to configure I2C transaction modes.
+ *
+ * @{
+ */
+
+/** @brief Sends a START condition on the I2C bus. */
+#define START_BIT   (1U << 1U)
+
+/** @brief Sends a STOP condition on the I2C bus. */
+#define STOP_BIT    (1U << 2U)
+
+/** @} */ /* end of I2C_Modes */
+
+
+/**
+ * @defgroup I2C_Instance_Type I2C Instance Handle Type
+ * @brief Opaque I2C hardware instance handle type.
+ *
+ * This module defines the I2C instance handle type used by the I2C driver.
+ * The type is opaque and represents a specific I2C hardware block.
+ *
+ * Users must not create objects of this type directly. Valid instances
+ * must only be obtained using the provided I2C instance constructors
+ * or I2C instance macros.
+ *
+ * @{
+ */
+
+/**
+ * @brief Opaque I2C hardware instance type.
+ *
+ * This type represents a specific I2C hardware block on the SoC.
+ * The internal structure is hidden from the user and is only known
+ * to the I2C driver implementation.
+ *
+ * @note This type must only be used as a handle.
+ *       Do not attempt to allocate or define objects of this type.
+ */
+typedef struct I2C_Instance I2C_Instance_t;
+
+/** @} */  /* end of I2C_Instance_Type */
+
+
+/**
+ * @defgroup I2C_Instance_Constructors I2C Instance Constructors
+ * @brief I2C hardware instance constructors.
+ *
+ * These functions return opaque handles to I2C hardware instances.
+ * The returned handles must be passed to the I2C driver configuration.
+ *
+ * @{
+ */
+
+/**
+ * @brief Get handle for I2C instance 0.
+ * @return Pointer to I2C0 hardware instance descriptor.
+ */
+const I2C_Instance_t *I2C_INSTANCE_0(void);
+
+/**
+ * @brief Get handle for I2C instance 1.
+ * @return Pointer to I2C1 hardware instance descriptor.
+ */
+const I2C_Instance_t *I2C_INSTANCE_1(void);
+
+/** @} */  /* end of I2C_Instance_Constructors */
+
+
+/**
+ * @defgroup I2C_Instance_Macros I2C Instance Macros
+ * @brief I2C hardware instance macros.
+ *
+ * These macros expand to constant I2C hardware instance handles.
+ * They provide a convenient and readable way to select I2C instances.
+ *
+ * @{
+ */
+
+/**
+ * @def I2C0
+ * @brief Macro for I2C instance 0 handle.
+ */
+#define I2C0 I2C_INSTANCE_0()
+
+/**
+ * @def I2C1
+ * @brief Macro for I2C instance 1 handle.
+ */
+#define I2C1 I2C_INSTANCE_1()
+
+/** @} */  /* end of I2C_Instance_Macros */
+
+
+/* Function prototypes */
+
+/**
+ * @brief Used to set clock frequency for I2C communication.
+ * 
+ * @details This function initializes the specified I2C instance and sets its
+ *          clock frequency for master transmit and receive operations.
+ * 
+ * @param i2c_num The parameter \a i2c_num is a pointer to the I2C instance handle.
+ *                Specifies the I2C peripheral instance to configure. Use I2C0 or 
+ *                I2C1 as defined in the I2C instance macros.
+ * 
+ * @param clock_frequency The parameter \a clock_frequency is an unsigned integer
+ *                        specifying the desired I2C communication clock frequency.
+ * 
+ * @return SUCCESS when successfully initialised; on failure, returns an error code.
+ */
+uint16_t I2C_Init(const I2C_Instance_t *i2c_num, uint32_t clock_frequency);
+
+/**
+ * @brief Used to send data to an I2C slave device.
+ * 
+  * @details This function transmits a sequence of bytes from the specified
+ *          data buffer to the given I2C slave address.
+ * 
+ * @param i2c_num The parameter \a i2c_num is a pointer to the I2C instance handle.
+ *                Specifies the I2C peripheral instance to configure. Use I2C0 or 
+ *                I2C1 as defined in the I2C instance macros.
+ * 
+ * @param slave_address The parameter \a slave_address is an 7 bit address that
+ *                      represents the I2C slave address.
+ * 
+ * @param data The parameter \a data is an pointer to buffer containing data to send.
+ * 
+ * @param length The parameter \a length is the number of bytes to transmit from the 
+ *               data buffer.
+ * 
+ * @param mode The parameter \a mode is used to set whether to send start bit,
+ *             stop bit and repeated start bit in transaction.
+ *             - START_BIT : sends start bit 
+ *             - STOP_BIT : sends stop bit
+ *             - (START_BIT | STOP_BIT ) : sends repeated start bit
+ *             
+ * 
+ * @return SUCCESS if the transmission is successful; on failure, returns an error code.
+ */
+uint16_t I2C_Transmit(const I2C_Instance_t *i2c_num, uint8_t slave_address, \
+                      uint8_t *data, uint8_t length, uint8_t mode);
+
+/**
+ * @brief Used to receive data from an I2C slave device.
+ * 
+ * @details This function reads a sequence of bytes from the specified I2C
+ *          slave address into the provided data buffer.
+ * 
+ * @param i2c_num The parameter \a i2c_num is a pointer to the I2C instance handle.
+ *                Specifies the I2C peripheral instance to configure. Use I2C0 or 
+ *                I2C1 as defined in the I2C instance macros.
+ * 
+ * @param slave_address The parameter \a slave_address is an 7 bit address that 
+ *                      represents the I2C slave address.
+ * 
+ * @param data The parameter \a data is an pointer to buffer containing data to send.
+ * 
+ * @param length The parameter \a length is the number of bytes to transmit from the 
+ *               data buffer.
+ * 
+ * @param mode The parameter \a mode is used to set whether to send start
+ *             bit, stop bit and repeated start in transaction.
+ *             - START_BIT : sends start bit 
+ *             - STOP_BIT : sends stop bit
+ *             - (START_BIT | STOP_BIT ) : sends repeated start bit
+ * 
+ * @return SUCCESS if the reception is successful; on failure, returns an error code.
+ */
+uint16_t I2C_Receive(const I2C_Instance_t *i2c_num, uint8_t slave_address, \
+                     uint8_t *data, uint8_t length, uint8_t mode);
+
+#ifdef __cplusplus
+}
+#endif
+#endif  // BSP_INCLUDE_I2C_H_

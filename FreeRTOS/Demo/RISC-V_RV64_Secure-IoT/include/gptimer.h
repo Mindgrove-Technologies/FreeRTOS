@@ -1,244 +1,284 @@
 /**
- * Project                           : Secure IoT SoC
- * Name of the file                  : gpt.h
- * Brief Description of file         : Header to Standard gp_timer driver
- * Name of Author                    : Suneeth. D
- * Email ID                          : suneethdamodharan@gmail.com
- * 
- * @file gpt.h
- * @author Suneeth. D (suneethdamodharan@gmail.com)
- * @brief This is a Baremetal GP_TIMER Driver's header file for Mindgrove Silicon's General Purpose Timer module.
- * @version 0.2
- * @date 2023-07-20
- * 
- * @copyright Copyright (c) Mindgrove Technologies Pvt. Ltd 2023. All rights reserved.
- * 
- */
-
-#include <stdint.h>
-#include "platform.h"
-
-/*! General Purpose Timer*/
-#define GPT_MAX_COUNT 4
-#define GPT_BASE_OFFSET 0x00000020
-#define GPT_BASE_ADDRESS 0x00044200
-#define GPT0_BASE_ADDRESS 0x00044200
-#define GPT0_END_ADDRESS 0x0004421F
-#define GPT1_BASE_ADDRESS 0x00044220
-#define GPT1_END_ADDRESS 0x0004423F
-#define GPT2_BASE_ADDRESS 0x00044240
-#define GPT2_END_ADDRESS 0x0004425F
-#define GPT3_BASE_ADDRESS 0x00044260
-#define GPT3_END_ADDRESS 0x0004427F
-
-/*! Registers of each GP_TIMER*/
-#define CTRL_REG         0x00044200
-#define CLK_CNTRL_REG    0x00044204
-#define CNTR_VAL_REG     0x00044208
-#define RPTD_CNT_REG     0x0004420C
-#define DUTY_CYC_REG     0x00044210
-#define PERIOD_REG       0x00044214
-#define CAPT_IP_REG      0x00044218
-
-/* Bit Specifications of each GP_TIMER's register*/
-/* Control Register */
-
-#define GPT_EN              (1<<0)
-#define GPT_MODE(x)         (x<<2)
-#define GPT_OUTPUT_EN       (1<<4)
-#define COUNT_RESET         (1<<5)
-#define CONTIN_CNT_EN       (1<<6)
-#define PWM_FALL_INTR_EN    (1<<7) 
-#define PWM_RISE_INTR_EN    (1<<8)
-#define CNTR_OFLOW_INTR_EN  (1<<9)
-#define CNTR_UFLOW_INTR_EN  (1<<10)
-#define CAPTURE_IP(x)       (x<<15) 
-
-/* Clock Control Reg*/
-
-#define CLK_SRC (0<<0)
-#define CLK_PRESCALAR(x)    (x<<1)
-
-/* Duty Cycle Reg*/
-
-#define DUTY_CYC_VAL(x)     (x<<0)
-
-/* Period Reg*/
-
-#define PRD_VAL(x)          (x<<0)
-
-/* Function Declarations*/
-/**
- * @fn void gptInit(int gpt_num, int mode, int period, int prescalar, int dutycycle, int cnt_en, int capture_val)
- * 
- * @brief The function initialises the gp_timer with different modes and configures necessary registers
- * 
- * @details It is used to select the specific GPT instance, set the mode, set the prescalar, set the dutycycle, enable
- * continous count and set the input bit to be captured
- * 
- * @param gpt_num The parameter \a gpt_num is an integer that represents the GPT instance number.
- * @note \a gpt_num value must be always less than GPT_MAX_COUNT.
- * 
- * @param mode The parameter \a mode is an integer that sets tCONTIN_CNT_ENhe mode of gp_timer
- * @note \a mode value must be always in the range 0<=mode<4.
- * 
- * @param period The parameter \a period is an integer that sets the period of gp_timer till which it needs to count
- * 
- * @param prescalar The parameter \a prescalar is an integer that sets the prescalar value with which the clock gets divided
- * 
- * @param dutycycle The parameter \a dutycycle is an integer that sets the duty cycle value for the pulse generated in PWM
- * 
- * @param cnt_en The paramter \a cnt_en is integer that enables continous count mode of the gptimer
- * 
- * @param capture_val The parameter \a capture_val is an integer that sets the input value to be captured
+ * SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (c) 2021-2026 Mindgrove Technologies. All rights reserved.
  *
- * @param output_en The parameter \a output_en is an integer that sets the output_enable high in the control and status register
- * 
- * 
+ * @license Licensed under the Apache License, Version 2.0 (see LICENSE).
+ * @licenseblock
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * @endlicenseblock
+ *
+ * Project                   : Secure IoT SoC
+ * @file gptimer.h
+ * @brief Contains driver apis for GPTimer Interface
+ * @details Provides the API for hardware control of General Purpose Timer (GPTimer)
+ *          including configuration and resetting the counter.
+ * @version 1.1
+ * @authors Shri Mahaalakshmi S J (mahaalakshmi@mindgrovetech.in)
+ *          Deeptha G             (deeptha@mindgrovetch.in)
+ * @date 17-02-2026
+ *
+ * @section History
+ * -----------------------------------------------------------------------------
+ * Date       | Version | Modified by           | Description
+ * -----------|---------|-----------------------|-------------------------------
+ * 07-02-2024 | 1.0     | Shri Mahaalakshmi S J | Initial release.
+ * 17-02-2026 | 1.1     | Deeptha G             | Optimized driver and updated
+ *            |         |                       | it to be MISRA-compliant.
+ * -----------------------------------------------------------------------------
  */
-void gptInit(int gpt_num, int mode, int period, int prescalar, int dutycycle, int cnt_en, int capture_val, int output_en);
-/**
- * @fn void setPeriod(int period, int gpt_num)
- * 
- * @brief The function sets the period for the specific gpt instance
- * 
- * @details It is used to set the thrrshold value for the specific gpt instance to count 
- * 
- * @param period The parameter \a period is an integer that sets the threshold value for the counter
- * 
- * @param gpt_num The parameter \a gpt_num is an integer that represents the GPT instance number.
- */
-void setPeriod(int period, int gpt_num);
-/**
- * @fn void setDutycycle(int dutycycle, int gpt_num, int period)
- * 
- * @brief The function sets the duty cycle for the specific gpt instance
- * 
- * @details It is used to set the duty cycle for the pulse generated in PWM mode by 
- * the specific GPT instance. 
- * 
- * @param dutycycle The parameter \a dutycycle is an integer that sets the dutycycle value for the counter
- * @note \a dutycycle value must be always 0<dutycycle<=100.
- * 
- * @param gpt_num The parameter \a gpt_num is an integer that represents the GPT instance number.
- */
-void setDutycycle(int dutycycle, int gpt_num, int period);
-/**
- * @fn void setPrescalar(int prescalar, int gpt_num)
- * 
- * @brief The function sets the prescalar value for the specific gpt instance
- * 
- * @details It is used to set the prescalar value for the specific gpt instance by a factor which the clk is divided
- * and the counter counts the value of clock cycles accordingly. 
- * 
- * @param prescalar The parameter \a prescalar is an integer that sets the prescalar value for the counter
- * 
- * @param gpt_num The parameter \a gpt_num is an integer that represents the GPT instance number.
- */
-void setPrescalar(int prescalar, int gpt_num);
-/**
- * @fn int readCounterVal(int gpt_num)
- * 
- * @brief The function reads the value of the counter.
- * 
- * @details It is used to read the value of counter of a specific gpt instance at any time during its 
- * counting process. 
- * 
- * @param gpt_num The parameter \a gpt_num is an integer that represents the GPT instance number.
- * 
- * @return a 32-bit counter value that is currently stored in the counter register
- */
-int readCounterVal(int gpt_num);
-/**
- * @fn int readReptdCount(int gpt_num)
- * 
- * @brief The function reads the value of repeated counts.
- * 
- * @details It is used to read the value of repeated counts counted by the counter of specific 
- * GPT instance when continous count is enabled
- * 
- * @param gpt_num The parameter \a gpt_num is an integer that represents the GPT instance number.
- * 
- * @return a 32-bit repeated count value that is currently stored in the Repeated_Count register
- */
-int readReptdCount(int gpt_num);
-/**
- * @fn int readCaptrdVal(int gpt_num)
- * 
- * @brief The function reads captured counter value
- * 
- * @details It is used to read the value of counter value captured when a desired input is captured
- *  at a gpio pin
- * 
- * @param gpt_num The parameter \a gpt_num is an integer that represents the GPT instance number.
- * 
- * @return a 32-bit counter value that is captured and currently stored in Capture_register
- */
-int readCaptrdVal(int gpt_num);
-/**
- * @fn int readOflowintrpt(int gpt_num)
- * 
- * @brief The function reads the overflow interrupt signal generated
- * 
- * @details It is used to read the counter overflow interrupt generated once the counter reaches the threshold value.
- * The function waits till the overflow interrupt signal is generated in the control register.
- * 
- * @param gpt_num The parameter \a gpt_num is an integer that represents the GPT instance number.
- * 
- * @return a bool value of True when the counter overflow interrupt is generated in Control_register
- */
-int readOflowintrpt(int gpt_num);
-/**
- * @fn int readUflowintrpt(int gpt_num)
- * 
- * @brief The function reads the underflow interrupt signal generated
- * 
- * @details It is used to read the counter underflow interrupt generated once the counter reaches the threshold value.
- * The function waits till the underflow interrupt signal is generated in the control register.
- * 
- * @param gpt_num The parameter \a gpt_num is an integer that represents the GPT instance number.
- * 
- * @return a bool value of True when the counter underflow interrupt is generated in Control_register
- */
-int readUflowintrpt(int gpt_num);
-/**
- * @fn readFallintrpt(int gpt_num)
- * 
- * @brief The function reads the PWM Falling Edge interrupt signal generated
- * 
- * @details It is used to read the Falling Edge interrupt signal generated for every Falling Edge of 
- * the generated PWM pulse.
- * 
- * @param gpt_num The parameter \a gpt_num is an integer that represents the GPT instance number.
- * 
- * @return a bool value of True when the counter underflow interrupt is generated in Control_register
- */
-int readFallintrpt(int gpt_num);
-/**
- * @fn readRiseintrpt(int gpt_num)
- * 
- * @brief The function reads the PWM Rising Edge interrupt signal generated
- * 
- * @details It is used to read the Rising Edge interrupt signal generated for every Rising Edge of 
- * the generated PWM pulse.
- * 
- * @param gpt_num The parameter \a gpt_num is an integer that represents the GPT instance number.
- * 
- * @return a bool value of True when the counter underflow interrupt is generated in Control_register
- */
-int readRiseintrpt(int gpt_num);
-/**
- * @fn void resetGptimer(gpt_num)
- * 
- * @brief The function resets the specific GPT instance
- * 
- * @details It is used to clear all the interrupts and counter values and resets the mode of the specific
- * GPT instance.
- * 
- * @param gpt_num The parameter \a gpt_num is an integer that represents the GPT instance number.
- * 
- * @return a bool value of True when the counter underflow interrupt is generated in Control_register
- */
-void resetGptimer(gpt_num);
 
-//EOF (End Of File)
+#ifndef BSP_INCLUDE_GPTIMER_H_
+#define BSP_INCLUDE_GPTIMER_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <stdbool.h>
+#include "secure_iot.h"
+#include "log.h"
+#include "errors.h"
+#include "utils.h"
+
+/**
+ * @defgroup GPTIMER_MODES GPTimer Operational Modes
+ * @brief Definitions for the timer counting logic and waveform generation.
+ * @{
+ */
+/** @brief The value of this macro is 0U. Pulse Width Modulation mode.
+ */
+#define GPT_PWM_MODE 0U
+/** @brief The value of this macro is 1U. Standard Up-counting mode.
+ */
+#define GPT_UP_COUNT 1U
+/** @brief The value of this macro is 2U. Standard Down-counting mode.
+ */
+#define GPT_DOWN_COUNT 2U
+/** @brief The value of this macro is 3U. Up-Down counting mode.
+ */
+#define GPT_UPDOWN_COUNT 3U
+/** @} */
+
+/**
+ * @defgroup GPTIMER_Instance_Type GPTIMER Instance Handle Type
+ * @brief Opaque GPTIMER hardware instance handle type.
+ *
+ * This module defines the GPTIMER instance handle type used by the GPTIMER driver.
+ * The type is opaque and represents a specific GPTIMER hardware block.
+ *
+ * Users must not create objects of this type directly. Valid instances
+ * must only be obtained using the provided GPTIMER instance constructors
+ * or GPTIMER instance macros.
+ *
+ * @{
+ */
+/**
+ * @brief Opaque GPTIMER hardware instance type.
+ *
+ * This type represents a specific GPTIMER hardware block on the SoC.
+ * The internal structure is hidden from the user and is only known
+ * to the GPTIMER driver implementation.
+ *
+ * @note This type must only be used as a handle.
+ *       Do not attempt to allocate or define objects of this type.
+ */
+typedef struct GPTIMER_Instance GPTIMER_Instance_t;
+
+/**
+ * @brief Get handle for GPTIMER instance 0.
+ *
+ * @note GPTIMER instance 0 is reserved for debug and print statements.
+ *       It should not be used for general-purpose GPTIMER communication.
+ *
+ * @return Pointer to GPTIMER0 hardware instance descriptor.
+ */
+const GPTIMER_Instance_t *GPTIMER_INSTANCE_0(void);
+
+/**
+ * @brief Get handle for GPTIMER instance 1.
+ * @return Pointer to GPTIMER1 hardware instance descriptor.
+ */
+const GPTIMER_Instance_t *GPTIMER_INSTANCE_1(void);
+
+/**
+ * @brief Get handle for GPTIMER instance 2.
+ * @return Pointer to GPTIMER2 hardware instance descriptor.
+ */
+const GPTIMER_Instance_t *GPTIMER_INSTANCE_2(void);
+
+/**
+ * @brief Get handle for GPTIMER instance 3.
+ * @return Pointer to GPTIMER3 hardware instance descriptor.
+ */
+const GPTIMER_Instance_t *GPTIMER_INSTANCE_3(void);
+
+/** @} */ /* end of GPTIMER_Instance_Constructors */
+
+/**
+ * @defgroup GPTIMER_Instance_Macros GPTIMER Instance Macros
+ * @brief GPTIMER hardware instance macros.
+ *
+ * These macros expand to constant GPTIMER hardware instance handles.
+ * They provide a convenient and readable way to select GPTIMER instances.
+ *
+ * @{
+ */
+/**
+ * @def GPTIMER0
+ * @ingroup GPTIMER_Instance_Macros
+ * @brief Macro for GPTIMER instance 0 handle.
+ */
+#define GPTIMER0 GPTIMER_INSTANCE_0()
+
+/**
+ * @def GPTIMER1
+ * @ingroup GPTIMER_Instance_Macros
+ * @brief Macro for GPTIMER instance 1 handle.
+ */
+#define GPTIMER1 GPTIMER_INSTANCE_1()
+
+/**
+ * @def GPTIMER2
+ * @ingroup GPTIMER_Instance_Macros
+ * @brief Macro for GPTIMER instance 2 handle.
+ */
+#define GPTIMER2 GPTIMER_INSTANCE_2()
+
+/**
+ * @def GPTIMER3
+ * @ingroup GPTIMER_Instance_Macros
+ * @brief Macro for GPTIMER instance 3 handle.
+ */
+#define GPTIMER3 GPTIMER_INSTANCE_3()
+
+/** @} */ /* end of GPTIMER_Instance_Macros */
+
+/**
+ * @brief GPTIMER configuration structure.
+ *
+ * This structure contains all parameters required to initialize
+ * and configure a General Purpose Timer (GPTIMER).
+ */
+typedef struct {
+    /**
+     * @brief GPTIMER hardware instance handle.
+     *
+     * This parameter selects the GPTIMER hardware block to be used.
+     * Valid instances are GPTIMER1, GPTIMER2, GPTIMER3 and GPTIMER4.
+     *
+     * @note GPTIMER instance 0 is reserved for serial debug communication.
+     */
+    const GPTIMER_Instance_t *gpt_num;
+    /**
+     * @brief GPTIMER operating mode.
+     *
+     * Selects the counting or PWM mode of the timer.
+     *
+     * @note Valid range: 0 <= mode < 4.
+     */
+    uint8_t mode;
+    /**
+     * @brief Timer period value.
+     *
+     * Specifies the period up to which the GPTIMER counts
+     * before overflowing, underflowing, or resetting
+     * (depending on the selected mode).
+     */
+    uint32_t period;
+    /**
+     * @brief Clock prescaler value.
+     *
+     * Divides the input clock frequency before it is fed
+     * to the GPTIMER counter.
+     */
+    uint32_t prescaler;
+    /**
+     * @brief PWM duty cycle value.
+     *
+     * Defines the duty cycle of the PWM output when the timer
+     * operates in PWM mode.
+     *
+     * @note The value provided by the user is normalized internally.
+     *       The input is taken modulo 100, ensuring the effective
+     *       duty cycle is always in the range 0 to 100 (inclusive).
+     *       A modulo result of 0 represents a 100% duty cycle.
+     *       A duty cycle of 0% is achieved only when the user
+     *       explicitly provides a value of 0U.
+     */
+    uint32_t dutycycle;
+    /**
+     * @brief Interrupt enable flag.
+     *
+     * Enables or disables GPTIMER interrupts based
+     * on the selected mode.
+     *
+     * @note 1 = Enable interrupt, 0 = Disable interrupt
+     */
+    bool interrupt_en;
+    /**
+     * @brief Continuous count enable flag.
+     *
+     * Enables continuous counting mode for the GPTIMER.
+     *
+     * @note 1 = Continuous counting enabled
+     */
+    bool cnt_en;
+    /**
+     * @brief Capture input enable flag.
+     *
+     * Enables capturing of the external input value.
+     */
+    bool capture_val;
+    /**
+     * @brief Output enable flag.
+     *
+     * @details Enable the output signal in PWM mode by setting
+     * the output enable bit in the control/status register.
+     */
+    bool output_en;
+} GPTIMER_Config_t;
+
+/**
+ *
+ * @brief The function `GPT_Init` initialises the gptimer with different modes and configures necessary registers.
+ *
+ * @details It is used to select the specific GPT instance, set the mode, set the prescaler, set the dutycycle, enable
+ * continous count and set the input bit to be captured.
+ *
+ * @param gptimer The `gptimer` parameter in the `GPT_Init` function is a struct that
+ * contains several properties related to configuring a General Purpose Timer (GPT).It has the following properties:
+ * gpt_num, mode, interrupt_en, period, prescaler, dutycycle, cnt_en, capture_val, output_en.
+ *
+ * @return SUCCESS if the configuration was successful, else ERROR code.
+ */
+uint16_t GPT_Init(GPTIMER_Config_t const *gptimer_config);
+
+/**
+ *
+ * @brief The function ` GPT_Reset` resets the counter, interrupts and register values.
+ *
+ * @details It is used to reset the counter, interrupts and register values. for the specified GPTIMER
+ * instance.
+ *
+ * @param gptimer The `gptimer` parameter in the `GPT_Init` function is a struct that
+ * contains several properties related to configuring a General Purpose Timer (GPT).It has the following properties:
+ * gpt_num, mode, interrupt_en, period, prescaler, dutycycle, cnt_en, capture_val, output_en.
+ * @return SUCCESS if the configuration was successful, else ERROR code.
+ */
+uint16_t GPT_Reset(GPTIMER_Config_t const *gptimer_config);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif  // BSP_INCLUDE_GPTIMER_H_

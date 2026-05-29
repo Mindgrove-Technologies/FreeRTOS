@@ -12,7 +12,7 @@ To build, simply run `make`. If you want a debug build, pass `DEBUG=1`.
 In order to build the executable without FPU, pass `FPU=0` flag when running make.
 By default, the executable will be built with FPU in it.
 
-The resulting executable file is ./build/SecureIoTDemo.shakti.
+The resulting executable file is ./build/SecureIoTDemo.elf.
 
 ## How to debug with gdb
 
@@ -40,3 +40,11 @@ $ riscv64-unknown-elf-gdb
 ## Description
 
 This demo prints Hello Worlld, and displays the current HART id.
+You can enable one of the following test configurations by defining it in `main_blinky.c`.  
+Ensure that **only one test macro is defined at a time**.
+
+- **TEST_HELLO_TASK**: Demonstrates task creation, scheduling, delays, and optional GPIO interrupt handling.
+
+- **TEST_QUEUE**: Demonstrates inter-task communication using a queue with producer and consumer tasks.
+
+- **TEST_SEMAPHORE_MUTEX**: Demonstrates synchronization using binary Semaphore, counting Semaphore and mutex
