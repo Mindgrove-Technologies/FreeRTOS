@@ -18,7 +18,7 @@
  * limitations under the License.
  * @endlicenseblock
  *
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file sha256.h
  * @brief Contains APIs for SHA-256 operations.
  * @details This header file defines function prototypes required to
@@ -72,11 +72,12 @@ extern "C" {
  * @param input_text Pointer to the input message to be hashed.
  * @param input_len_bits Length of the input message in bits.
  *
- * @return `SUCCESS` if hashing completes successfully,
- *         `EFAULT` if any required pointer is NULL,
- *         `EINVAL` if an invalid block length condition occurs,
- *         `ETIMEDOUT` if the SHA-256 hardware does not respond within
- *          the timeout window.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if hashing completes successfully
+ * - @ref EFAULT if any required pointer is NULL
+ * - @ref EINVAL if an invalid block length condition occurs
+ * - @ref ETIMEDOUT if the SHA-256 hardware does not respond within
+ *        the timeout window.
  */
 uint16_t SHA256_Single_Run(uint8_t *sha_output,
                            const uint8_t *input_text,
@@ -103,11 +104,12 @@ uint16_t SHA256_Single_Run(uint8_t *sha_output,
  * @param iterated_length_bits Number of bits already processed.
  * For the first call, this value should be 0.
  *
- * @return `SUCCESS` if the chunk is processed successfully,  
- *         `EFAULT` if input_text is NULL,
- *         `EINVAL` if input parameters are invalid,
- *         `ETIMEDOUT` if the SHA-256 hardware does not respond within
- *          the timeout window.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if the chunk is processed successfully
+ * - @ref EFAULT if input_text is NULL
+ * - @ref EINVAL if input parameters are invalid
+ * - @ref ETIMEDOUT if the SHA-256 hardware does not respond within
+ *        the timeout window.
  */
 uint16_t SHA256_Multi_Run(const uint8_t *input_text,
                           size_t input_len_bits,
@@ -128,10 +130,11 @@ uint16_t SHA256_Multi_Run(const uint8_t *input_text,
  * @param output_length Pointer to where the output length in bytes
  * will be written. Set to 32 on success.
  *
- * @return `SUCCESS` if the output was read and zeroization completed,
- *         `EFAULT` if sha_output or output_length is NULL,
- *         `ETIMEDOUT` if the SHA-256 hardware zeroization does not complete 
- *          within the timeout window.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if the output was read and zeroization completed
+ * - @ref EFAULT if sha_output or output_length is NULL
+ * - @ref ETIMEDOUT if the SHA-256 hardware zeroization does not complete 
+ *        within the timeout window.
  */
 uint16_t SHA256_Read_Output(uint8_t *sha_output, size_t *output_length);
 
@@ -143,9 +146,10 @@ uint16_t SHA256_Read_Output(uint8_t *sha_output, size_t *output_length);
  * a constant-time busy-wait until the zeroization is complete or the
  * timeout window expires.
  *
- * @return `SUCCESS` if zeroization completed within the timeout window,
- *         `ETIMEDOUT` if the SHA-256 hardware zeroization does not complete 
- *          within the timeout window.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if zeroization completed within the timeout window
+ * - @ref ETIMEDOUT if the SHA-256 hardware zeroization does not complete 
+ *        within the timeout window.
  */
 uint16_t SHA256_Zeroize(void);
 

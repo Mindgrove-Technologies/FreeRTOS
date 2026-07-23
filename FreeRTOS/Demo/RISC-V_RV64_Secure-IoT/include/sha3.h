@@ -1,6 +1,7 @@
 /**
  * SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (c) 2023-2026 Mindgrove Technologies. All rights reserved.
+ * 
  * @license Licensed under the Apache License, Version 2.0 (see LICENSE).
  * @licenseblock
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,18 +17,17 @@
  * limitations under the License.
  * @endlicenseblock
  *
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file sha3.h
  * @brief SHA-3 (Keccak) cryptographic hash header
  * @details This header file declares the public interface for the SHA-3
- *          (Keccak) cryptographic hash driver compliant with FIPS 202.
- *          It provides data types, macros, and function prototypes required
- *          to initialize, update, and finalize SHA-3 hash computations for
- *          the following variants:
- *            - SHA3-224
- *            - SHA3-256
- *            - SHA3-384
- *            - SHA3-512
+ * (Keccak) cryptographic hash driver compliant with FIPS 202.It provides data
+ * types, macros, and function prototypes required to initialize, update, and
+ * finalize SHA-3 hash computations for the following variants:
+ * - SHA3-224
+ * - SHA3-256
+ * - SHA3-384
+ * - SHA3-512
  *
  * @version 1.0
  * @authors Akash R B (akash@mindgrovetech.in)
@@ -49,8 +49,6 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include "errors.h"
-
 
 /**
  * @defgroup SHA3_MACROS SHA-3 Configuration Macros
@@ -101,7 +99,9 @@ typedef struct {
  * @brief Initializes the SHA-3 context for a 224-bit hash.
  * @details Resets the state and configures the rate for the SHA3-224 variant.
  * @param ctx Pointer to the Sha3 context structure.
- * @return SUCCESS if initialization is successful, otherwise error code.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS on success
+ * - @ref EFAULT if the pointer is NULL
  */
 uint16_t Sha3_224_Init(Sha3* ctx);
 
@@ -111,7 +111,9 @@ uint16_t Sha3_224_Init(Sha3* ctx);
  * @param ctx Pointer to the Sha3 context structure.
  * @param data Pointer to the input message bytes.
  * @param len Length of the input data in bytes.
- * @return SUCCESS if update is successful, otherwise error code.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS on success
+ * - @ref EFAULT if the pointer is NULL
  */
 uint16_t Sha3_224_Update(Sha3* ctx, const uint8_t* data, uint32_t len);
 
@@ -120,7 +122,9 @@ uint16_t Sha3_224_Update(Sha3* ctx, const uint8_t* data, uint32_t len);
  * @details Applies NIST padding, finishes absorption, and squeezes the digest.
  * @param ctx Pointer to the Sha3 context structure.
  * @param hash Pointer to the buffer where the 28-byte digest will be stored.
- * @return SUCCESS if finalization is successful, otherwise error code.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS on success
+ * - @ref EFAULT if the pointer is NULL
  */
 uint16_t Sha3_224_Final(Sha3* ctx, uint8_t* hash);
 
@@ -129,7 +133,9 @@ uint16_t Sha3_224_Final(Sha3* ctx, uint8_t* hash);
 /**
  * @brief Initializes the SHA-3 context for a 256-bit hash.
  * @param ctx Pointer to the Sha3 context structure.
- * @return SUCCESS if successful.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS on success
+ * - @ref EFAULT if the pointer is NULL
  */
 uint16_t Sha3_256_Init(Sha3* ctx);
 
@@ -138,7 +144,9 @@ uint16_t Sha3_256_Init(Sha3* ctx);
  * @param ctx Pointer to the Sha3 context structure.
  * @param data Pointer to input message.
  * @param len Length of input.
- * @return SUCCESS if successful.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS on success
+ * - @ref EFAULT if the pointer is NULL
  */
 uint16_t Sha3_256_Update(Sha3* ctx, const uint8_t* data, uint32_t len);
 
@@ -146,7 +154,9 @@ uint16_t Sha3_256_Update(Sha3* ctx, const uint8_t* data, uint32_t len);
  * @brief Finalizes the SHA3-256 hash.
  * @param ctx Pointer to the Sha3 context structure.
  * @param hash Pointer to 32-byte output buffer.
- * @return SUCCESS if successful.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS on success
+ * - @ref EFAULT if the pointer is NULL
  */
 uint16_t Sha3_256_Final(Sha3* ctx, uint8_t* hash);
 
@@ -155,7 +165,9 @@ uint16_t Sha3_256_Final(Sha3* ctx, uint8_t* hash);
 /**
  * @brief Initializes the SHA-3 context for a 384-bit hash.
  * @param ctx Pointer to the Sha3 context structure.
- * @return SUCCESS if successful.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS on success
+ * - @ref EFAULT if the pointer is NULL
  */
 uint16_t Sha3_384_Init(Sha3* ctx);
 
@@ -164,7 +176,9 @@ uint16_t Sha3_384_Init(Sha3* ctx);
  * @param ctx Pointer to the Sha3 context structure.
  * @param data Pointer to input message.
  * @param len Length of input.
- * @return SUCCESS if successful.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS on success
+ * - @ref EFAULT if the pointer is NULL
  */
 uint16_t Sha3_384_Update(Sha3* ctx, const uint8_t* data, uint32_t len);
 
@@ -172,7 +186,9 @@ uint16_t Sha3_384_Update(Sha3* ctx, const uint8_t* data, uint32_t len);
  * @brief Finalizes the SHA3-384 hash.
  * @param ctx Pointer to the Sha3 context structure.
  * @param hash Pointer to 48-byte output buffer.
- * @return SUCCESS if successful.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS on success
+ * - @ref EFAULT if the pointer is NULL
  */
 uint16_t Sha3_384_Final(Sha3* ctx, uint8_t* hash);
 
@@ -181,7 +197,9 @@ uint16_t Sha3_384_Final(Sha3* ctx, uint8_t* hash);
 /**
  * @brief Initializes the SHA-3 context for a 512-bit hash.
  * @param ctx Pointer to the Sha3 context structure.
- * @return SUCCESS if successful.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS on success
+ * - @ref EFAULT if the pointer is NULL
  */
 uint16_t Sha3_512_Init(Sha3* ctx);
 
@@ -190,7 +208,9 @@ uint16_t Sha3_512_Init(Sha3* ctx);
  * @param ctx Pointer to the Sha3 context structure.
  * @param data Pointer to input message.
  * @param len Length of input.
- * @return SUCCESS if successful.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS on success
+ * - @ref EFAULT if the pointer is NULL
  */
 uint16_t Sha3_512_Update(Sha3* ctx, const uint8_t* data, uint32_t len);
 
@@ -198,7 +218,9 @@ uint16_t Sha3_512_Update(Sha3* ctx, const uint8_t* data, uint32_t len);
  * @brief Finalizes the SHA3-512 hash.
  * @param ctx Pointer to the Sha3 context structure.
  * @param hash Pointer to 64-byte output buffer.
- * @return SUCCESS if successful.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS on success
+ * - @ref EFAULT if the pointer is NULL
  */
 uint16_t Sha3_512_Final(Sha3* ctx, uint8_t* hash);
 

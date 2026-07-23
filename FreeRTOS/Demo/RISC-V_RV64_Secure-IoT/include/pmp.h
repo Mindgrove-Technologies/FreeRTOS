@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file pmp.h
  * @brief Declarations for PMP configuration.
  * @details This header file provides function prototypes, macros,
@@ -116,8 +116,10 @@ extern "C" {
  * @param size    The size of the memory region in bytes. Must be a power 
  *                of 2 for NAPOT addressing mode and 0 for TOR Mode.
  *
- * @return SUCCESS when PMP registers are configured, EINVAL for invalid
- *         arguments, EPERM if lock bit is set for given entry.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS when PMP registers are configured
+ * - @ref EINVAL for invalid arguments
+ * - @ref EPERM if lock bit is set for given entry.
  */
 uint16_t PMP_Set_Entry(uint8_t config, uint8_t entry, uint32_t* address, \
                         size_t size);
@@ -130,8 +132,9 @@ uint16_t PMP_Set_Entry(uint8_t config, uint8_t entry, uint32_t* address, \
  * 
  * @param entry  PMP entry which is to be cleared (0-3).
  *
- * @return SUCCESS when cleared, EINVAL for invalid PMP entry, 
- *         EPERM if lock bit for the given entry is set.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS when cleared, EINVAL for invalid PMP entry
+ * - @ref EPERM if lock bit for the given entry is set.
  */
 uint16_t PMP_Clear_Entry(uint8_t entry);
 
@@ -142,7 +145,9 @@ uint16_t PMP_Clear_Entry(uint8_t entry);
  *          register. If any PMP entry has the lock bit set, the operation is 
  *          aborted without clearing any of the entries.
  *
- * @return SUCCESS when cleared, EPERM if any entry has its lock bit set.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS when cleared
+ * - @ref EPERM if any entry has its lock bit set.
  */
 uint16_t PMP_Clear_All(void);
 

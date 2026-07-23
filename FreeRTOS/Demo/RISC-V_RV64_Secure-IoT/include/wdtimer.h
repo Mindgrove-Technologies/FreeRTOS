@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @copyright Copyright (c) 2026 Mindgrove Technologies.
  * All rights reserved.
  * @file wdtimer.h
@@ -85,8 +85,9 @@ extern "C" {
  * @note wcycles is applicable only for hard reset, as soft reset occurs
  * immediately.
  *
- * @return SUCCESS- Watchdog timer is started successfully.
- * EINVAL- wcycles exceeds the 64-bit range when multiplied with base frequency.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS- Watchdog timer is started successfully.
+ * - @ref EINVAL- wcycles exceeds the 64-bit range when multiplied with base frequency.
  */
 uint16_t WDT_Start(bool mode, uint64_t wcycles);
 
@@ -99,7 +100,8 @@ uint16_t WDT_Start(bool mode, uint64_t wcycles);
  *
  * @param None
  *
- * @return Returns "0" on success.
+ * @return Returns a 16-bit status code:
+ * - @ref Success on successfully disabling the Watchdog Timer.
  */
 uint16_t WDT_Disable(void);
 

@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file pro_io.h
  * @brief Contains driver header for GPIO Interface
  * @details Provides the API for sequential read/write operations for the 

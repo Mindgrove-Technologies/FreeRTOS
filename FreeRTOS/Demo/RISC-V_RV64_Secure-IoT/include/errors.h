@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file errors.h
  * @brief  Header file defining standard error codes for drivers.
  * @details  This file defines macros for standard and driver specific error 
@@ -548,7 +548,7 @@
  */
 
 /** @brief Authentication tag verification failed. */
-#define AUTH_TAG_MISMATCH    149U
+#define EAUTHTAGMISMATCH    149U
 
 /** @} */
 
@@ -588,10 +588,10 @@
 #define ENOIOCTLCMD           515U
 
 /** @brief Restart by calling sys_restart_syscall. */
-#define ERESTART_RESTARTBLOCK 516U
+#define ERESTARTRESTARTBLOCK 516U
 
 /** @brief Driver requests probe retry. */
-#define EPROBE_DEFER          517U
+#define EPROBEDEFER          517U
 
 /** @brief Open found a stale dentry. */
 #define EOPENSTALE            518U

@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file ascon.h
  * @brief Contains APIs for the ASCON cryptographic functions.
  * @details Provides APIs for authenticated encryption and decryption 
@@ -285,11 +285,12 @@ typedef struct {
  * @param cfg Pointer to an ASCON_AEAD128a_Config structure containing
  *            all required input, output, key, nonce, and mode parameters.
  *
- * @return `SUCCESS` on successful encryption or decryption,
- *         `AUTH_TAG_MISMATCH` if authentication tag verification fails
- *         (decrypt mode only),
- *         `EFAULT` if any required buffer pointer inside cfg is NULL, and
- *         `EINVAL` if the input length is smaller than the authentication
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS On successful encryption or decryption,
+ * - @ref AUTHTAGMISMATCH If authentication tag verification fails
+ * (decrypt mode only),
+ * - @ref EFAULT If any required buffer pointer inside cfg is NULL, and
+ * - @ref EINVAL If the input length is smaller than the authentication
  *         tag length (decrypt mode only).
  */
 uint16_t ASCON_AEAD128a(ASCON_AEAD128a_Config *cfg);
@@ -309,8 +310,9 @@ uint16_t ASCON_AEAD128a(ASCON_AEAD128a_Config *cfg);
  * @param cfg Pointer to an ASCON_Hash256_Config structure containing
  *            the input message and output buffer.
  *
- * @return `SUCCESS` on successful hash computation, and
- *         `EFAULT` if the required buffers inside cfg are NULL.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS On successful hash computation, and
+ * - @ref EFAULT If the required buffers inside cfg are NULL.
  */
 uint16_t ASCON_Hash256(ASCON_Hash256_Config *cfg);
 
@@ -329,8 +331,9 @@ uint16_t ASCON_Hash256(ASCON_Hash256_Config *cfg);
  * @param cfg Pointer to an ASCON_XOF128_Config structure containing
  *            the input message, output buffer, and requested output length.
  *
- * @return `SUCCESS` on successful XOF hash computation, and
- *         `EFAULT` if the required buffers inside cfg are NULL.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS On successful XOF hash computation, and
+ * - @ref EFAULT If the required buffers inside cfg are NULL.
  */
 uint16_t ASCON_XOF128(ASCON_XOF128_Config *cfg);
 
@@ -351,8 +354,9 @@ uint16_t ASCON_XOF128(ASCON_XOF128_Config *cfg);
  *            the input message, customization string, output buffer,
  *            and requested output length.
  *
- * @return `SUCCESS` on successful Customizable XOF computation, and
- *         `EFAULT` if the required buffers inside cfg are NULL.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS On successful Customizable XOF computation, and
+ * - @ref EFAULT If the required buffers inside cfg are NULL.
  */
 uint16_t ASCON_CXOF128(ASCON_CXOF128_Config *cfg);
 

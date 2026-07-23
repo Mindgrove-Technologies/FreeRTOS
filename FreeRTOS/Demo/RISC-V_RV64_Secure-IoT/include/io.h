@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file io.h
  * @brief Header file for standard library functions.
  * @details Provides function prototypes and definitions required for

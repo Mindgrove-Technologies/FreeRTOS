@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @copyright Copyright (c) 2026 Mindgrove Technologies.
  * All rights reserved.
  * @file pwm.h
@@ -83,6 +83,31 @@ typedef enum {
     /** Enable interrupt on half-period event */
     PWM_INTR_HALFPERIOD = 0x03U
 } PWM_Interrupt_Modes;
+
+/**
+ * @enum PWM_IRQn_Type
+ * 
+ * @brief PWM interrupt ID
+ * 
+ * This enumeration defines the available PWM interrupt numbers supported by the platform.
+*/
+typedef enum {
+/* =========================================  Secure_IoT Specific Interrupt Numbers  ========================================= */
+  PWM0_IRQn                 =  33,              /*!< 33 PWM0                                                                   */
+  PWM1_IRQn                 =  34,              /*!< 34 PWM1                                                                   */
+  PWM2_IRQn                 =  35,              /*!< 35 PWM2                                                                   */
+  PWM3_IRQn                 =  36,              /*!< 36 PWM3                                                                   */
+  PWM4_IRQn                 =  37,              /*!< 37 PWM4                                                                   */
+  PWM5_IRQn                 =  38,              /*!< 38 PWM5                                                                   */
+  PWM6_IRQn                 =  39,              /*!< 39 PWM6                                                                   */
+  PWM7_IRQn                 =  40,              /*!< 40 PWM7                                                                   */
+  PWM8_IRQn                 =  41,              /*!< 41 PWM8                                                                   */
+  PWM9_IRQn                 =  42,              /*!< 42 PWM9                                                                   */
+  PWM10_IRQn                =  43,              /*!< 43 PWM10                                                                  */
+  PWM11_IRQn                =  44,              /*!< 44 PWM11                                                                  */
+  PWM12_IRQn                =  45,              /*!< 45 PWM12                                                                  */
+  PWM13_IRQn                =  46,              /*!< 46 PWM13                                                                  */
+} PWM_IRQn_Type;
 
 /**
  * @brief PWM configuration structure.
@@ -152,9 +177,10 @@ typedef struct {
  * @param pwm_pins Bitwise OR’ed value of PWM pin identifiers representing the
  * PWM output channels to be enabled.
  *
- * @return Returns SUCCESS if the PWM module is started successfully;
- *         ENODEV if the pwm_pins given, is not within 0-13;
- *         EINVAL if the configuration values are out of range;
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if the PWM module is started successfully
+ * - @ref ENODEV if the pwm_pins given, is not within 0-13
+ * - @ref EINVAL if the configuration values are out of range
  */
 uint16_t PWM_Start(PWM_Config_t *config, uint32_t pwm_pins);
 
@@ -167,8 +193,9 @@ uint16_t PWM_Start(PWM_Config_t *config, uint32_t pwm_pins);
  * @param pwm_pins Bitwise OR’ed value of PWM pin identifiers representing the
  * PWM output channels to be stopped.
  *
- * @return Returns SUCCESS if the PWM module is stopped successfully;
- *         ENODEV if the pwm_pins given, is not within 0-13. 
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if the PWM module is stopped successfully
+ * - @ref ENODEV if the pwm_pins given, is not within 0-13
  */
 uint16_t PWM_Stop(uint32_t pwm_pins);
 

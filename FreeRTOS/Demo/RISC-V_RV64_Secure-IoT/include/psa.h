@@ -17,11 +17,11 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file psa.h
- * @brief PSA Crypto API declarations for the Secure IoT SoC.
+ * @brief PSA Crypto API declarations for the MGS2401 SoC.
  * @details This header declares all Platform Security Architecture (PSA)
- *          Crypto APIs for the Secure IoT SoC. It provides interfaces for 
+ *          Crypto APIs for the MGS2401 SoC. It provides interfaces for 
  *          symmetric cipher operations (AES), cryptographic hash operations
  *          (SHA-256), asymmetric operations (RSA sign, verify, encrypt, decrypt),
  *          key management, and random number generation, all compliant with the
@@ -97,20 +97,20 @@ extern "C" {
  *                      to the output buffer (PSA_MG_AES_IV_SIZE +
  *                      input_length). Must not be NULL.
  *
- * @return
- * - PSA_SUCCESS on successful encryption.
- * - PSA_ERROR_INVALID_ARGUMENT if input, output, or output_length is NULL,
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS on successful encryption.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if input, output, or output_length is NULL,
  *   the key identifier is zero, the input length is zero or not a multiple
  *   of PSA_MG_AES_BLOCK_LENGTH, or the algorithm is not a cipher algorithm.
- * - PSA_ERROR_NOT_SUPPORTED if the algorithm is not one of the four
+ * - @ref PSA_ERROR_NOT_SUPPORTED if the algorithm is not one of the four
  *   supported cipher modes.
- * - PSA_ERROR_BUFFER_TOO_SMALL if output_size is smaller than
+ * - @ref PSA_ERROR_BUFFER_TOO_SMALL if output_size is smaller than
  *   PSA_MG_AES_IV_SIZE + input_length bytes.
- * - PSA_ERROR_NOT_PERMITTED if the key does not allow encryption usage.
- * - PSA_ERROR_INVALID_HANDLE if the key identifier does not refer to a
+ * - @ref PSA_ERROR_NOT_PERMITTED if the key does not allow encryption usage.
+ * - @ref PSA_ERROR_INVALID_HANDLE if the key identifier does not refer to a
  *   valid key.
- * - PSA_ERROR_BAD_STATE if the crypto subsystem is not initialized.
- * - PSA_ERROR_CORRUPTION_DETECTED if an internal integrity check fails.
+ * - @ref PSA_ERROR_BAD_STATE if the crypto subsystem is not initialized.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if an internal integrity check fails.
  */
 psa_status_t psa_cipher_encrypt(psa_key_id_t key, psa_algorithm_t alg,
                                 const uint8_t *input, size_t input_length,
@@ -147,21 +147,21 @@ psa_status_t psa_cipher_encrypt(psa_key_id_t key, psa_algorithm_t alg,
  * @param output_length On success, set to the number of bytes of plaintext
  *                      written to the output buffer. Must not be NULL.
  *
- * @return
- * - PSA_SUCCESS on successful decryption.
- * - PSA_ERROR_INVALID_ARGUMENT if input, output, or output_length is NULL,
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS on successful decryption.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if input, output, or output_length is NULL,
  *   the key identifier is zero, the input length is not greater than
  *   PSA_MG_AES_IV_SIZE, the ciphertext portion is not a multiple of
  *   PSA_MG_AES_BLOCK_LENGTH, or the algorithm is not a cipher algorithm.
- * - PSA_ERROR_NOT_SUPPORTED if the algorithm is not one of the four
+ * - @ref PSA_ERROR_NOT_SUPPORTED if the algorithm is not one of the four
  *   supported cipher modes.
- * - PSA_ERROR_BUFFER_TOO_SMALL if output_size is smaller than
+ * - @ref PSA_ERROR_BUFFER_TOO_SMALL if output_size is smaller than
  *   input_length - PSA_MG_AES_IV_SIZE bytes.
- * - PSA_ERROR_NOT_PERMITTED if the key does not allow decryption usage.
- * - PSA_ERROR_INVALID_HANDLE if the key identifier does not refer to a
+ * - @ref PSA_ERROR_NOT_PERMITTED if the key does not allow decryption usage.
+ * - @ref PSA_ERROR_INVALID_HANDLE if the key identifier does not refer to a
  *   valid key.
- * - PSA_ERROR_BAD_STATE if the crypto subsystem is not initialized.
- * - PSA_ERROR_CORRUPTION_DETECTED if an internal integrity check fails.
+ * - @ref PSA_ERROR_BAD_STATE if the crypto subsystem is not initialized.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if an internal integrity check fails.
  */
 psa_status_t psa_cipher_decrypt(psa_key_id_t key, psa_algorithm_t alg,
                                 const uint8_t *input, size_t input_length,
@@ -194,18 +194,18 @@ psa_status_t psa_cipher_decrypt(psa_key_id_t key, psa_algorithm_t alg,
  *                  algorithms: PSA_ALG_CBC_NO_PADDING, PSA_ALG_CTR,
  *                  PSA_ALG_CFB, or PSA_ALG_OFB.
  *
- * @return
- * - PSA_SUCCESS if the operation is successfully set up.
- * - PSA_ERROR_BAD_STATE if the operation pointer is NULL or the operation
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the operation is successfully set up.
+ * - @ref PSA_ERROR_BAD_STATE if the operation pointer is NULL or the operation
  *   has already been set up (alg or iv_set fields are non-zero).
- * - PSA_ERROR_INVALID_ARGUMENT if the key identifier is zero or the
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if the key identifier is zero or the
  *   algorithm is not a cipher algorithm.
- * - PSA_ERROR_NOT_SUPPORTED if the algorithm is not one of the four
+ * - @ref PSA_ERROR_NOT_SUPPORTED if the algorithm is not one of the four
  *   supported cipher modes.
- * - PSA_ERROR_NOT_PERMITTED if the key does not allow encryption usage.
- * - PSA_ERROR_INVALID_HANDLE if the key identifier does not refer to a
+ * - @ref PSA_ERROR_NOT_PERMITTED if the key does not allow encryption usage.
+ * - @ref PSA_ERROR_INVALID_HANDLE if the key identifier does not refer to a
  *   valid key.
- * - PSA_ERROR_CORRUPTION_DETECTED if an internal integrity check fails.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if an internal integrity check fails.
  */
 psa_status_t psa_cipher_encrypt_setup(psa_cipher_operation_t *operation,
                                       psa_key_id_t key,
@@ -237,18 +237,18 @@ psa_status_t psa_cipher_encrypt_setup(psa_cipher_operation_t *operation,
  *                  algorithms: PSA_ALG_CBC_NO_PADDING, PSA_ALG_CTR,
  *                  PSA_ALG_CFB, or PSA_ALG_OFB.
  *
- * @return
- * - PSA_SUCCESS if the operation is successfully set up.
- * - PSA_ERROR_BAD_STATE if the operation pointer is NULL or the operation
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the operation is successfully set up.
+ * - @ref PSA_ERROR_BAD_STATE if the operation pointer is NULL or the operation
  *   has already been set up (alg or iv_set fields are non-zero).
- * - PSA_ERROR_INVALID_ARGUMENT if the key identifier is zero or the
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if the key identifier is zero or the
  *   algorithm is not a cipher algorithm.
- * - PSA_ERROR_NOT_SUPPORTED if the algorithm is not one of the four
+ * - @ref PSA_ERROR_NOT_SUPPORTED if the algorithm is not one of the four
  *   supported cipher modes.
- * - PSA_ERROR_NOT_PERMITTED if the key does not allow decryption usage.
- * - PSA_ERROR_INVALID_HANDLE if the key identifier does not refer to a
+ * - @ref PSA_ERROR_NOT_PERMITTED if the key does not allow decryption usage.
+ * - @ref PSA_ERROR_INVALID_HANDLE if the key identifier does not refer to a
  *   valid key.
- * - PSA_ERROR_CORRUPTION_DETECTED if an internal integrity check fails.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if an internal integrity check fails.
  */
 psa_status_t psa_cipher_decrypt_setup(psa_cipher_operation_t *operation,
                                       psa_key_id_t key,
@@ -272,11 +272,11 @@ psa_status_t psa_cipher_decrypt_setup(psa_cipher_operation_t *operation,
  * @param iv_length   Length of the IV in bytes. Must be exactly
  *                    PSA_MG_AES_IV_SIZE (16 bytes).
  *
- * @return
- * - PSA_SUCCESS if the IV is successfully set.
- * - PSA_ERROR_BAD_STATE if the operation pointer is NULL, the operation
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the IV is successfully set.
+ * - @ref PSA_ERROR_BAD_STATE if the operation pointer is NULL, the operation
  *   has not been set up (alg field is zero), or the IV has already been set.
- * - PSA_ERROR_INVALID_ARGUMENT if the IV pointer is NULL or the IV length
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if the IV pointer is NULL or the IV length
  *   does not equal PSA_MG_AES_IV_SIZE.
  */
 psa_status_t psa_cipher_set_iv(psa_cipher_operation_t *operation,
@@ -313,16 +313,16 @@ psa_status_t psa_cipher_set_iv(psa_cipher_operation_t *operation,
  *                       the output buffer. Always equal to input_length.
  *                       Must not be NULL.
  *
- * @return
- * - PSA_SUCCESS if the input data is successfully processed.
- * - PSA_ERROR_BAD_STATE if the operation pointer is NULL, the IV has not
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the input data is successfully processed.
+ * - @ref PSA_ERROR_BAD_STATE if the operation pointer is NULL, the IV has not
  *   been set, or the algorithm field is zero.
- * - PSA_ERROR_INVALID_ARGUMENT if any pointer is NULL, the input length
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if any pointer is NULL, the input length
  *   is zero, or the input length is not a multiple of
  *   PSA_MG_AES_BLOCK_LENGTH.
- * - PSA_ERROR_BUFFER_TOO_SMALL if output_size is smaller than
+ * - @ref PSA_ERROR_BUFFER_TOO_SMALL if output_size is smaller than
  *   input_length bytes.
- * - PSA_ERROR_CORRUPTION_DETECTED if the underlying AES operation fails.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if the underlying AES operation fails.
  */
 psa_status_t psa_cipher_update(psa_cipher_operation_t *operation,
                                const uint8_t *input, size_t input_length,
@@ -352,12 +352,12 @@ psa_status_t psa_cipher_update(psa_cipher_operation_t *operation,
  * @param output_length  On success, always set to 0 since no additional
  *                       output is produced. Must not be NULL.
  *
- * @return
- * - PSA_SUCCESS if the cipher operation is finalized successfully.
- * - PSA_ERROR_BAD_STATE if the operation pointer is NULL, the IV has not
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the cipher operation is finalized successfully.
+ * - @ref PSA_ERROR_BAD_STATE if the operation pointer is NULL, the IV has not
  *   been set, the algorithm field is zero, or there is remaining unprocessed
  *   data (unprocessed_len != 0).
- * - PSA_ERROR_INVALID_ARGUMENT if the output_length pointer is NULL.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if the output_length pointer is NULL.
  */
 psa_status_t psa_cipher_finish(psa_cipher_operation_t *operation,
                                uint8_t *output, size_t output_size,
@@ -377,9 +377,9 @@ psa_status_t psa_cipher_finish(psa_cipher_operation_t *operation,
  * @param operation  Pointer to the cipher operation context to abort.
  *                   Must not be NULL.
  *
- * @return
- * - PSA_SUCCESS if the operation was successfully aborted and cleaned up.
- * - PSA_ERROR_BAD_STATE if the operation pointer is NULL.
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the operation was successfully aborted and cleaned up.
+ * - @ref PSA_ERROR_BAD_STATE if the operation pointer is NULL.
  */
 psa_status_t psa_cipher_abort(psa_cipher_operation_t *operation);
 
@@ -423,18 +423,18 @@ psa_status_t psa_cipher_abort(psa_cipher_operation_t *operation);
  * @param cipher_operation Selects the direction of the operation. Must be
  *                         MG_PSA_AES_ENCRYPT or MG_PSA_AES_DECRYPT.
  *
- * @return
- * - PSA_SUCCESS if the operation completes successfully.
- * - PSA_ERROR_INVALID_ARGUMENT if input_length is zero, not a multiple of
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the operation completes successfully.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if input_length is zero, not a multiple of
  *   PSA_MG_AES_BLOCK_LENGTH, or cipher_operation is neither
  *   MG_PSA_AES_ENCRYPT nor MG_PSA_AES_DECRYPT.
- * - PSA_ERROR_NOT_SUPPORTED if the algorithm is not one of the four
+ * - @ref PSA_ERROR_NOT_SUPPORTED if the algorithm is not one of the four
  *   supported cipher modes.
- * - PSA_ERROR_NOT_PERMITTED if the key does not allow the requested usage.
- * - PSA_ERROR_INVALID_HANDLE if the key identifier does not refer to a
+ * - @ref PSA_ERROR_NOT_PERMITTED if the key does not allow the requested usage.
+ * - @ref PSA_ERROR_INVALID_HANDLE if the key identifier does not refer to a
  *   valid key.
- * - PSA_ERROR_BAD_STATE if the internal operation state is invalid.
- * - PSA_ERROR_CORRUPTION_DETECTED if an internal integrity error is detected.
+ * - @ref PSA_ERROR_BAD_STATE if the internal operation state is invalid.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if an internal integrity error is detected.
  */
 psa_status_t mg_psa_cipher_multirun(psa_key_id_t key,
                                     psa_algorithm_t alg,
@@ -481,14 +481,14 @@ psa_status_t mg_psa_cipher_multirun(psa_key_id_t key,
  *                     least PSA_MG_SHA256_OUTPUT_LEN.
  * @param hash_length  On success, number of bytes written to the hash buffer.
  *
- * @return
- * - PSA_SUCCESS if the hash computation is successful.
- * - PSA_ERROR_INVALID_ARGUMENT if input, hash, or hash_length is NULL, or
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the hash computation is successful.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if input, hash, or hash_length is NULL, or
  *   the algorithm is not a valid hash algorithm.
- * - PSA_ERROR_NOT_SUPPORTED if the requested hash algorithm is not supported.
- * - PSA_ERROR_BUFFER_TOO_SMALL if hash_size is less than
+ * - @ref PSA_ERROR_NOT_SUPPORTED if the requested hash algorithm is not supported.
+ * - @ref PSA_ERROR_BUFFER_TOO_SMALL if hash_size is less than
  *   PSA_MG_SHA256_OUTPUT_LEN.
- * - PSA_ERROR_CORRUPTION_DETECTED if the hash computation fails internally.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if the hash computation fails internally.
  */
 psa_status_t psa_hash_compute(psa_algorithm_t alg, const uint8_t *input,
                               size_t input_length, uint8_t *hash,
@@ -510,15 +510,15 @@ psa_status_t psa_hash_compute(psa_algorithm_t alg, const uint8_t *input,
  * @param hash_length  Size of the reference hash in bytes. Must be equal to
  *                     PSA_MG_SHA256_OUTPUT_LEN.
  *
- * @return
- * - PSA_SUCCESS if the computed hash matches the reference hash.
- * - PSA_ERROR_INVALID_ARGUMENT if input or hash is NULL, the algorithm is
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the computed hash matches the reference hash.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if input or hash is NULL, the algorithm is
  *   not a valid hash algorithm, or hash_length does not equal
  *   PSA_MG_SHA256_OUTPUT_LEN.
- * - PSA_ERROR_NOT_SUPPORTED if the requested hash algorithm is not supported.
- * - PSA_ERROR_INVALID_SIGNATURE if the computed hash does not match the
+ * - @ref PSA_ERROR_NOT_SUPPORTED if the requested hash algorithm is not supported.
+ * - @ref PSA_ERROR_INVALID_SIGNATURE if the computed hash does not match the
  *   provided reference hash.
- * - PSA_ERROR_CORRUPTION_DETECTED if an internal failure occurs during
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if an internal failure occurs during
  *   hash computation or if the computed hash length is unexpected.
  */
 psa_status_t psa_hash_compare(psa_algorithm_t alg, const uint8_t *input,
@@ -540,12 +540,12 @@ psa_status_t psa_hash_compare(psa_algorithm_t alg, const uint8_t *input,
  *                  initialized state (PSA_HASH_OPERATION_INIT).
  * @param alg       Hash algorithm to use for the operation.
  *
- * @return
- * - PSA_SUCCESS if the hash operation context is successfully initialized.
- * - PSA_ERROR_BAD_STATE if the operation pointer is NULL or the operation
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the hash operation context is successfully initialized.
+ * - @ref PSA_ERROR_BAD_STATE if the operation pointer is NULL or the operation
  *   has already been set up.
- * - PSA_ERROR_INVALID_ARGUMENT if the algorithm is not a valid hash algorithm.
- * - PSA_ERROR_NOT_SUPPORTED if the algorithm is a valid hash algorithm but
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if the algorithm is not a valid hash algorithm.
+ * - @ref PSA_ERROR_NOT_SUPPORTED if the algorithm is a valid hash algorithm but
  *   is not supported by this implementation.
  */
 psa_status_t psa_hash_setup(psa_hash_operation_t *operation,
@@ -576,12 +576,12 @@ psa_status_t psa_hash_setup(psa_hash_operation_t *operation,
  * @param input_length Length of the input data in bytes. A value of 0 is
  *                     permitted and correctly handles the empty message case.
  *
- * @return
- * - PSA_SUCCESS if the input data is successfully processed.
- * - PSA_ERROR_BAD_STATE if the operation pointer is NULL or the operation
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the input data is successfully processed.
+ * - @ref PSA_ERROR_BAD_STATE if the operation pointer is NULL or the operation
  *   has not been properly initialized via psa_hash_setup().
- * - PSA_ERROR_INVALID_ARGUMENT if the input pointer is NULL.
- * - PSA_ERROR_CORRUPTION_DETECTED if an internal processing error occurs
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if the input pointer is NULL.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if an internal processing error occurs
  *   during hashing.
  */
 psa_status_t psa_hash_update(psa_hash_operation_t *operation,
@@ -605,14 +605,14 @@ psa_status_t psa_hash_update(psa_hash_operation_t *operation,
  * @param hash_length On success, set to the number of bytes written to the
  *                    hash buffer. This will equal PSA_MG_SHA256_OUTPUT_LEN.
  *
- * @return
- * - PSA_SUCCESS on successful completion of the hash operation.
- * - PSA_ERROR_BAD_STATE if the operation pointer is NULL or the operation
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS on successful completion of the hash operation.
+ * - @ref PSA_ERROR_BAD_STATE if the operation pointer is NULL or the operation
  *   has not been properly initialized.
- * - PSA_ERROR_INVALID_ARGUMENT if hash or hash_length is NULL.
- * - PSA_ERROR_BUFFER_TOO_SMALL if hash_size is less than
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if hash or hash_length is NULL.
+ * - @ref PSA_ERROR_BUFFER_TOO_SMALL if hash_size is less than
  *   PSA_MG_SHA256_OUTPUT_LEN.
- * - PSA_ERROR_CORRUPTION_DETECTED if an internal error occurs during hash
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if an internal error occurs during hash
  *   finalization or if the output length is unexpected.
  */
 psa_status_t psa_hash_finish(psa_hash_operation_t *operation, uint8_t *hash,
@@ -629,10 +629,10 @@ psa_status_t psa_hash_finish(psa_hash_operation_t *operation, uint8_t *hash,
  *
  * @param operation Pointer to the hash operation structure to abort.
  *
- * @return
- * - PSA_SUCCESS if the hash operation is successfully aborted or was already
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the hash operation is successfully aborted or was already
  *   inactive.
- * - PSA_ERROR_BAD_STATE if the operation pointer is NULL.
+ * - @ref PSA_ERROR_BAD_STATE if the operation pointer is NULL.
  */
 psa_status_t psa_hash_abort(psa_hash_operation_t *operation);
 
@@ -658,15 +658,15 @@ psa_status_t psa_hash_abort(psa_hash_operation_t *operation);
  * @param hash_length  On success, set to the number of bytes written to the
  *                     hash buffer. This will equal PSA_MG_SHA256_OUTPUT_LEN.
  *
- * @return
- * - PSA_SUCCESS if the hash computation completes successfully.
- * - PSA_ERROR_BAD_STATE if the internal hash operation cannot be initialized
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the hash computation completes successfully.
+ * - @ref PSA_ERROR_BAD_STATE if the internal hash operation cannot be initialized
  *   or is in an invalid state.
- * - PSA_ERROR_INVALID_ARGUMENT if the algorithm is not a valid hash algorithm.
- * - PSA_ERROR_NOT_SUPPORTED if the requested hash algorithm is not supported.
- * - PSA_ERROR_BUFFER_TOO_SMALL if hash_size is less than
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if the algorithm is not a valid hash algorithm.
+ * - @ref PSA_ERROR_NOT_SUPPORTED if the requested hash algorithm is not supported.
+ * - @ref PSA_ERROR_BUFFER_TOO_SMALL if hash_size is less than
  *   PSA_MG_SHA256_OUTPUT_LEN.
- * - PSA_ERROR_CORRUPTION_DETECTED if an internal error occurs during hash
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if an internal error occurs during hash
  *   processing.
  */
 psa_status_t mg_psa_hash_compute_multirun(psa_algorithm_t alg,
@@ -721,14 +721,14 @@ psa_status_t mg_psa_hash_compute_multirun(psa_algorithm_t alg,
  * @param signature_length  Pointer to variable that will receive the actual
  *                          signature length.
  *
- * @return
- * - PSA_SUCCESS on successful signature generation.
- * - PSA_ERROR_INVALID_ARGUMENT if input arguments are invalid or the
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS on successful signature generation.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if input arguments are invalid or the
  *   algorithm is unsupported.
- * - PSA_ERROR_NOT_PERMITTED if the key does not allow signing.
- * - PSA_ERROR_BUFFER_TOO_SMALL if signature_size is insufficient.
- * - PSA_ERROR_CORRUPTION_DETECTED for internal errors.
- * - PSA_ERROR_INVALID_HANDLE if the key identifier is invalid.
+ * - @ref PSA_ERROR_NOT_PERMITTED if the key does not allow signing.
+ * - @ref PSA_ERROR_BUFFER_TOO_SMALL if signature_size is insufficient.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED for internal errors.
+ * - @ref PSA_ERROR_INVALID_HANDLE if the key identifier is invalid.
  */
 psa_status_t psa_sign_message(psa_key_id_t key, psa_algorithm_t alg,
                               const uint8_t *input, size_t input_length,
@@ -757,14 +757,14 @@ psa_status_t psa_sign_message(psa_key_id_t key, psa_algorithm_t alg,
  *                          salt_length is 0.
  * @param salt_length       Length of the user-provided salt in bytes.
  *
- * @return
- * - PSA_SUCCESS on successful signature generation.
- * - PSA_ERROR_INVALID_ARGUMENT if input arguments are invalid or the
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS on successful signature generation.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if input arguments are invalid or the
  *   algorithm is unsupported.
- * - PSA_ERROR_NOT_PERMITTED if the key does not allow signing.
- * - PSA_ERROR_BUFFER_TOO_SMALL if signature_size is insufficient.
- * - PSA_ERROR_CORRUPTION_DETECTED for internal errors.
- * - PSA_ERROR_INVALID_HANDLE if the key identifier is invalid.
+ * - @ref PSA_ERROR_NOT_PERMITTED if the key does not allow signing.
+ * - @ref PSA_ERROR_BUFFER_TOO_SMALL if signature_size is insufficient.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED for internal errors.
+ * - @ref PSA_ERROR_INVALID_HANDLE if the key identifier is invalid.
  */
 psa_status_t psa_sign_message_with_salt(psa_key_id_t key, psa_algorithm_t alg,
                                         const uint8_t *input,
@@ -792,14 +792,14 @@ psa_status_t psa_sign_message_with_salt(psa_key_id_t key, psa_algorithm_t alg,
  * @param signature         Pointer to the signature to verify.
  * @param signature_length  Length of the signature in bytes.
  *
- * @return
- * - PSA_SUCCESS if the signature is valid.
- * - PSA_ERROR_INVALID_SIGNATURE if the signature does not match.
- * - PSA_ERROR_INVALID_ARGUMENT if input arguments are invalid or the
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the signature is valid.
+ * - @ref PSA_ERROR_INVALID_SIGNATURE if the signature does not match.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if input arguments are invalid or the
  *   algorithm is unsupported.
- * - PSA_ERROR_NOT_PERMITTED if the key does not allow verification.
- * - PSA_ERROR_CORRUPTION_DETECTED for internal errors.
- * - PSA_ERROR_INVALID_HANDLE if the key identifier is invalid.
+ * - @ref PSA_ERROR_NOT_PERMITTED if the key does not allow verification.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED for internal errors.
+ * - @ref PSA_ERROR_INVALID_HANDLE if the key identifier is invalid.
  */
 psa_status_t psa_verify_message(psa_key_id_t key, psa_algorithm_t alg,
                                 const uint8_t *input, size_t input_length,
@@ -826,14 +826,14 @@ psa_status_t psa_verify_message(psa_key_id_t key, psa_algorithm_t alg,
  *                              Must match the salt length used during signing.
  *                              Pass 32 for the default randomly generated salt.
  *
- * @return
- * - PSA_SUCCESS if the signature is valid.
- * - PSA_ERROR_INVALID_SIGNATURE if the signature does not match.
- * - PSA_ERROR_INVALID_ARGUMENT if input arguments are invalid or the
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the signature is valid.
+ * - @ref PSA_ERROR_INVALID_SIGNATURE if the signature does not match.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if input arguments are invalid or the
  *   algorithm is unsupported.
- * - PSA_ERROR_NOT_PERMITTED if the key does not allow verification.
- * - PSA_ERROR_CORRUPTION_DETECTED for internal errors.
- * - PSA_ERROR_INVALID_HANDLE if the key identifier is invalid.
+ * - @ref PSA_ERROR_NOT_PERMITTED if the key does not allow verification.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED for internal errors.
+ * - @ref PSA_ERROR_INVALID_HANDLE if the key identifier is invalid.
  */
 psa_status_t psa_verify_message_with_salt(psa_key_id_t key,
                                           psa_algorithm_t alg,
@@ -864,14 +864,14 @@ psa_status_t psa_verify_message_with_salt(psa_key_id_t key,
  * @param output_length     Pointer to variable that will receive the
  *                          ciphertext length.
  *
- * @return
- * - PSA_SUCCESS on successful encryption.
- * - PSA_ERROR_INVALID_ARGUMENT if input arguments are invalid or the
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS on successful encryption.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if input arguments are invalid or the
  *   algorithm is unsupported.
- * - PSA_ERROR_NOT_PERMITTED if the key does not allow encryption.
- * - PSA_ERROR_BUFFER_TOO_SMALL if output_size is less than MG_RSA_256_BYTES.
- * - PSA_ERROR_CORRUPTION_DETECTED for internal errors.
- * - PSA_ERROR_INVALID_HANDLE if the key identifier is invalid.
+ * - @ref PSA_ERROR_NOT_PERMITTED if the key does not allow encryption.
+ * - @ref PSA_ERROR_BUFFER_TOO_SMALL if output_size is less than MG_RSA_256_BYTES.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED for internal errors.
+ * - @ref PSA_ERROR_INVALID_HANDLE if the key identifier is invalid.
  */
 psa_status_t psa_asymmetric_encrypt(psa_key_id_t key, psa_algorithm_t alg,
                                     const uint8_t *input, size_t input_length,
@@ -901,14 +901,14 @@ psa_status_t psa_asymmetric_encrypt(psa_key_id_t key, psa_algorithm_t alg,
  * @param output_length     Pointer to variable that will receive the
  *                          plaintext length.
  *
- * @return
- * - PSA_SUCCESS on successful decryption.
- * - PSA_ERROR_INVALID_ARGUMENT if input arguments are invalid, the algorithm
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS on successful decryption.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if input arguments are invalid, the algorithm
  *   is unsupported, or input_length is not MG_RSA_256_BYTES.
- * - PSA_ERROR_NOT_PERMITTED if the key does not allow decryption.
- * - PSA_ERROR_BUFFER_TOO_SMALL if output_size is insufficient.
- * - PSA_ERROR_CORRUPTION_DETECTED for internal errors.
- * - PSA_ERROR_INVALID_HANDLE if the key identifier is invalid.
+ * - @ref PSA_ERROR_NOT_PERMITTED if the key does not allow decryption.
+ * - @ref PSA_ERROR_BUFFER_TOO_SMALL if output_size is insufficient.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED for internal errors.
+ * - @ref PSA_ERROR_INVALID_HANDLE if the key identifier is invalid.
  */
 psa_status_t psa_asymmetric_decrypt(psa_key_id_t key, psa_algorithm_t alg,
                                     const uint8_t *input, size_t input_length,
@@ -946,12 +946,12 @@ psa_status_t psa_asymmetric_decrypt(psa_key_id_t key, psa_algorithm_t alg,
  *                      is not defined, must be a multiple of 4 and must not
  *                      exceed 256 bytes.
  *
- * @return
- * - PSA_SUCCESS if random data is generated successfully.
- * - PSA_ERROR_INVALID_ARGUMENT if output is NULL, output_size is zero, or
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if random data is generated successfully.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if output is NULL, output_size is zero, or
  *   when PSA_TRNG_AVAILABLE is not defined, output_size exceeds 256 bytes
  *   or is not a multiple of 4 bytes.
- * - PSA_ERROR_HARDWARE_FAILURE if the TRNG hardware times out while
+ * - @ref PSA_ERROR_HARDWARE_FAILURE if the TRNG hardware times out while
  *   generating random data.
  *
  * @note When PSA_TRNG_AVAILABLE is not defined, the software fallback is
@@ -968,7 +968,7 @@ psa_status_t psa_generate_random(uint8_t *output, size_t output_size);
  *          seeds the entropy source, initializes cryptographic driver wrappers,
  *          and prepares the key slot management subsystem. Calling this function
  *          multiple times is explicitly permitted — if the subsystem is already
- *          fully initialized, the function returns PSA_SUCCESS immediately
+ *          fully initialized, the function returns  immediately
  *          without reinitializing any resources.
  *
  *          This function must be called before invoking any other PSA Crypto
@@ -979,12 +979,12 @@ psa_status_t psa_generate_random(uint8_t *output, size_t output_size);
  *          On any initialization failure, all partially initialized subsystems
  *          are cleaned up automatically before the error is returned.
  *
- * @return
- * - PSA_SUCCESS if the crypto subsystem is successfully initialized or was
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the crypto subsystem is successfully initialized or was
  *   already fully initialized.
- * - PSA_ERROR_INSUFFICIENT_MEMORY if key slot memory allocation fails
+ * - @ref PSA_ERROR_INSUFFICIENT_MEMORY if key slot memory allocation fails
  *   (dynamic key store only).
- * - PSA_ERROR_GENERIC_ERROR if hardware memory protection (PMP) setup fails
+ * - @ref PSA_ERROR_GENERIC_ERROR if hardware memory protection (PMP) setup fails
  *   (dynamic key store only).
  */
 psa_status_t psa_crypto_init(void);
@@ -1167,16 +1167,16 @@ psa_key_id_t psa_get_key_id(const psa_key_attributes_t *attributes);
  * @param key          Pointer to a variable where the assigned key identifier
  *                     will be written upon successful import. Must not be NULL.
  *
- * @return
- * - PSA_SUCCESS if the key is successfully imported and stored.
- * - PSA_ERROR_INVALID_ARGUMENT if any input pointer is NULL, the key length
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the key is successfully imported and stored.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if any input pointer is NULL, the key length
  *   is zero, or the provided key bits do not match the expected values.
- * - PSA_ERROR_NOT_SUPPORTED if the key size exceeds PSA_MAX_KEY_BITS or the
+ * - @ref PSA_ERROR_NOT_SUPPORTED if the key size exceeds PSA_MAX_KEY_BITS or the
  *   key type is not supported.
- * - PSA_ERROR_BAD_STATE if the PSA Crypto subsystem is not initialized.
- * - PSA_ERROR_BUFFER_TOO_SMALL if the allocated key buffer is too small for
+ * - @ref PSA_ERROR_BAD_STATE if the PSA Crypto subsystem is not initialized.
+ * - @ref PSA_ERROR_BUFFER_TOO_SMALL if the allocated key buffer is too small for
  *   the provided key material.
- * - PSA_ERROR_CORRUPTION_DETECTED if an internal integrity failure occurs
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if an internal integrity failure occurs
  *   during key import.
  */
 psa_status_t psa_import_key(const psa_key_attributes_t *attributes,
@@ -1206,17 +1206,17 @@ psa_status_t psa_import_key(const psa_key_attributes_t *attributes,
  * @param data_length On success, set to the number of bytes written to the
  *                    output buffer. Must not be NULL.
  *
- * @return
- * - PSA_SUCCESS on successful export.
- * - PSA_ERROR_INVALID_ARGUMENT if the key type is neither a key pair
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS on successful export.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if the key type is neither a key pair
  *   nor a public key type, or if any input pointer is NULL, or if
  *   data_size is zero.
- * - PSA_ERROR_BUFFER_TOO_SMALL if the output buffer is too small to
+ * - @ref PSA_ERROR_BUFFER_TOO_SMALL if the output buffer is too small to
  *   hold the DER-encoded key.
- * - PSA_ERROR_RSA_BAD_INPUT_DATA if a private exponent export is
+ * - @ref PSA_ERROR_RSA_BAD_INPUT_DATA if a private exponent export is
  *   attempted on a context that holds only a public key (no private
  *   parameters).
- * - PSA_ERROR_CORRUPTION_DETECTED if an internal integrity check fails.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if an internal integrity check fails.
  *
  * @note On any failure, the output buffer is zeroed before returning.
  */
@@ -1235,9 +1235,9 @@ psa_status_t mg_psa_rsa_export_key(psa_key_type_t type, mg_rsa_context *rsa,
  *
  * @param key Identifier of the key to destroy.
  *
- * @return
- * - PSA_SUCCESS if the key was successfully destroyed or did not exist.
- * - PSA_ERROR_CORRUPTION_DETECTED if an internal integrity failure is
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the key was successfully destroyed or did not exist.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if an internal integrity failure is
  *   detected during key slot cleanup.
  */
 psa_status_t psa_destroy_key(psa_key_id_t key);

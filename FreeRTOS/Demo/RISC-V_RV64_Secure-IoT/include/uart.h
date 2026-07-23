@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file uart.h
  * @brief Contains the declarations for the UART interface.
  * @details This header file provides the function prototypes, macros,
@@ -44,11 +44,7 @@
 #define BSP_INCLUDE_UART_H_
 
 #include <stdint.h>
-#include "secure_iot.h"
-#include "plic.h"
-#include "errors.h"
-#include "pinmux.h"
-#include "utils.h"
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -108,6 +104,22 @@ enum UART_CharSize {
     CHAR_SIZE_6 = 2,   /**< 6-bit character size */
     CHAR_SIZE_5 = 3    /**< 5-bit character size */
 };
+
+/**
+ * @enum UART_IRQn_Type
+ * 
+ * @brief UART interrupt ID
+ * 
+ * This enumeration defines the available UART interrupt numbers supported by the platform.
+*/
+typedef enum {
+/* =========================================  Secure_IoT Specific Interrupt Numbers  ========================================= */
+  UART0_IRQn                =  53,              /*!< 53 UART0                                                                  */
+  UART1_IRQn                =  54,              /*!< 54 UART1                                                                  */
+  UART2_IRQn                =  55,              /*!< 55 UART2                                                                  */
+  UART3_IRQn                =  56,              /*!< 56 UART3                                                                  */
+  UART4_IRQn                =  57,              /*!< 57 UART4                                                                  */
+} UART_IRQn_Type;
 
 /**
  * @defgroup UART_Interrupt_Enable UART Interrupt Enable Bits

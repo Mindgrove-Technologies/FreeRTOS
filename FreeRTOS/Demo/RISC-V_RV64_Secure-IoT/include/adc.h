@@ -1,6 +1,7 @@
 /**
  * SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (c) 2023-2026 Mindgrove Technologies. All rights reserved.
+ * 
  * @license Licensed under the Apache License, Version 2.0 (see LICENSE).
  * @licenseblock
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file adc.h
  * @brief Analog-to-Digital Converter (ADC) peripheral driver header
  * @details This header file declares the public interface for the ADC driver.
@@ -35,7 +36,6 @@
  * 27-01-2026 | 1.1     | Akash R B             | Cleaned up and finalized APIs.
  * -----------------------------------------------------------------------------
  */
-
 #ifndef BSP_INCLUDE_ADC_H_
 #define BSP_INCLUDE_ADC_H_
 
@@ -44,7 +44,7 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
-#include "utils.h"
+#include <stdint.h>
 
 /**
  * @enum ADC_CHANNEL_ENUM ADC Input Channel Selection
@@ -79,6 +79,18 @@ typedef enum {
 } adc_resolution_t;
 
 /** @} */
+
+/**
+ * @enum ADC_IRQn_Type
+ * 
+ * @brief ADC interrupt ID
+ * 
+ * This enumeration defines the available ADC interrupt numbers supported by the platform.
+*/
+typedef enum {
+/* =========================================  Secure_IoT Specific Interrupt Numbers  ========================================= */
+  ADC_INTR_IRQn             =  66,              /*!< 66 ADC_INTR                                                               */
+} ADC_IRQn_Type;
 
 /**
  * @defgroup ADC_Operation_Mode ADC Operation Modes
@@ -235,10 +247,11 @@ typedef struct {
  * 
  * @param cfg Pointer to a constant ADC_Config_t structure.
  * 
- * @return SUCCESS (0) on successful configuration, or an error code:
- * - EFAULT: Null pointer provided.
- * - ECHRNG: Channel selection out of valid range.
- * - EINVAL: Invalid resolution or mode parameters.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS (0) on successful configuration
+ * - @ref EFAULT Null pointer provided.
+ * - @ref ECHRNG Channel selection out of valid range.
+ * - @ref EINVAL Invalid resolution or mode parameters.
  */
 uint16_t ADC_CCR(const ADC_Config_t *cfg);
 
@@ -254,9 +267,10 @@ uint16_t ADC_CCR(const ADC_Config_t *cfg);
  * @param output Pointer to a variable where the converted ADC digital value 
  *               will be stored.
  * 
- * @return SUCCESS (0) on successful completion, or an error code:
- * - EFAULT: Null pointer provided.
- * - ETIMEDOUT: Conversion did not complete within timeout.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS (0) on successful completion
+ * - @ref EFAULT Null pointer provided.
+ * - @ref ETIMEDOUT Conversion did not complete within timeout.
  * 
  * @note This is a blocking call. Ensure the ADC has been triggered via 
  * ADC_CCR() before calling this function.
@@ -272,8 +286,9 @@ uint16_t ADC_Read_Output(const ADC_Config_t *cfg , uint16_t * output);
  *          hardware abstraction. To restart, the peripheral must be
  *          reconfigured via ADC_Init().
  *
- * @return SUCCESS (0) on successful completion, or an error code:
- *         - EFAULT: Null pointer or invalid register access.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS (0) on successful completion
+ * - @ref EFAULT Null pointer or invalid register access.
  *
  * @note Any conversion currently in progress will be terminated abruptly.
  *       Ensure all required data has been read via ADC_Read_Output()

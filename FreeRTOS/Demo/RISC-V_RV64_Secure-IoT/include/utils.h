@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  *
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file utils.h
  * @brief  Contains the APIs for basic utility functions and millis.
  * @details Provides the APIs for reading and writing data as well as for calculating millis.
@@ -52,9 +52,8 @@ extern "C" {
 
 #include <stdint.h>
 #include <stddef.h>
-#include "log.h"
-#include "clint.h"
-#include "errors.h"
+
+extern volatile uint64_t CLOCK_FREQUENCY_BASE;
 
 /**
  * @defgroup DIV_HELPERS Integer Division Helpers
@@ -85,20 +84,31 @@ extern "C" {
 
 /** @} */ /* end of DIV_HELPERS */
 
-/**
- * @defgroup GUARD_MACROS Safety Guard Macros
- * @brief Runtime checks to ensure pointer validity and safe execution.
- * @{
- */
+// STRIP_FROM_APPS_START
+#ifdef SECURE_SDK
+    extern void Enter_U_Mode(void);
+    #define DROP_PRIVILEGE Enter_U_Mode()
+#else
+    #define DROP_PRIVILEGE ((void)0)
+#endif
+
+
 /** @brief Checks if a pointer is NULL and returns EFAULT if true. */
 #define CHECK_NULL(ptr)                          \
 do {                                             \
     if (!(ptr)) {                                \
         log_emit(ERROR, #ptr " is NULL\n\r");      \
+        DROP_PRIVILEGE;                              \
         return EFAULT;                           \
     }                                            \
 } while (0)
+// STRIP_FROM_APPS_END
 
+/**
+ * @defgroup GUARD_MACROS Safety Guard Macros
+ * @brief Runtime checks to ensure pointer validity and safe execution.
+ * @{
+ */
 /**
  * @brief Checks whether an address is aligned to a given size.
  *
@@ -335,10 +345,10 @@ void Exit(int status);
  *
  * @param timeout Maximum number of CPU cycles to wait before timing out.
  *                This is compared against (current_mcycle - start_mcycle).
- *
- * @return
- *         SUCCESS     : Condition met within timeout
- *         ETIMEDOUT   : Timeout occurred before condition was met
+ * 
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS     : Condition met within timeout
+ * - @ref ETIMEDOUT   : Timeout occurred before condition was met
  *
  * @note This function uses a blocking polling loop and does not yield CPU
  *       control. Use carefully in time-critical or RTOS-based environments.

@@ -18,7 +18,7 @@
  * limitations under the License.
  * @endlicenseblock
  *
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file crypto_helpers.h
  * @brief Helper utilities for cryptographic operations.
  * @details Provides utility functions for memory validation, random number
@@ -80,8 +80,9 @@ typedef enum {
  *
  * @param ptr Pointer to allocated memory.
  *
- * @return `SUCCESS` if the pointer is valid (non-NULL).
- *         `EFAULT` if the pointer is NULL.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if the pointer is valid (non-NULL).
+ * - @ref EFAULT if the pointer is NULL.
  */
 uint16_t Check_Calloc(const uint8_t *ptr);
 
@@ -207,8 +208,9 @@ void Print_uchar64(const char *name, const uint8_t *data,
  * @param size Input: length of hex string.
  *             Output: number of bytes written.
  *
- * @return `SUCCESS` on successful conversion.
- *         `EINVAL` if input length is invalid or contains non-hex characters.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS on successful conversion.
+ * - @ref EINVAL if input length is invalid or contains non-hex characters.
  */
 uint16_t Hex_String_To_Byte_Array(const char *hex_str, uint8_t *byte_array,
                                   size_t *size);
@@ -233,10 +235,11 @@ uint16_t Hex_String_To_Byte_Array(const char *hex_str, uint8_t *byte_array,
  * @param timeout Maximum mcycle count to wait.
  * @param polarity CRYPTO_WAIT_ACTIVE_HIGH or CRYPTO_WAIT_ACTIVE_LOW.
  *
- * @return `SUCCESS` if the bit transitioned as expected within the
- *          timeout window.
- *         `ETIMEDOUT` if the bit did not transition within the timeout
- *          window.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if the bit transitioned as expected within the
+ *        timeout window.
+ * - @ref ETIMEDOUT if the bit did not transition within the timeout
+ *        window.
  */
 uint16_t Crypto_Wait_For_Timeout(const volatile uint8_t *reg,
                                  uint8_t bit,

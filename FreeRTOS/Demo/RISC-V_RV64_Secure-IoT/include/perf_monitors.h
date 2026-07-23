@@ -1,18 +1,35 @@
 /**
- * Project                           : Secure IoT SoC
- * Name of the file                  : perf_monitors.c
- * Brief Description of file         : Driver to Standard perf_monitor driver
- * Name of Author                    : Shri Mahaalakshmi S J
- * Email ID                          : mahaalakshmi@mindgrovetech.in
+ * SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (c) 2021-2026 Mindgrove Technologies. All rights reserved.
  * 
+ * @license Licensed under the Apache License, Version 2.0 (see LICENSE).
+ * @licenseblock
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * @endlicenseblock
+ * 
+ * Project                   : MGS2401 SoC
  * @file perf_monitors.h
- * @author Shri Mahaalakshmi S J (mahaalakshmi@mindgrovetech.in)
  * @brief This is a Baremetal perf_monitor Driver's header file for Mindgrove Silicon's performance monitor.
- * @version 0.2
- * @date 2024-12-04
+ * @version 1.0
+ * @authors Shri Mahaalakshmi S J (mahaalakshmi@mindgrovetech.in)
+ * @date 04-12-2024
  * 
- * @copyright Copyright (c) Mindgrove Technologies Pvt. Ltd 2024. All rights reserved.
- * 
+ * @section History
+ * -----------------------------------------------------------------------------
+ * Date       | Version | Modified by           | Description                   
+ * -----------|---------|-----------------------|-------------------------------
+ * 04-12-2024 | 1.0     | Shri Mahaalakshmi S J | Initial release
+ * -----------------------------------------------------------------------------
  */
 
 #ifndef PERF_MONITOR_H
@@ -21,9 +38,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "encoding.h"
-#include "secure_iot.h"
-#include "io.h"
-#include "log.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -78,8 +92,6 @@ struct Arith_perf_t
 };
 
 /** 
- * @fn void PERF_Mcycle_Init()
- * 
  * @brief The function 'PERF_Mcycle_Init' Clears the mcycle register
  * 
  * @return Void
@@ -87,22 +99,13 @@ struct Arith_perf_t
 void PERF_Mcycle_Init();
 
 /**
- * @fn uint64_t get_mcycle_start()
+ * @fn uint64_t PERF_Get_Mcycle()
  * 
- * @brief The function 'get_mcycle_start' starts the mcycle value 
+ * @brief Reads and returns the current machine cycle counter value.
  * 
- * @return returns the mcycle count
+ * @return Current value of the mcycle register.
  */
-uint64_t get_mcycle_start();
-
-/** 
- * @fn uint64_t get_mcycle_stop()
- * 
- * @brief The function 'get_mcycle_stop' Stops the mcycle value
- * 
- * @return returns the mcycle count
- */
-uint64_t get_mcycle_stop();
+uint64_t PERF_Get_Mcycle();
 
 /** 
  * @fn uint64_t millis(int total_cycles)
@@ -114,8 +117,6 @@ uint64_t get_mcycle_stop();
 // uint64_t millis(uint64_t total_cycles);
 
 /** 
- * @fn void PERF_Cache_Init()
- * 
  * @brief The function `PERF_Cache_Init` initializes performance monitoring counters and events related to
  * cache accesses.
  * 
@@ -124,8 +125,6 @@ uint64_t get_mcycle_stop();
 void PERF_Cache_Init();
 
 /** 
- * @fn void PERF_Print_Cache(int iterations)
- * 
  * @brief The function `PERF_Print_Cache` prints various performance metrics related to instruction cache
  * (ICache) and data cache (DCache) based on the given number of iterations.
  * 
@@ -137,8 +136,6 @@ void PERF_Cache_Init();
 void PERF_Print_Cache(int iterations);
 
 /** 
- * @fn void PERF_Print_Cache_MissPercentage()
- * 
  * @brief The function calculates and prints the cache miss percentages for instruction cache (ICache) and
  * data cache (DCache) reads and writes.
  * 
@@ -147,8 +144,6 @@ void PERF_Print_Cache(int iterations);
 void PERF_Print_Cache_MissPercentage();
 
 /** 
- * @fn void PERF_Stalls_Init()
- * 
  * @brief The function `PERF_Stalls_Init` initializes performance monitoring counters for raw and execution
  * stalls.
  * 
@@ -157,8 +152,6 @@ void PERF_Print_Cache_MissPercentage();
 void PERF_Stalls_Init();
 
 /** 
- * @fn void PERF_Print_Stalls(int iterations)
- * 
  * @brief The function `PERF_Print_Stalls` prints the number of raw stalls and execution stalls per iteration.
  * 
  * @param iterations The `iterations` parameter is used to calculate the average value of each metric over 
@@ -169,8 +162,6 @@ void PERF_Stalls_Init();
 void PERF_Print_Stalls(int iterations);
 
 /** 
- * @fn void PERF_Branches_Init()
- * 
  * @brief The function `PERF_Branches_Init` initializes performance monitoring counters for branch
  * instructions in a C program.
  * 
@@ -179,8 +170,6 @@ void PERF_Print_Stalls(int iterations);
 void PERF_Branches_Init();
 
 /**
- * @fn void PERF_Print_Branches(int iterations)
- * 
  * @brief The function `PERF_Print_Branches` calculates and prints the number of branch mispredictions, jumps,
  * branches, and the percentage of branch mispredictions based on the given number of iterations.
  * 
@@ -192,8 +181,6 @@ void PERF_Branches_Init();
 void PERF_Print_Branches(int iterations);
 
 /** 
- * @fn void PERF_Arithops_Init()
- * 
  * @brief The function `PERF_Arithops_Init` initializes performance monitoring counters for floating-point
  * operations and multiplication/division events.
  * 
@@ -202,8 +189,6 @@ void PERF_Print_Branches(int iterations);
 void PERF_Arithops_Init();
 
 /** 
- * @fn void PERF_Print_Arithops(int iterations)
- * 
  * @brief The function `PERF_Print_Arithops` prints the average number of floating-point operations and
  * multiplication/division operations per iteration.
  * 
@@ -215,8 +200,6 @@ void PERF_Arithops_Init();
 void PERF_Print_Arithops(int iterations);
 
 /** 
- * @fn void PERF_Set_Event(int counter, int event)
- * 
  * @brief The function `PERF_Set_Event` sets a specific event for a performance counter in a system.
  * 
  * @param counter The `counter` parameter sets the event for the specified counter based on the value 
@@ -229,8 +212,6 @@ void PERF_Print_Arithops(int iterations);
 void PERF_Set_Event(int counter, int event);
 
 /** 
- * @fn void PERF_Disable(int counter)
- * 
  * @brief The function `PERF_Disable` disables a specific performance counter based on the 
  * input parameter `counter`.
  * 
@@ -242,8 +223,6 @@ void PERF_Set_Event(int counter, int event);
 void PERF_Disable(int counter);
 
 /** 
- * @fn void PERF_Disable_All()
- * 
  * @brief The function `PERF_Disable_All` disables all performance monitoring event registers.
  * 
  * @return Void
@@ -251,8 +230,6 @@ void PERF_Disable(int counter);
 void PERF_Disable_All();
 
 /** 
- * @fn void PERF_Clear_All()
- * 
  * @brief The function `PERF_Clear_All` clears all performance monitor counter values.
  * 
  * @return Void

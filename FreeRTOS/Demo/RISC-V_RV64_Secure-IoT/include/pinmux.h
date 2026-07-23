@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  *
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @copyright Copyright (c) 2026 Mindgrove Technologies.
  * All rights reserved.
  * @file pinmux.h
@@ -27,7 +27,6 @@
  * @version 1.1
  * @authors Kapil Shyam.M,Harini Sree.S
  * @date 22-01-2026
- *
  * @section History
  * -----------------------------------------------------------------------------
  * Date       | Version | Modified by           | Description
@@ -57,7 +56,8 @@ extern "C" {
  * 
  * @param none
  * 
- * @return SUCCESS after the Pinmux for GPIO 32-44 is configured.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS after the Pinmux for GPIO 32-44 is configured.
  */
 uint16_t PINMUX_Reset(void);
 
@@ -73,8 +73,9 @@ uint16_t PINMUX_Reset(void);
  * @param enable  If set to true, configures the pin for PWM functionality.
  * If set to false, reverts the pin to GPIO functionality.
  * 
- * @return SUCCESS if the pinmux configuration was applied successfully;
- * otherwise, ENODEV if the channel number is invalid.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if the pinmux configuration was applied successfully
+ * - @ref ENODEV if the channel number is invalid.
  */
 uint16_t PINMUX_PWM(uint8_t num, bool enable);
 
@@ -105,8 +106,9 @@ uint16_t PINMUX_AllPWM(bool enable);
  * @param enable  If set to true, configures the pin for PWM functionality.
  * If set to false, reverts the pin to GPIO functionality.
  *
- * @return SUCCESS if the SPI peripheral is enabled successfully; otherwise,
- * ENODEV if the SPI number is invalid.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if the SPI peripheral is enabled successfully
+ * - @ref ENODEV if the SPI number is invalid.
  */
 uint16_t PINMUX_SPI(uint8_t num, bool enable);
 
@@ -123,8 +125,9 @@ uint16_t PINMUX_SPI(uint8_t num, bool enable);
  * @param enable  If set to true, configures the pin for PWM functionality.
  * If set to false, reverts the pin to GPIO functionality.
  * 
- * @return SUCCESS if the UART peripheral is enabled successfully; otherwise,
- * ENODEV if the UART number is invalid.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if the UART peripheral is enabled successfully
+ * - @ref ENODEV if the UART number is invalid.
  */
 uint16_t PINMUX_UART(uint8_t num, bool enable);
 
@@ -143,8 +146,9 @@ uint16_t PINMUX_UART(uint8_t num, bool enable);
  * @param enable  If set to true, configures the pin for PWM functionality.
  * If set to false, reverts the pin to GPIO functionality.
  *
- * @return SUCCESS if the GPTimer peripheral is enabled successfully;
- * otherwise, ENODEV if the number is invalid.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if the GPTimer peripheral is enabled successfully
+ * - @ref ENODEV if the number is invalid.
  */
 uint16_t PINMUX_GPTimer(uint8_t num, bool enable);
 
@@ -156,7 +160,8 @@ uint16_t PINMUX_GPTimer(uint8_t num, bool enable);
  *
  * @param none
  *
- * @return SUCCESS if the JTAG pin is enabled successfully.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if the JTAG pin is enabled successfully.
  */
 uint16_t PINMUX_EnableJTAG(void);
 
@@ -168,7 +173,8 @@ uint16_t PINMUX_EnableJTAG(void);
  *
  * @param none
  *
- * @return SUCCESS if the JTAG pin is disabled successfully.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if the JTAG pin is disabled successfully.
  */
 uint16_t PINMUX_DisableJTAG(void);
 

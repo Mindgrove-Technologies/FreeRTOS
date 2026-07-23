@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file crypto_config.h
  * @brief Header file for all crypto configs in Mindgrove Silicon Secure-IoT SoC.
  * @details This is the header file for the crypto configs used in  PSA Crypto 

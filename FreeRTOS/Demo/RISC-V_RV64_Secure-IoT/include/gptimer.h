@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  *
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file gptimer.h
  * @brief Contains driver apis for GPTimer Interface
  * @details Provides the API for hardware control of General Purpose Timer (GPTimer)
@@ -45,10 +45,7 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
-#include "secure_iot.h"
-#include "log.h"
-#include "errors.h"
-#include "utils.h"
+#include <stdint.h>
 
 /**
  * @defgroup GPTIMER_MODES GPTimer Operational Modes
@@ -164,6 +161,21 @@ const GPTIMER_Instance_t *GPTIMER_INSTANCE_3(void);
 /** @} */ /* end of GPTIMER_Instance_Macros */
 
 /**
+ * @enum GPTIMER_IRQn_Type
+ * 
+ * @brief GPTIMER interrupt ID
+ * 
+ * This enumeration defines the available GPTIMER interrupt numbers supported by the platform.
+*/
+typedef enum {
+/* =========================================  Secure_IoT Specific Interrupt Numbers  ========================================= */
+  GPTIMER0_IRQn             =  47,              /*!< 47 GPTIMER0                                                               */
+  GPTIMER1_IRQn             =  48,              /*!< 48 GPTIMER1                                                               */
+  GPTIMER2_IRQn             =  49,              /*!< 49 GPTIMER2                                                               */
+  GPTIMER3_IRQn             =  50,              /*!< 50 GPTIMER3                                                               */
+} GPT_IRQn_Type;
+
+/**
  * @brief GPTIMER configuration structure.
  *
  * This structure contains all parameters required to initialize
@@ -259,7 +271,11 @@ typedef struct {
  * contains several properties related to configuring a General Purpose Timer (GPT).It has the following properties:
  * gpt_num, mode, interrupt_en, period, prescaler, dutycycle, cnt_en, capture_val, output_en.
  *
- * @return SUCCESS if the configuration was successful, else ERROR code.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS Configuration applied successfully.
+ * - @ref EFAULT Returned by @ref CHECK_NULL if null pointer is given as input.
+ * - @ref EPERM  Returned if prescaler is less than or equal to zero. 
+ * - @ref EINVAL Returned if invalid inconfiguration value is given such as mode or interrupt_enable
  */
 uint16_t GPT_Init(GPTIMER_Config_t const *gptimer_config);
 

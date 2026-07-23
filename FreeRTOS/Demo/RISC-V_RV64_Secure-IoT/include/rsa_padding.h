@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file rsa_padding.h
  * @brief Contains APIs for RSA padding schemes used in cryptographic operations.
  * @details This header file provides function prototypes  required for 
@@ -59,9 +59,10 @@ extern "C" {
  * @param input Pointer to the input message.
  * @param input_length Length of the input message in bytes.
  *
- * @return `SUCCESS` if encryption succeeds,  
- *         `EFAULT` if any pointer is NULL,  
- *         `EINVAL` if input length exceeds allowable size or output length is invalid.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if encryption succeeds,  
+ * - @ref EFAULT if any pointer is NULL,  
+ * - @ref EINVAL if input length exceeds allowable size or output length is invalid.
  */
 uint16_t RSAES_PKCS1_v1_5_Encrypt(uint8_t *output, size_t output_length,
                                   const uint8_t *input, size_t input_length);
@@ -79,9 +80,10 @@ uint16_t RSAES_PKCS1_v1_5_Encrypt(uint8_t *output, size_t output_length,
  * @param input Pointer to the padded/encrypted input.
  * @param input_length Length of the input buffer in bytes (must be RSA_BLOCK_SIZE).
  *
- * @return `SUCCESS` if decryption succeeds,  
- *         `EFAULT` if any pointer is NULL,  
- *         `EINVAL` if input length or padding format is invalid.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if decryption succeeds,  
+ * - @ref EFAULT if any pointer is NULL,  
+ * - @ref EINVAL if input length or padding format is invalid.
  */
 uint16_t RSAES_PKCS1_v1_5_Decrypt(uint8_t *output, size_t *output_length,
                                   const uint8_t *input, size_t input_length);
@@ -98,9 +100,10 @@ uint16_t RSAES_PKCS1_v1_5_Decrypt(uint8_t *output, size_t *output_length,
  * @param input Pointer to the input message to sign.
  * @param input_length Length of the input message in bytes.
  *
- * @return `SUCCESS` if signing succeeds,  
- *         `EFAULT` if any pointer is NULL,  
- *         `EINVAL` if output length is invalid or hashing fails.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if signing succeeds,  
+ * - @ref EFAULT if any pointer is NULL,  
+ * - @ref EINVAL if output length is invalid or hashing fails.
  */
 uint16_t RSASSA_PKCS1_v1_5_Sign(uint8_t *output, size_t output_length,
                                 const uint8_t *input, size_t input_length);
@@ -118,9 +121,10 @@ uint16_t RSASSA_PKCS1_v1_5_Sign(uint8_t *output, size_t output_length,
  * @param input Pointer to the original message.
  * @param input_length Length of the original message in bytes.
  *
- * @return `SUCCESS` if verification succeeds,  
- *         `EFAULT` if any pointer is NULL,  
- *         `EINVAL` if signature format or hash verification fails.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if verification succeeds,  
+ * - @ref EFAULT if any pointer is NULL,  
+ * - @ref EINVAL if signature format or hash verification fails.
  */
 uint16_t RSASSA_PKCS1_v1_5_Verify(const uint8_t *signature,
                                   size_t signature_length,
@@ -141,9 +145,10 @@ uint16_t RSASSA_PKCS1_v1_5_Verify(const uint8_t *signature,
  * @param label Optional label associated with the message.
  * @param label_length Length of the label in bytes.
  *
- * @return `SUCCESS` if encryption succeeds,  
- *         `EFAULT` if any pointer is NULL,  
- *         `EINVAL` if input length exceeds maximum allowed or output length is invalid.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if encryption succeeds,  
+ * - @ref EFAULT if any pointer is NULL,  
+ * - @ref EINVAL if input length exceeds maximum allowed or output length is invalid.
  */
 uint16_t RSAES_OAEP_Encrypt(uint8_t *output, size_t output_length,
                             const uint8_t *input, size_t input_length,
@@ -163,9 +168,10 @@ uint16_t RSAES_OAEP_Encrypt(uint8_t *output, size_t output_length,
  * @param label Optional label associated with the message.
  * @param label_length Length of the label in bytes.
  *
- * @return `SUCCESS` if decryption succeeds,  
- *         `EFAULT` if any pointer is NULL,  
- *         `EINVAL` if padding format or label hash is invalid.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if decryption succeeds,  
+ * - @ref EFAULT if any pointer is NULL,  
+ * - @ref EINVAL if padding format or label hash is invalid.
  */
 uint16_t RSAES_OAEP_Decrypt(const uint8_t *input, size_t input_length,
                             uint8_t *output, size_t *output_length,
@@ -191,9 +197,10 @@ uint16_t RSAES_OAEP_Decrypt(const uint8_t *input, size_t input_length,
  * @param use_provided_salt  Flag indicating whether to use the provided salt (1)
  *                           or generate salt_length random bytes internally (0).
  *
- * @return `SUCCESS` if signing succeeds,  
- *         `EFAULT` if any pointer is NULL or salt is invalid,  
- *         `EINVAL` if output length or salt length is invalid.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if signing succeeds,  
+ * - @ref EFAULT if any pointer is NULL or salt is invalid,  
+ * - @ref EINVAL if output length or salt length is invalid.
  */
 uint16_t RSASSA_PSS_Sign(uint8_t *output, size_t output_length,
                          const uint8_t *input, size_t input_length,
@@ -214,9 +221,10 @@ uint16_t RSASSA_PSS_Sign(uint8_t *output, size_t output_length,
  * @param expected_salt_length Length of the salt expected in the signature.
  *                             Must match the salt_length used during signing.
  *                             Pass 32 (default) for randomly generated salt.
- * @return `SUCCESS` if verification succeeds,  
- *         `EFAULT` if any pointer is NULL,  
- *         `EINVAL` if signature format, hash, or salt length is invalid.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if verification succeeds,  
+ * - @ref EFAULT if any pointer is NULL,  
+ * - @ref EINVAL if signature format, hash, or salt length is invalid.
  */
 uint16_t RSASSA_PSS_Verify(const uint8_t *signature, size_t signature_length,
                            const uint8_t *input, size_t input_length,

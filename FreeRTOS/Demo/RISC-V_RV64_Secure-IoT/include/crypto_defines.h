@@ -1,7 +1,6 @@
 /**
  * SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (c) 2021-2026 Mindgrove Technologies.
- * All rights reserved.
  *
  * @license Licensed under the Apache License, Version 2.0 (see LICENSE).
  * @licenseblock
@@ -18,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  *
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file crypto_defines.h
  * @brief Cryptographic constant definitions for AES, RSA, and SHA-256.
  * @details This header file defines macros and constants used across
@@ -146,7 +145,7 @@ extern "C" {
  * @def RSA_PUBLIC_EXPONENT_DEFAULT
  * @brief Default RSA public exponent value (65537).
  */
-#define RSA_PUBLIC_EXPONENT_DEFAULT    0x10001
+#define RSA_PUBLIC_EXPONENT_DEFAULT    0x10001UL
 
 /**
  * @def RSA_PRIVATE_EXPONENT_SIZE

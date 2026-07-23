@@ -194,9 +194,9 @@ void vUARTTask(void *pvParameters)
 int main_hello( void )
 {
     int hartid;
-    printf( "\n Hello World from FreeRTOS on Secure-IoT SoC!\n" );
+    printf( "\nHello World from FreeRTOS on Secure-IoT SoC!\n" );
     hartid = xGetCoreID();
-    printf( "\n Running on Core: %d", hartid);
+    printf( "\nRunning on Core: %d\n\n", hartid);
     // vToggleLED();
 
     #ifdef TEST_HELLO_TASK

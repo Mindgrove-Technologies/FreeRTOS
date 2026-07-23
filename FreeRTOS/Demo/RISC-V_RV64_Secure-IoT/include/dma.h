@@ -1,7 +1,6 @@
 /**
  * SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (c) 2021-2026 Mindgrove Technologies. 
- * All rights reserved.
  *
  * @license Licensed under the Apache License, Version 2.0 (see LICENSE).
  * @licenseblock
@@ -18,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  *
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file dma.h
  * @brief Contains driver APIs for DMA Controller Interface
  * @details Provides the API for configuring and controlling the 
@@ -49,7 +48,6 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include "errors.h"
 #include "stdbool.h"
 #include "secure_iot.h"
 
@@ -69,6 +67,32 @@ extern "C" {
 #define PRO_IO_TETRA_DATA_OFFSET        0x78U
 #define PRO_IO_OCTA_DATA_OFFSET         0x80U
 #define PRO_IO_FUSION_DATA_OFFSET       0x88U
+
+/**
+ * @defgroup DMA_Memory_Regions DMA Memory Regions
+ * @brief Memory boundaries and peripheral sizes configured for DMA transfers.
+ * @{
+ */
+
+/** @brief Start address of the RAM block allocated for DMA operations. */
+#define DMA_RAM_START_ADDR        (0x80000000U)
+
+/** @brief End address of the RAM block allocated for DMA operations. */
+#define DMA_RAM_END_ADDR          (0x80020000U)
+
+/** @brief Memory-mapped start address for the QSPI0 peripheral (Flash). */
+#define DMA_QSPI0_START_ADDR      (0x90000000U)
+
+/** @brief Memory-mapped start address for the QSPI1 peripheral (PSRAM). */
+#define DMA_QSPI1_START_ADDR      (0xB0000000U)
+
+/** @brief Default Flash size register value (19U represents a 1MB capacity). */
+#define DMA_DEFAULT_FLASH_FSIZE    (19U)
+
+/** @brief Default PSRAM size register value (20U represents a 2MB capacity). */
+#define DMA_DEFAULT_PSRAM_FSIZE    (20U)
+
+/** @} */
 
 /**
  * @defgroup DMA_Peripheral_Addresses DMA Peripheral Register Addresses
@@ -100,7 +124,6 @@ extern "C" {
 
 /** @brief RSA output data register address */
 #define RSA_OUT_REG_ADDR        (RSA_BASE + RSA_OUT_OFFSET)
-
 
 /* ================= QSPI ================= */
 
@@ -246,6 +269,18 @@ typedef enum {
     DMA_QSPI_PSRAM
 } dma_qspi_type_t;
 
+/**
+ * @enum PWM_IRQn_Type
+ * 
+ * @brief PWM interrupt ID
+ * 
+ * This enumeration defines the available PWM interrupt numbers supported by the platform.
+*/
+typedef enum {
+/* =========================================  Secure_IoT Specific Interrupt Numbers  ========================================= */
+  DMA_INTR_IRQn             =  68,              /*!< 68 DMA_INTR                                                               */
+} DMA_IRQn_Type;
+
 /* ============================================================
  *                       Structures
  * ============================================================ */
@@ -361,38 +396,56 @@ typedef struct {
     DMA_Channel_t chn_no;
 
     /**
-     * @brief External flash size.
+     * @brief External flash memory size configuration.
      *
-     * Specifies the total size of the external QSPI flash memory.
+     * Specifies the FSIZE value corresponding to the
+     * external QSPI flash memory size.
      *
-     * - Used to dynamically determine the valid flash address range
-     *   for DMA memory detection.
+     * - Used to dynamically determine the valid flash
+     *   address range for DMA memory detection.
+     *
+     * Memory size is calculated as:
+     * size = 2^(flash_fsize + 1)
+     *
+     * Example:
+     * - flash_fsize = 20U -> 2 MB flash
+     * - flash_fsize = 21U -> 4 MB flash
+     * - flash_fsize = 22U -> 8 MB flash
      *
      * @note
-     * - This value must be provided in bytes.
+     * - This value corresponds to the FSIZE field used
+     *   in the QSPI peripheral configuration.
      * - The valid flash address range is computed as:
-     *   [DMA_FLASH_START_ADDR, DMA_FLASH_START_ADDR + flash_size - 1]
-     * - Ensure this value correctly matches the actual flash size
-     *   configured in the system to avoid invalid memory access.
+     *   [DMA_FLASH_START_ADDR,
+     *    DMA_FLASH_START_ADDR + size - 1]
      */
-    uint32_t flash_size;
+    uint8_t flash_fsize;
 
     /**
-     * @brief External PSRAM size.
+     * @brief External PSRAM memory size configuration.
      *
-     * Specifies the total size of the external PSRAM memory.
+     * Specifies the FSIZE value corresponding to the
+     * external PSRAM memory size.
      *
-     * - Used to dynamically determine the valid PSRAM address range
-     *   for DMA memory detection.
+     * - Used to dynamically determine the valid PSRAM
+     *   address range for DMA memory detection.
+     *
+     * Memory size is calculated as:
+     * size = 2^(psram_fsize + 1)
+     *
+     * Example:
+     * - psram_fsize = 20U -> 2 MB PSRAM
+     * - psram_fsize = 21U -> 4 MB PSRAM
+     * - psram_fsize = 22U -> 8 MB PSRAM
      *
      * @note
-     * - This value must be provided in bytes.
+     * - This value corresponds to the FSIZE field used
+     *   in the QSPI peripheral configuration.
      * - The valid PSRAM address range is computed as:
-     *   [DMA_PSRAM_START_ADDR, DMA_PSRAM_START_ADDR + psram_size - 1]
-     * - Ensure this value correctly matches the actual PSRAM size
-     *   configured in the system to avoid invalid memory access.
+     *   [DMA_PSRAM_START_ADDR,
+     *    DMA_PSRAM_START_ADDR + size - 1]
      */
-    uint32_t psram_size;
+    uint8_t psram_fsize;
 
     /**
      * @brief QSPI destination device type for DMA transfer.
@@ -448,31 +501,31 @@ typedef struct {
  * ============================================================ */
 
 /**
-
-* @brief Get interrupt status for a DMA channel.
-*
-* Reads the interrupt status register corresponding to the
-* selected DMA channel and returns the status flags.
-*
-* The interrupt status is returned in the lower 4 bits of @p dma_status,
-* where each bit represents a specific interrupt condition. Multiple
-* interrupt conditions may be set simultaneously.
-*
-* Possible status values:
-* * 0x0 : No interrupt pending
-* * 0x1 : Global interrupt flag
-* * 0x2 : Transfer complete
-* * 0x4 : Half transfer reached
-* * 0x8 : Transfer error occurred
-* * Combination of above values indicates multiple events
-*
-* @param[in]  dma_config   Pointer to DMA configuration structure.
-* @param[out] dma_status   Pointer to store interrupt status bits.
-*
-* @retval SUCCESS   Operation successful
-* @retval ECHRNG    Invalid DMA channel number
-* @retval EFAULT    Null pointer passed
-  */
+ * @brief Get interrupt status for a DMA channel.
+ *
+ * Reads the interrupt status register corresponding to the
+ * selected DMA channel and returns the status flags.
+ *
+ * The interrupt status is returned in the lower 4 bits of @p dma_status,
+ * where each bit represents a specific interrupt condition. Multiple
+ * interrupt conditions may be set simultaneously.
+ *
+ * Possible status values:
+ * * 0x0 : No interrupt pending
+ * * 0x1 : Global interrupt flag
+ * * 0x2 : Transfer complete
+ * * 0x4 : Half transfer reached
+ * * 0x8 : Transfer error occurred
+ * * Combination of above values indicates multiple events
+ *
+ * @param[in]  dma_config   Pointer to DMA configuration structure.
+ * @param[out] dma_status   Pointer to store interrupt status bits.
+ *
+ * @return
+ * @ref SUCCESS   Operation successful
+ * @ref ECHRNG    Invalid DMA channel number
+ * @ref EFAULT    Null pointer passed
+ */
 uint16_t DMA_Interrupt_Status(const DMA_Config_t *dma_config,
                               uint8_t *dma_status);
 
@@ -487,9 +540,10 @@ uint16_t DMA_Interrupt_Status(const DMA_Config_t *dma_config,
  * @param[in] transfer_complete_int_flag  Set to true to clear transfer complete flag.
  * @param[in] global_int_flag             Set to true to clear global interrupt flag.
  *
- * @retval SUCCESS   Operation successful
- * @retval ECHRNG    Invalid DMA channel number
- * @retval EFAULT    Null pointer passed
+ * @return
+ * @ref SUCCESS   Operation successful
+ * @ref ECHRNG    Invalid DMA channel number
+ * @ref EFAULT    Null pointer passed
  */
 uint16_t DMA_Clear_Interrupt_Flags(const DMA_Config_t *dma_config,
                                    bool transfer_error_int_flag,
@@ -507,9 +561,10 @@ uint16_t DMA_Clear_Interrupt_Flags(const DMA_Config_t *dma_config,
  * @param[in] half_transfer_int_en       Enable half-transfer interrupt.
  * @param[in] transfer_complete_int_en   Enable transfer complete interrupt.
  *
- * @retval SUCCESS   Operation successful
- * @retval ECHRNG    Invalid DMA channel number
- * @retval EFAULT    Null pointer passed
+ * @return
+ * @ref SUCCESS   Operation successful
+ * @ref ECHRNG    Invalid DMA channel number
+ * @ref EFAULT    Null pointer passed
  */
 uint16_t DMA_Enable_Interrupts(const DMA_Config_t *dma_config,
                                bool transfer_error_int_en,
@@ -526,9 +581,10 @@ uint16_t DMA_Enable_Interrupts(const DMA_Config_t *dma_config,
  * @param[in] half_transfer_int_en       Disable half-transfer interrupt.
  * @param[in] transfer_complete_int_en   Disable transfer complete interrupt.
  *
- * @retval SUCCESS   Operation successful
- * @retval ECHRNG    Invalid DMA channel number
- * @retval EFAULT    Null pointer passed
+ * @return
+ * @ref SUCCESS   Operation successful
+ * @ref ECHRNG    Invalid DMA channel number
+ * @ref EFAULT    Null pointer passed
  */
 uint16_t DMA_Disable_Interrupts(const DMA_Config_t *dma_config,
                                 bool transfer_error_int_en,
@@ -545,10 +601,11 @@ uint16_t DMA_Disable_Interrupts(const DMA_Config_t *dma_config,
  *                        - 0 : Channel disabled
  *                        - 1 : Channel enabled
  *
- * @retval SUCCESS     Operation successful
- * @retval ECHRNG      Invalid DMA channel number
- * @retval EFAULT      Null pointer passed
- * @retval ETIMEDOUT   Timeout while checking channel state
+ * @return
+ * @ref SUCCESS     Operation successful
+ * @ref ECHRNG      Invalid DMA channel number
+ * @ref EFAULT      Null pointer passed
+ * @ref ETIMEDOUT   Timeout while checking channel state
  */
 uint16_t DMA_Channel_Status(const DMA_Config_t *dma_config,
                             uint8_t *state);
@@ -563,10 +620,11 @@ uint16_t DMA_Channel_Status(const DMA_Config_t *dma_config,
  *                       - true  : Enable channel
  *                       - false : Disable channel
  *
- * @retval SUCCESS     Operation successful
- * @retval ECHRNG      Invalid DMA channel number
- * @retval EFAULT      Null pointer passed
- * @retval ETIMEDOUT   Timeout while enabling/disabling channel
+ * @return
+ * @ref SUCCESS     Operation successful
+ * @ref ECHRNG      Invalid DMA channel number
+ * @ref EFAULT      Null pointer passed
+ * @ref ETIMEDOUT   Timeout while enabling/disabling channel
  */
 uint16_t DMA_Channel_Set_State(const DMA_Config_t *dma_config,
                                bool enable);
@@ -583,11 +641,12 @@ uint16_t DMA_Channel_Set_State(const DMA_Config_t *dma_config,
  * - Channel must be disabled before calling this function.
  * - Transfer length must be aligned with data size.
  *
- * @retval SUCCESS     Operation successful
- * @retval ECHRNG      Invalid DMA channel number
- * @retval EFAULT      Null pointer passed
- * @retval ETIMEDOUT   Timeout while waiting for channel disable
- * @retval EINVAL      Invalid configuration parameters
+ * @return
+ * @ref SUCCESS     Operation successful
+ * @ref ECHRNG      Invalid DMA channel number
+ * @ref EFAULT      Null pointer passed
+ * @ref ETIMEDOUT   Timeout while waiting for channel disable
+ * @ref EINVAL      Invalid configuration parameters
  */
 uint16_t DMA_Transfer_Configure(const DMA_Config_t *dma_config);
 

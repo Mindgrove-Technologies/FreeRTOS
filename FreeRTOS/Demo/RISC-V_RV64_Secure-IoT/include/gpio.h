@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file gpio.h
  * @brief Contains driver header for GPIO Interface
  * @details Provides the API for hardware control of General Purpose I/O (GPIO) 
@@ -66,6 +66,61 @@ extern "C" {
 #define GPIO_PIN(x) (1ULL << (x))
 
 /** @} */
+
+/**
+* @enum GPIO_IRQn_Type
+* @brief GPIO interrupt instance identifiers.
+*
+* This enumeration defines the available GPIO Interrupt instances supported by the platform.
+*/
+typedef enum {
+/* =========================================  Secure_IoT Specific Interrupt Numbers  ========================================= */
+  GPIO0_IRQn                =   1,              /*!< 1  GPIO0                                                                  */
+  GPIO1_IRQn                =   2,              /*!< 2  GPIO1                                                                  */
+  GPIO2_IRQn                =   3,              /*!< 3  GPIO2                                                                  */
+  GPIO3_IRQn                =   4,              /*!< 4  GPIO3                                                                  */
+  GPIO4_IRQn                =   5,              /*!< 5  GPIO4                                                                  */
+  GPIO5_IRQn                =   6,              /*!< 6  GPIO5                                                                  */
+  GPIO6_IRQn                =   7,              /*!< 7  GPIO6                                                                  */
+  GPIO7_IRQn                =   8,              /*!< 8  GPIO7                                                                  */
+  GPIO8_IRQn                =   9,              /*!< 9  GPIO8                                                                  */
+  GPIO9_IRQn                =  10,              /*!< 10 GPIO9                                                                  */
+  GPIO10_IRQn               =  11,              /*!< 11 GPIO10                                                                 */
+  GPIO11_IRQn               =  12,              /*!< 12 GPIO11                                                                 */
+  GPIO12_IRQn               =  13,              /*!< 13 GPIO12                                                                 */
+  GPIO13_IRQn               =  14,              /*!< 14 GPIO13                                                                 */
+  GPIO14_IRQn               =  15,              /*!< 15 GPIO14                                                                 */
+  GPIO15_IRQn               =  16,              /*!< 16 GPIO15                                                                 */
+  GPIO16_IRQn               =  17,              /*!< 17 GPIO16                                                                 */
+  GPIO17_IRQn               =  18,              /*!< 18 GPIO17                                                                 */
+  GPIO18_IRQn               =  19,              /*!< 19 GPIO18                                                                 */
+  GPIO19_IRQn               =  20,              /*!< 20 GPIO19                                                                 */
+  GPIO20_IRQn               =  21,              /*!< 21 GPIO20                                                                 */
+  GPIO21_IRQn               =  22,              /*!< 22 GPIO21                                                                 */
+  GPIO22_IRQn               =  23,              /*!< 23 GPIO22                                                                 */
+  GPIO23_IRQn               =  24,              /*!< 24 GPIO23                                                                 */
+  GPIO24_IRQn               =  25,              /*!< 25 GPIO24                                                                 */
+  GPIO25_IRQn               =  26,              /*!< 26 GPIO25                                                                 */
+  GPIO26_IRQn               =  27,              /*!< 27 GPIO26                                                                 */
+  GPIO27_IRQn               =  28,              /*!< 28 GPIO27                                                                 */
+  GPIO28_IRQn               =  29,              /*!< 29 GPIO28                                                                 */
+  GPIO29_IRQn               =  30,              /*!< 30 GPIO29                                                                 */
+  GPIO30_IRQn               =  31,              /*!< 31 GPIO30                                                                 */
+  GPIO31_IRQn               =  32,              /*!< 32 GPIO31                                                                 */
+  GPIOP0_IRQn               =  70,              /*!< 69 GPIOP0                                                                 */
+  GPIOP1_IRQn               =  71,              /*!< 70 GPIOP1                                                                 */
+  GPIOP2_IRQn               =  72,              /*!< 71 GPIOP2                                                                 */
+  GPIOP3_IRQn               =  73,              /*!< 72 GPIOP3                                                                 */
+  GPIOP4_IRQn               =  74,              /*!< 73 GPIOP4                                                                 */
+  GPIOP5_IRQn               =  75,              /*!< 74 GPIOP5                                                                 */
+  GPIOP6_IRQn               =  76,              /*!< 75 GPIOP6                                                                 */
+  GPIOP7_IRQn               =  77,              /*!< 76 GPIOP7                                                                 */
+  GPIOP8_IRQn               =  78,              /*!< 77 GPIOP8                                                                 */
+  GPIOP9_IRQn               =  79,              /*!< 78 GPIOP9                                                                 */
+  GPIOP10_IRQn              =  80,              /*!< 79 GPIOP10                                                                */
+  GPIOP11_IRQn              =  81,              /*!< 80 GPIOP11                                                                */
+  GPIOP12_IRQn              =  82               /*!< 81 GPIOP12                                                               */
+} GPIO_IRQn_Type;
 
 /**
  * @brief The function `GPIO_Config` initializes the GPIO instance and set the 

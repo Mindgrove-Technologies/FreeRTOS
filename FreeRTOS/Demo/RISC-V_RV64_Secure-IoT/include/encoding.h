@@ -1,52 +1,38 @@
+ /**
+ * SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (c) 2021-2026 Mindgrove Technologies. All rights reserved.
+ * 
+ * @license Licensed under the Apache License, Version 2.0 (see LICENSE).
+ * @licenseblock
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * @endlicenseblock
+ * 
+ * Project                   : MGS2401 SoC
+ * @file encoding.h
+ * @brief Header file for encoding defines and APIs
+ * @version 1.0
+ * @authors Kapil Shyam. M (kapil@mindgrovetech.in)
+ * @date 21-09-2024 
+ * 
+ * @section History
+ * -----------------------------------------------------------------------------
+ * Date       | Version | Modified by           | Description                   
+ * -----------|---------|-----------------------|-------------------------------
+ * 21-09-2024 | 1.0     | Kapil Shyam. M        | Initial release.              
+ * -----------------------------------------------------------------------------
+ */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wint-conversion"
-
-// See LICENSE for license details.
-
-// Definition of the InstructionDescriptor structure
-typedef struct {
-    const char *name;
-    const char *match_pattern;
-    const char *mask_pattern;
-} InstructionDescriptor;
-
-// Definition of the CSRDescriptor structure
-typedef struct {
-    const char *name;
-    int id;
-} CSRDescriptor;
-
-// void register_instruction(InstructionDescriptor *desc) {
-//     printf("Registered instruction: %s\n", desc->name);
-//     printf("Match pattern: %s\n", desc->match_pattern);
-//     printf("Mask pattern: %s\n", desc->mask_pattern);
-// }
-
-// void register_csr(CSRDescriptor *desc) {
-//     printf("Registered CSR: %s\n", desc->name);
-//     printf("CSR ID: %d\n", desc->id);
-// }
-
-// Define a macro for declaring and automatically registering an instruction
-#define DECLARE_INSN(name, match, mask) \
-  static const InstructionDescriptor name##_desc = { \
-    #name, \
-    match, \
-    mask \
-  }; // \
-  // static void __attribute__((constructor)) register_##name(void) { \
-  //   register_instruction((InstructionDescriptor*)&name##_desc); \
-  // }
-
-// Define a macro for declaring and automatically registering a CSR
-#define DECLARE_CSR(name, id) \
-  static const CSRDescriptor name##_desc = { \
-    #name, \
-    id \
-  }; // \
-  // static void __attribute__((constructor)) register_##name(void) { \
-    // register_csr((CSRDescriptor*)&name##_desc); \
-  // }
 
 #ifndef RISCV_CSR_ENCODING_H
 #define RISCV_CSR_ENCODING_H

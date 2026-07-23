@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file trng.h
  * @brief Public APIs for TRNG (True Random Number Generator)
  * @details Declares APIs for generating true random numbers using VTRNG
@@ -46,6 +46,18 @@ extern "C" {
 #include <stddef.h>
 
 /**
+ * @enum TRNG_IRQn_Type
+ * 
+ * @brief TRNG interrupt ID
+ * 
+ * This enumeration defines the available TRNG interrupt numbers supported by the platform.
+*/
+typedef enum {
+/* =========================================  Secure_IoT Specific Interrupt Numbers  ========================================= */
+  TRNG_INTR_IRQn            =  69,              /*!< 69 TRNG_INTR_IRQn                                                         */
+} TRNG_IRQn_Type;
+
+/**
  * @brief Generate true random bytes using VTRNG hardware.
  *
  * This function triggers the TRNG hardware to generate random data and
@@ -68,9 +80,51 @@ extern "C" {
  * @retval EFAULT     Null pointer passed for output buffer.
  * @retval ETIME      Timeout occurred while waiting for TRNG hardware.
  */
- uint16_t TRNG_Generate(void *random_bits,
-    size_t req_num_bytes,
-    uint8_t vtrng, uint64_t timeout);
+uint16_t TRNG_Generate(void *random_bits,
+                       size_t req_num_bytes,
+                       uint8_t vtrng,
+                       uint64_t timeout);
+
+/**
+ * @brief Perform Known Answer Test (KAT).
+ *
+ * @details
+ * This function performs the Known Answer Test (KAT)
+ * supported by the NIST TRNG hardware.
+ *
+ * The TRNG supports KAT execution on:
+ * - Deterministic Random Bit Generator (DRBG)
+ * - Derivation function inside the entropy source
+ *
+ * Two different KAT vectors are supported for validation.
+ *
+ * The KAT configuration is controlled using:
+ * - kat_sel : Selects the target block
+ * - DRBG
+ * - Derivation function
+ *
+ * - kat_vec : Selects the KAT test vector
+ *
+ * These selections are configured through the MODE register.
+ *
+ * The function performs KAT for all four possible
+ * combinations of:
+ * - KAT_SEL = 0, KAT_VEC = 0
+ * - KAT_SEL = 0, KAT_VEC = 1
+ * - KAT_SEL = 1, KAT_VEC = 0
+ * - KAT_SEL = 1, KAT_VEC = 1
+ *
+ * If any KAT execution fails, the function returns an error.
+ *
+ * @note The hardware remains locked in test mode during KAT execution. 
+ * A hardware reset is required before calling TRNG_Generate 
+ * to restore the peripheral to normal operational mode.
+ *
+ * @return
+ * - SUCCESS : All KAT combinations passed successfully
+ * - ETIMEDOUT : KAT test failed.
+ */
+uint16_t TRNG_Full_KAT(void);
 
 #ifdef __cplusplus
 }

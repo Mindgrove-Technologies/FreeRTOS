@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file psa_types.h
  * @brief Header file for declaring the types used in PSA crypto APIs in Mindgrove 
  *        Silicon Secure-IoT SoC.

@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file psa_enums.h
  * @brief Header file for enums for PSA Crypto APIs in Mindgrove Silicon Secure-IoT SoC
  * @details This is the header file for the enums used in  PSA Crypto APIs in 

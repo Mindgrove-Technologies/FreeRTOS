@@ -17,13 +17,14 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file qspi_psram_driver.h
  * @brief Declarations for PSRAM driver using QSPI.
  * @details This header file provides the public APIs,
  *          to configure and operate PSRAM through the QSPI interface.
  * @version 1.0
  * @authors Vignesh Kumar J (vigneshkumar@mindgrovetech.in)
+ *          Narasimha R V (narasimha@mindgrovetech.in)
  * @date 18-02-2026
  *
  * @section History
@@ -43,21 +44,73 @@ extern "C" {
 
 #include "qspi.h"
 
-/**
- * @brief Initializes the PSRAM device for memory-mapped operation.
- *
- * @details This function configures the PSRAM through the given QSPI
- *          instance and places it into RAM mode. After successful
- *          initialization, the PSRAM can be accessed like normal SRAM
- *          using standard memory read and write operations.
- *
- * @param[in] qspi_inst Pointer to the QSPI instance used to interface
- *                      with the PSRAM device.
- *
- * @return Returns 0 on SUCCESS, or an error code on failure.
- */
+#define PSRAM_DEFAULT_PRESCALER    20U
 
-uint16_t PSRAM_Init(const QSPI_Instance_t *qspi_inst);
+/**
+ * @brief Initialize PSRAM in memory-mapped RAM mode.
+ *
+ * @details
+ * This function configures the QSPI peripheral to interface
+ * with the external PSRAM device using Memory-Mapped Mode (MMM)
+ * with RAM mode enabled.
+ *
+ * After successful initialization:
+ * - PSRAM can be accessed like normal SRAM
+ * - Standard pointer-based read/write operations can be used
+ * - No explicit QSPI read/write commands are required
+ * - CPU can directly access PSRAM through the mapped address range
+ *
+ * The function internally configures:
+ * - Memory-mapped mode (MMM)
+ * - RAM mode selection
+ * - Read instruction and dummy cycles
+ * - Write instruction and dummy cycles
+ * - Device configuration parameters required for PSRAM access
+ *
+ * This allows the external PSRAM to behave like internal memory
+ * from the software point of view.
+ *
+ * Example:
+ * After initialization:
+ *
+ * volatile uint32_t *psram = (uint32_t *)PSRAM_BASE_ADDR;
+ * psram[0] = 0xCAFEBABE;
+ *
+ * @param[in] qspi_inst
+ * Pointer to the QSPI hardware instance used to interface
+ * with the PSRAM device.
+ *
+ * @param[in] psram_mem_size
+ * PSRAM size configuration value used to program the
+ * memory size field of the QSPI controller.
+ *
+ * Example:
+ * If PSRAM size is 8 MB:
+ * psram_mem_size = 22
+ * because:
+ * Memory Size = 2^(psram_mem_size + 1)
+ *
+ * @param[in] prescaler
+ * Clock prescaler value used to divide the QSPI input clock.
+ * QSPI clock frequency is computed as:
+ *   QSPI_CLK = BASE_CLK / (prescaler + 1)
+ *
+ * The configured frequency must not exceed the maximum
+ * operating frequency supported by the PSRAM device.
+ *
+ * @return
+ * - error codes returned by @ref QSPI_Transaction()
+ *
+ * @note
+ * Before starting a new indirect QSPI transaction after PSRAM
+ * memory-mapped mode is enabled, the user must call
+ * @ref QSPI_Abort_Transaction() to exit memory-mapped mode
+ * and allow peripheral reconfiguration.
+ *
+ */
+uint16_t PSRAM_Init(const QSPI_Instance_t *qspi_inst,
+                    size_t psram_mem_size,
+                    uint8_t prescaler);
 
 #ifdef __cplusplus
 }

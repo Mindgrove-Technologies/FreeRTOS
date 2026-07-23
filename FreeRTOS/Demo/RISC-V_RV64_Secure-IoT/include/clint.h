@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  *
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file clint.h
  * @brief Contains driver apis for CLINT Interface
  * @details Provides the API for configuring CLINT timers and counters.

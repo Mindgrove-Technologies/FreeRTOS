@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file psa_errors.h
  * @brief Header file for all error codes for PSA Crypto APIs in Mindgrove Silicon 
  *        Secure-IoT SoC.

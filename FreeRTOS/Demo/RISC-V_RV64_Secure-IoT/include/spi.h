@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file  spi.h
  * @brief Contains the declarations for the SPI interface.
  * @details This header file provides the function prototypes, macro definitions,
@@ -207,6 +207,20 @@ typedef enum {
     FULL_DUPLEX = 3U
 } SPI_Comm_Mode;
 
+/**
+ * @enum SPI_IRQn_Type
+ * 
+ * @brief SPI interrupt ID
+ * 
+ * This enumeration defines the available SPI interrupt numbers supported by the platform.
+*/
+typedef enum {
+/* =========================================  Secure_IoT Specific Interrupt Numbers  ========================================= */
+  SPI0_IRQn                 =  62,              /*!< 62 SPI0                                                                   */
+  SPI1_IRQn                 =  63,              /*!< 63 SPI1                                                                   */
+  SPI2_IRQn                 =  64,              /*!< 64 SPI2                                                                   */
+  SPI3_IRQn                 =  65,              /*!< 65 SPI3                                                                   */
+} SPI_IRQn_Type;
 
 /**
  * @defgroup SPI_Instance_Type SPI Instance Handle Type
@@ -415,36 +429,41 @@ typedef struct {
  * @brief Configures and enables the specified SPI instance for communication.
  * 
  * @details This function sets the SPI parameters such as clock mode, chip select type,
- *  frequency, setup/hold times, communication mode, data size, bit order, and 
- * master/slave mode based on the provided configuration structure.
+ *          frequency, setup/hold times, communication mode, data size, bit order, and 
+ *          master/slave mode based on the provided configuration structure.
  * 
  * @param spi_config Pointer to an SPI_Config_t structure containing all SPI configuration parameters.
  * 
- * @return Return SUCCESS if configuration is successful, otherwise returns Error code if 
- *         any required pointer is null or if spi_freq not in range.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  Configuration applied successfully.
+ * - @ref EFAULT   Returned if a SPI_Config_t structure pointer is passed as NULL.
+ * - @ref EINFREQ  Returned if the provided SPI frequency is out of the supported range.
  */
 uint16_t SPI_Config(const SPI_Config_t *spi_config);
 
 /**
- * @brief Controls the SPI chip select (NCS) line in software mode.
+ * @brief Controls the SPI chip select (NCS) line in software mode. Ignored if 
+ *        SPI is configured as Slave mode, used only for SPI Master mode.
  * 
  * @param spi_config Pointer to an SPI_Config_t structure specifying the SPI instance.
  * @param ncs_val Boolean value to set the NCS line (0 = deassert, 1 = assert).
  * 
- * @return Return SUCCESS if configuration is successful, otherwise returns Error code if 
- *         any required pointer is null.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS NCS line state set successfully.
+ * - @ref EFAULT Returned if a SPI_Config_t structure pointer is passed as NULL.
  */
-uint16_t Software_Control_NCS(const SPI_Config_t *spi_config, bool ncs_val);
+uint16_t SPI_Software_NCS(const SPI_Config_t *spi_config, bool ncs_val);
 
 /**
  * @brief Flushes (clears) the RX FIFO buffer of the specified SPI instance.
  * 
  * @param spi_config Pointer to an SPI_Config_t structure specifying the SPI instance.
  * 
- * @return Return SUCCESS if RX FIFO is cleared, otherwise returns Error code if 
- *         any required pointer is null.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  RX FIFO flushed successfully.
+ * - @ref EFAULT Returned if a SPI_Config_t structure pointer is passed as NULL.
  */
-uint16_t Flush_RX_FIFO(const SPI_Config_t *spi_config);
+uint16_t SPI_Flush_RX_FIFO(const SPI_Config_t *spi_config);
 
 /**
  * @brief Enables a interrupt bits based on the provided interrupt.
@@ -454,8 +473,9 @@ uint16_t Flush_RX_FIFO(const SPI_Config_t *spi_config);
  *                   Multiple interrupts can be enabled together by OR-ing the macros
  *                   (e.g., TX_FIFO_INTR_EMPTY | RX_FIFO_INTR_FULL).
  * 
- * @return Return SUCCESS if interrupt enabled successful, otherwise returns Error code if 
- *         any required pointer is null..
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  Interrupt(s) enabled successfully.
+ * - @ref EFAULT  Returned if a SPI_Config_t structure pointer is passed as NULL.
  */
 uint16_t SPI_Interrupt_Enable(const SPI_Config_t *spi_config, \
                                 uint32_t  interrupt_type);
@@ -468,10 +488,14 @@ uint16_t SPI_Interrupt_Enable(const SPI_Config_t *spi_config, \
  * 
  * @param spi_config Pointer to an SPI_Config_t structure specifying the SPI instance.
  * 
- * @return Returns SUCCESS if transmission completes successfully; otherwise returns
- *         Error code if the operation exceeds the timeout limit.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  TX FIFO is empty and SPI is no longer busy.
+ * - @ref EFAULT  Returned if a SPI_Config_t structure pointer is passed as NULL.
+ * - @ref ETIMEDOUT Returned if the TX FIFO is not empty within the expected 
+ *                  time in in slave mode, or if the TX FIFO is not empty or
+ *                  the SPI is busy within the timeout period in master mode.
  */
-uint16_t Wait_Till_TX_Complete(const SPI_Config_t *spi_config);
+uint16_t SPI_Wait_Till_TX_Complete(const SPI_Config_t *spi_config);
 
 /**
  * @brief Checks the SPI TX FIFO empty and busy status.
@@ -488,16 +512,16 @@ uint16_t Wait_Till_TX_Complete(const SPI_Config_t *spi_config);
  *         - 10: Busy, TX FIFO not empty  
  *         - 11: Busy, TX FIFO empty  
  */
-
-uint8_t Check_TX_And_Busy_Status(const SPI_Config_t *spi_config);
+uint8_t SPI_Check_TX_And_Busy_Status(const SPI_Config_t *spi_config);
 
 /**
  * @brief Disables the specified SPI instance.
  * 
  * @param spi_config Pointer to an SPI_Config_t structure specifying the SPI instance.
  * 
- * @return Return SUCCESS if spi disabled successful, otherwise returns Error code if 
- *         any required pointer is null..
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  SPI instance disabled successfully.
+ * - @ref EFAULT  Returned if a SPI_Config_t structure pointer is passed as NULL.
  */
 uint16_t SPI_Disable(const SPI_Config_t *spi_config);
 
@@ -512,10 +536,11 @@ uint16_t SPI_Disable(const SPI_Config_t *spi_config);
  *                   and communication mode.
  * @param buf        Pointer to a spi_buffer structure.
  *                   
- * @return  Return SUCCESS if transfer completed successfully, otherwise returns Error code if 
- *          any required pointer is null or if an invalid data size is provided.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  Data transfer completed successfully.
+ * - @ref EFAULT  Returned if a SPI_Config_t structure pointer is passed as NULL.
+ * - @ref EINVAL  Returned if an invalid data size is provided.
  */
-
 uint16_t SPI_Transceive(const SPI_Config_t *spi_config, const spi_buffer *buf);
 
 /**
@@ -530,8 +555,10 @@ uint16_t SPI_Transceive(const SPI_Config_t *spi_config, const spi_buffer *buf);
  * @param size       DMA transfer size @ref SPI_DMA_Size (`SIZE_8`, `SIZE_16`,
  *                                                        `SIZE_32`, `SIZE_64`).
  * 
- * @return  Return SUCCESS if configuration is successful, otherwise returns Error code if 
- *          any required pointer is null or if an invalid data size is provided.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  DMA transfer size configured successfully.
+ * - @ref EFAULT  Returned if a SPI_Config_t structure pointer is passed as NULL.
+ * - @ref EINVAL  Returned if an invalid DMA size is provided.
  */
 uint16_t SPI_DMA(const SPI_Config_t *spi_config, SPI_DMA_Size size);
 

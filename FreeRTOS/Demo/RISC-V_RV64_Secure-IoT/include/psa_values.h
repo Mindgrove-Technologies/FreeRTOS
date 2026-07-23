@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file psa_values.h
  * @brief PSA Crypto API macros and constants for Secure-IOT Processor.
  * @details This header file defines macros and constants used throughout the 
@@ -76,7 +76,7 @@ extern "C" {
  */
 
 /** @brief Maximum number of key slots supported in this implementation. */
-#define MG_PSA_KEY_SLOT_COUNT 32U
+#define MG_PSA_KEY_SLOT_COUNT 8U
 
 /** @brief Hexadecimal radix used for key representation. */
 #define MG_PSA_HEX_RADIX 16

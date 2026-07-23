@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file otp.h
  * @brief This is a Baremetal OTP Driver header file for OTP.
  * @details Provides an API to read from and write to OTP memory 
@@ -42,12 +42,8 @@
 #ifndef BSP_INCLUDE_OTP_H_
 #define BSP_INCLUDE_OTP_H_
 
-#include "io.h"
-#include "perf_monitors.h"
-#include "errors.h"
-#include "log.h"
-#include "secure_iot.h"
-#include "utils.h"
+#include <stdint.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {

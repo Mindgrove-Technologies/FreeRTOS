@@ -1,6 +1,4 @@
 XLEN ?= 64
-FPU ?= 1
-LIB ?= libsecureiot.a
 CROSS   = riscv$(XLEN)-unknown-elf-
 CC      = $(CROSS)gcc
 CPP     = $(CROSS)cpp
@@ -14,7 +12,7 @@ DEBUG ?= 0
 BASE_ADDRESS ?= 0x80000000
 MARCH = rv64imafdc_zicsr_zifencei
 MABI = lp64d
-LIB = libsecureiot.a
+LIB = libmgs2401.a
 
 BUILD_DIR       = build
 RTOS_SOURCE_DIR = $(abspath ../../Source)
@@ -74,12 +72,12 @@ ASMS = $(RTOS_SOURCE_DIR)/portable/GCC/RISC-V/portASM.S
 OBJS = $(SRCS:%.c=$(BUILD_DIR)/%$(XLEN).o) $(ASMS:%.S=$(BUILD_DIR)/%$(XLEN).o)
 DEPS = $(SRCS:%.c=$(BUILD_DIR)/%$(XLEN).d) $(ASMS:%.S=$(BUILD_DIR)/%$(XLEN).d)
 
-$(BUILD_DIR)/SecureIoTDemo.elf: $(OBJS) $(BUILD_DIR)/link.ld Makefile
+$(BUILD_DIR)/mgs2401_demo.elf: $(OBJS) $(BUILD_DIR)/link.ld Makefile
 	@echo "Linking..."
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(OBJS) -T$(BUILD_DIR)/link.ld $(LIB_DIR)/$(LIB) -lm -o $@
 	@echo "Generating dump and symbol table..."
-	$(OBJDUMP) -D -S $@ > $(BUILD_DIR)/SecureIoTDemo.disassembly
-	$(NM) -aABCglS --size-sort --special-syms $@ > $(BUILD_DIR)/SecureIoTDemo.sym
+	$(OBJDUMP) -D -S $@ > $(BUILD_DIR)/mgs2401_demo.disassembly
+	$(NM) -aABCglS --size-sort --special-syms $@ > $(BUILD_DIR)/mgs2401_demo.sym
 	$(OBJCOPY) -O binary $@ $(BUILD_DIR)/code.bin
 
 $(BUILD_DIR)/%$(XLEN).o: %.c Makefile

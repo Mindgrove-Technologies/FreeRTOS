@@ -47,101 +47,6 @@ extern "C" {
   * @{
   */
 
-
-
-/* =========================================================================================================================== */
-/* ================                                Interrupt Number Definition                                ================ */
-/* =========================================================================================================================== */
-
-typedef enum {
-/* =======================================  Shakti C-Class Specific Interrupt Numbers  ======================================= */
-/* =========================================  Secure_IoT Specific Interrupt Numbers  ========================================= */
-  GPIO0_IRQn                =   1,              /*!< 1  GPIO0                                                                  */
-  GPIO1_IRQn                =   2,              /*!< 2  GPIO1                                                                  */
-  GPIO2_IRQn                =   3,              /*!< 3  GPIO2                                                                  */
-  GPIO3_IRQn                =   4,              /*!< 4  GPIO3                                                                  */
-  GPIO4_IRQn                =   5,              /*!< 5  GPIO4                                                                  */
-  GPIO5_IRQn                =   6,              /*!< 6  GPIO5                                                                  */
-  GPIO6_IRQn                =   7,              /*!< 7  GPIO6                                                                  */
-  GPIO7_IRQn                =   8,              /*!< 8  GPIO7                                                                  */
-  GPIO8_IRQn                =   9,              /*!< 9  GPIO8                                                                  */
-  GPIO9_IRQn                =  10,              /*!< 10 GPIO9                                                                  */
-  GPIO10_IRQn               =  11,              /*!< 11 GPIO10                                                                 */
-  GPIO11_IRQn               =  12,              /*!< 12 GPIO11                                                                 */
-  GPIO12_IRQn               =  13,              /*!< 13 GPIO12                                                                 */
-  GPIO13_IRQn               =  14,              /*!< 14 GPIO13                                                                 */
-  GPIO14_IRQn               =  15,              /*!< 15 GPIO14                                                                 */
-  GPIO15_IRQn               =  16,              /*!< 16 GPIO15                                                                 */
-  GPIO16_IRQn               =  17,              /*!< 17 GPIO16                                                                 */
-  GPIO17_IRQn               =  18,              /*!< 18 GPIO17                                                                 */
-  GPIO18_IRQn               =  19,              /*!< 19 GPIO18                                                                 */
-  GPIO19_IRQn               =  20,              /*!< 20 GPIO19                                                                 */
-  GPIO20_IRQn               =  21,              /*!< 21 GPIO20                                                                 */
-  GPIO21_IRQn               =  22,              /*!< 22 GPIO21                                                                 */
-  GPIO22_IRQn               =  23,              /*!< 23 GPIO22                                                                 */
-  GPIO23_IRQn               =  24,              /*!< 24 GPIO23                                                                 */
-  GPIO24_IRQn               =  25,              /*!< 25 GPIO24                                                                 */
-  GPIO25_IRQn               =  26,              /*!< 26 GPIO25                                                                 */
-  GPIO26_IRQn               =  27,              /*!< 27 GPIO26                                                                 */
-  GPIO27_IRQn               =  28,              /*!< 28 GPIO27                                                                 */
-  GPIO28_IRQn               =  29,              /*!< 29 GPIO28                                                                 */
-  GPIO29_IRQn               =  30,              /*!< 30 GPIO29                                                                 */
-  GPIO30_IRQn               =  31,              /*!< 31 GPIO30                                                                 */
-  GPIO31_IRQn               =  32,              /*!< 32 GPIO31                                                                 */
-  PWM0_IRQn                 =  33,              /*!< 33 PWM0                                                                   */
-  PWM1_IRQn                 =  34,              /*!< 34 PWM1                                                                   */
-  PWM2_IRQn                 =  35,              /*!< 35 PWM2                                                                   */
-  PWM3_IRQn                 =  36,              /*!< 36 PWM3                                                                   */
-  PWM4_IRQn                 =  37,              /*!< 37 PWM4                                                                   */
-  PWM5_IRQn                 =  38,              /*!< 38 PWM5                                                                   */
-  PWM6_IRQn                 =  39,              /*!< 39 PWM6                                                                   */
-  PWM7_IRQn                 =  40,              /*!< 40 PWM7                                                                   */
-  PWM8_IRQn                 =  41,              /*!< 41 PWM8                                                                   */
-  PWM9_IRQn                 =  42,              /*!< 42 PWM9                                                                   */
-  PWM10_IRQn                =  43,              /*!< 43 PWM10                                                                  */
-  PWM11_IRQn                =  44,              /*!< 44 PWM11                                                                  */
-  PWM12_IRQn                =  45,              /*!< 45 PWM12                                                                  */
-  PWM13_IRQn                =  46,              /*!< 46 PWM13                                                                  */
-  GPTIMER0_IRQn             =  47,              /*!< 47 GPTIMER0                                                               */
-  GPTIMER1_IRQn             =  48,              /*!< 48 GPTIMER1                                                               */
-  GPTIMER2_IRQn             =  49,              /*!< 49 GPTIMER2                                                               */
-  GPTIMER3_IRQn             =  50,              /*!< 50 GPTIMER3                                                               */
-  I2C0_IRQn                 =  51,              /*!< 51 I2C0                                                                   */
-  I2C1_IRQn                 =  52,              /*!< 52 I2C1                                                                   */
-  UART0_IRQn                =  53,              /*!< 53 UART0                                                                  */
-  UART1_IRQn                =  54,              /*!< 54 UART1                                                                  */
-  UART2_IRQn                =  55,              /*!< 55 UART2                                                                  */
-  UART3_IRQn                =  56,              /*!< 56 UART3                                                                  */
-  UART4_IRQn                =  57,              /*!< 57 UART4                                                                  */
-  QUADSPI0_IRQn             =  58,              /*!< 58 QUADSPI0                                                               */
-  QUADSPI0_READY_IRQn       =  59,              /*!< 59 QUADSPI0_READY                                                         */
-  QUADSPI1_IRQn             =  60,              /*!< 60 QUADSPI1                                                               */
-  QUADSPI1_READY_IRQn       =  61,              /*!< 61 QUADSPI1_READY                                                         */
-  SPI0_IRQn                 =  62,              /*!< 62 SPI0                                                                   */
-  SPI1_IRQn                 =  63,              /*!< 63 SPI1                                                                   */
-  SPI2_IRQn                 =  64,              /*!< 64 SPI2                                                                   */
-  SPI3_IRQn                 =  65,              /*!< 65 SPI3                                                                   */
-  ADC_INTR_IRQn             =  66,              /*!< 66 ADC_INTR                                                               */
-  ITRACE_INTR_IRQn          =  67,              /*!< 67 ITRACE_INTR                                                            */
-  DMA_INTR_IRQn             =  68,              /*!< 68 DMA_INTR                                                               */
-  TRNG_INTR_IRQn            =  69,              /*!< 69 TRNG_INTR_IRQn                                                         */
-  GPIOP0_IRQn               =  70,              /*!< 69 GPIOP0                                                                 */
-  GPIOP1_IRQn               =  71,              /*!< 70 GPIOP1                                                                 */
-  GPIOP2_IRQn               =  72,              /*!< 71 GPIOP2                                                                 */
-  GPIOP3_IRQn               =  73,              /*!< 72 GPIOP3                                                                 */
-  GPIOP4_IRQn               =  74,              /*!< 73 GPIOP4                                                                 */
-  GPIOP5_IRQn               =  75,              /*!< 74 GPIOP5                                                                 */
-  GPIOP6_IRQn               =  76,              /*!< 75 GPIOP6                                                                 */
-  GPIOP7_IRQn               =  77,              /*!< 76 GPIOP7                                                                 */
-  GPIOP8_IRQn               =  78,              /*!< 77 GPIOP8                                                                 */
-  GPIOP9_IRQn               =  79,              /*!< 78 GPIOP9                                                                 */
-  GPIOP10_IRQn              =  80,              /*!< 79 GPIOP10                                                                */
-  GPIOP11_IRQn              =  81,              /*!< 80 GPIOP11                                                                */
-  GPIOP12_IRQn              =  82               /*!< 81 GPIOP12                                                               */
-} IRQn_Type;
-
-
-
 /* =========================================================================================================================== */
 /* ================                           Processor and Core Peripheral Section                           ================ */
 /* =========================================================================================================================== */
@@ -3549,7 +3454,7 @@ typedef struct {                                /*!< ITRACE Structure           
   __IM  uint32_t  RESERVED1;
   
   union {
-    __IOM uint32_t FITER_CTRL;                  /*!< Instruction filter control                                                */
+    __IOM uint32_t FILTER0_CTRL;                  /*!< Instruction filter control                                                */
     
     struct {
       __IOM uint32_t EN         : 1;            /*!< Filter enable                                                             */
@@ -3563,7 +3468,7 @@ typedef struct {                                /*!< ITRACE Structure           
       __IOM uint32_t COMP3_EN   : 1;            /*!< Enable the first comparator                                               */
       __IOM uint32_t MATCH_COMP3 : 2;           /*!< Mentions which comparator output to use for this 3rd filter               */
             uint32_t            : 17;
-    } FITER_CTRL_b;
+    } FILTER0_CTRL_b;
   } ;
   
   union {
@@ -3640,7 +3545,56 @@ typedef struct {                                /*!< ITRACE Structure           
   __IOM uint32_t  COMP1_PMATCH_LOW;             /*!< Comparator 1 primary match data: Low 32 bits                              */
   __IOM uint32_t  COMP1_PMATCH_HIGH;            /*!< Comparator 1 primary match data: High 32 bits                             */
   __IOM uint32_t  COMP1_SMATCH_LOW;             /*!< Comparator 1 secondary match data: Low 32 bits                            */
-} ITRACE_Type;                                  /*!< Size = 36 (0x24)                                                          */
+  __IOM uint32_t  COMP1_SMATCH_HIGH;
+
+  __IOM uint32_t  COMP2_PMATCH_LOW;
+  __IOM uint32_t  COMP2_PMATCH_HIGH;
+  __IOM uint32_t  COMP2_SMATCH_LOW;
+  __IOM uint32_t  COMP2_SMATCH_HIGH;
+
+  __IOM uint32_t  COMP3_PMATCH_LOW;
+  __IOM uint32_t  COMP3_PMATCH_HIGH;
+  __IOM uint32_t  COMP3_SMATCH_LOW;
+  __IOM uint32_t  COMP3_SMATCH_HIGH;
+
+  __IM  uint32_t  RESERVED5[4];
+
+  union {
+    __IOM uint32_t FILTER1_CTRL;                  /*!< Instruction filter control                                                */
+    
+    struct {
+      __IOM uint32_t EN         : 1;            /*!< Filter enable                                                             */
+      __IOM uint32_t PRV_EN     : 1;            /*!< Match privielge mode enable                                               */
+      __IOM uint32_t PRV        : 2;            /*!< The privelege mode to filter when enabled                                 */
+            uint32_t            : 2;
+      __IOM uint32_t COMP1_EN   : 1;            /*!< Enable the first comparator                                               */
+      __IOM uint32_t MATCH_COMP1 : 2;           /*!< Mentions which comparator output to use for this 1st filter               */
+      __IOM uint32_t COMP2_EN   : 1;            /*!< Enable the second comparator                                              */
+      __IOM uint32_t MATCH_COMP2 : 2;           /*!< Mentions which comparator output to use for this 2nd filter               */
+      __IOM uint32_t COMP3_EN   : 1;            /*!< Enable the first comparator                                               */
+      __IOM uint32_t MATCH_COMP3 : 2;           /*!< Mentions which comparator output to use for this 3rd filter               */
+            uint32_t            : 17;
+    } FILTER1_CTRL_b;
+  } ;
+
+  union {
+    __IOM uint32_t FILTER2_CTRL;                  /*!< Instruction filter control                                                */
+    
+    struct {
+      __IOM uint32_t EN         : 1;            /*!< Filter enable                                                             */
+      __IOM uint32_t PRV_EN     : 1;            /*!< Match privielge mode enable                                               */
+      __IOM uint32_t PRV        : 2;            /*!< The privelege mode to filter when enabled                                 */
+            uint32_t            : 2;
+      __IOM uint32_t COMP1_EN   : 1;            /*!< Enable the first comparator                                               */
+      __IOM uint32_t MATCH_COMP1 : 2;           /*!< Mentions which comparator output to use for this 1st filter               */
+      __IOM uint32_t COMP2_EN   : 1;            /*!< Enable the second comparator                                              */
+      __IOM uint32_t MATCH_COMP2 : 2;           /*!< Mentions which comparator output to use for this 2nd filter               */
+      __IOM uint32_t COMP3_EN   : 1;            /*!< Enable the first comparator                                               */
+      __IOM uint32_t MATCH_COMP3 : 2;           /*!< Mentions which comparator output to use for this 3rd filter               */
+            uint32_t            : 17;
+    } FILTER2_CTRL_b;
+  } ;
+} ITRACE_Type;                                  /*!< Size = 72 (0x44)                                                          */
 
 
 
@@ -3684,16 +3638,16 @@ typedef struct {                                /*!< ITRACE_RAM Structure       
   __IOM uint32_t  START_HIGH;                   /*!< The RAM start address register. High 32 bits                              */
   __IOM uint32_t  LIMIT_LOW;                    /*!< The RAM end address register. Low 32 bits                                 */
   __IOM uint32_t  LIMIT_HIGH;                   /*!< The RAM end address register. High 32 bits                                */
-  __IOM uint32_t  WP_LOW;                       /*!< Write pointer of trace packet into RAM. Low 32 bits                       */
-  __IOM uint32_t  WP_HIGH;                      /*!< Write pointer of trace packet into RAM. High 32 bits                      */
-  __IOM uint32_t  RP_LOW;                       /*!< Read pointer of trace packet into RAM. Low 32 bits                        */
-  __IOM uint32_t  RP_HIGH;                      /*!< Read pointer of trace packet into RAM. High 32 bits                       */
+  __IOM uint32_t  WRITE_POINTER_LOW;            /*!< Write pointer of trace packet into RAM. Low 32 bits                       */
+  __IOM uint32_t  WRITE_POINTER_HIGH;           /*!< Write pointer of trace packet into RAM. High 32 bits                      */
+  __IOM uint32_t  READ_POINTER_LOW;             /*!< Read pointer of trace packet into RAM. Low 32 bits                        */
+  __IOM uint32_t  READ_POINTER_HIGH;            /*!< Read pointer of trace packet into RAM. High 32 bits                       */
   __IM  uint32_t  RESERVED1[4];
   __IM  uint32_t  DATA;                         /*!< RAM data is read by external host via this register.                      */
   __IOM uint32_t  DMA_THRESH;                   /*!< When the ITRACE RAM reaches the threshold limit, it will send
                                                      an interrupt to the DMA, then DMA will start the transfer.                */
+  __IOM uint32_t  AXI_LOCK;
 } ITRACE_RAM_Type;                              /*!< Size = 72 (0x48)                                                          */
-
 
 
 /* =========================================================================================================================== */
@@ -3706,14 +3660,15 @@ typedef struct {                                /*!< ITRACE_RAM Structure       
   */
 
 typedef struct {                                /*!< PLIC Structure                                                            */
-  __IOM uint32_t  PRIORITY[82];                 /*!< Priority registers for interrupt source 0 to 81                           */
+  __IOM uint32_t  PRIORITY[82];                 /*!< Priority register                                                         */
   __IM  uint32_t  RESERVED[942];
-  __IM  uint32_t  PENDING_0_31;                 /*!< Interrupt pending bits of sources 0-31                                    */
-  __IM  uint32_t  PENDING_32_63;                /*!< Interrupt pending bits of sources 32-63                                   */
-  __IM  uint32_t  PENDING_64_81     :18 ;       /*!< Interrupt pending bits of sources 64-81                                   */
+  __IM  uint32_t  PENDING_B0;                   /*!< Interrupt pending bits of sources 0-31                                    */
+  __IM  uint32_t  PENDING_B1;                   /*!< Interrupt pending bits of sources 32-63                                   */
+  __IM  uint32_t  PENDING_B2;                   /*!< Interrupt pending bits of sources 64-81                                   */
   __IM  uint32_t  RESERVED1[1021];
-  __IOM uint64_t  INTR_EN_0_63;                 /*!< Interrupt enable bits of sources 0-63                                     */
-  __IOM uint64_t  INTR_EN_64_81     :18 ;       /*!< Interrupt enable bits of sources 64-81                                    */
+  __IOM uint32_t  INTR_ENABLE_B0;               /*!< Interrupt enable bits of sources 0-31                                     */
+  __IOM uint32_t  INTR_ENABLE_B1;               /*!< Interrupt enable bits of sources 32-63                                    */
+  __IOM uint32_t  INTR_ENABLE_B2;               /*!< Interrupt enable bits of sources 64-81                                    */
   __IM  uint32_t  RESERVED2[522237];
   __IOM uint32_t  PRIORITY_THRES;               /*!< Priority threshold register                                               */
   __IOM uint32_t  INTR_COMPLETE;                /*!< Interrupt claim/complete register                                         */
@@ -3765,6 +3720,403 @@ typedef struct {                                /*!< OTP Structure              
   } ;
   __OM  uint8_t  OUTPUT;                       /*!< One-Time Programmable Memory Output Data register.                        */
 } OTP_Type;
+
+/* =========================================================================================================================== */
+/* ================                                      TRNG_CONTROLLER                                      ================ */
+/* =========================================================================================================================== */
+
+
+/**
+  * @brief True Random Number Generator Control/Configuration/Status registers. (TRNG_CONTROLLER)
+  */
+
+typedef struct {                                /*!< TRNG_CONTROLLER Structure                                                 */
+  
+  union {
+    __IOM uint32_t TRNG_REG_CTRL;               /*!< Control Register                                                          */
+    
+    struct {
+      __IOM uint32_t CMD        : 4;            /*!< Command bits                                                              */
+            uint32_t            : 28;
+    } TRNG_REG_CTRL_b;
+  } ;
+  
+  union {
+    __IOM uint32_t TRNG_REG_MODE;               /*!< MODE Register                                                             */
+    
+    struct {
+      __IOM uint32_t SEC_ALG    : 1;            /*!< Select security strength in DRBG                                          */
+            uint32_t            : 2;
+      __IOM uint32_t PRED_RESIST : 1;           /*!< Enable/disable prediction resistance                                      */
+      __IOM uint32_t ADDIN_PRESENT : 1;         /*!< Indicate availability of the Additional Input                             */
+      __IOM uint32_t KAT_VEC    : 2;            /*!< Select test vectors for known-answer test                                 */
+      __IOM uint32_t KAT_SEL    : 2;            /*!< Select test component for known-answer test                               */
+            uint32_t            : 23;
+    } TRNG_REG_MODE_b;
+  } ;
+  
+  union {
+    __IOM uint32_t TRNG_REG_SMODE;              /*!< SMODE Register                                                            */
+    
+    struct {
+      __IOM uint32_t NONCE      : 1;            /*!< Set the core in nonce seeding mode                                        */
+      __IOM uint32_t MISSION_MODE : 1;          /*!< Sets the operating mode to TEST or MISSION.                               */
+      __IOM uint32_t MAX_REJECTS : 8;           /*!< Maximum number of consecutive bit rejections before issuing
+                                                     ring tweak. Defaults to 10.                                               */
+            uint32_t            : 6;
+      __IOM uint32_t INDIV_HT_DISABLE : 8;      /*!< Disable/Enable statistical health tests individually, in TEST
+                                                     mode.                                                                     */
+            uint32_t            : 7;
+      __IOM uint32_t NOISE_COLLECT : 1;         /*!< Enable raw noise collection mode.                                         */
+    } TRNG_REG_SMODE_b;
+  } ;
+  
+  union {
+    __IOM uint32_t TRNG_REG_STAT;               /*!< Status                                                                    */
+    
+    struct {
+      __IOM uint32_t LAST_CMD   : 4;            /*!< Last command                                                              */
+      __IOM uint32_t SEC_ALG    : 1;            /*!< Maximum security strength                                                 */
+      __IOM uint32_t NONCE_MODE : 1;            /*!< Enable/Disable Nonce mode                                                 */
+      __IOM uint32_t MISSION_MODE : 1;          /*!< Mission mode or Test mode                                                 */
+      __IOM uint32_t DRBG_STATE : 2;            /*!< Reflects how a DRBG state is instantiated                                 */
+      __IOM uint32_t STARTUP_TEST_STUCK : 1;    /*!< Indicates whether the startup test is stuck                               */
+      __IOM uint32_t STARTUP_TEST_IN_PROG : 1;  /*!< Indicates whether the startup test is in progress                         */
+            uint32_t            : 20;
+      __IOM uint32_t BUSY       : 1;            /*!< Indicates the state of the core                                           */
+    } TRNG_REG_STAT_b;
+  } ;
+  
+  union {
+    __IOM uint32_t TRNG_REG_IE;                 /*!< Enable                                                                    */
+    
+    struct {
+      __IOM uint32_t ZEROIZED   : 1;            /*!< Include or exclude ZEROIZED interrupt contribution                        */
+      __IOM uint32_t KAT_COMPLETED : 1;         /*!< Include or exclude KAT_COMPLETED interrupt contribution                   */
+      __IOM uint32_t NOISE_RDY  : 1;            /*!< Include or exclude NOISE_RDY interrupt contribution                       */
+      __IOM uint32_t ALARMS     : 1;            /*!< Include or exclude ALARMS interrupt contribution                          */
+      __IOM uint32_t DONE       : 1;            /*!< Include or exclude DONE interrupt contribution                            */
+      __IOM uint32_t SIF_ERR    : 1;            /*!< Include or exclude SIF_ERR interrupt contribution                         */
+      __IOM uint32_t SIF_SBE    : 1;            /*!< Include or exclude SIF_SBE interrupt contribution                         */
+            uint32_t            : 24;
+      __IOM uint32_t GLBL       : 1;            /*!< Global interrupt enable signal for the DWC TRNG NIST                      */
+    } TRNG_REG_IE_b;
+  } ;
+  
+  union {
+    __IOM uint32_t TRNG_REG_ISTAT;              /*!< Interrupt Status Register                                                 */
+    
+    struct {
+      __IOM uint32_t ZEROIZED   : 1;            /*!< Indicates the completion of the ZEROIZE operation.                        */
+      __IOM uint32_t KAT_COMPLETED : 1;         /*!< Indicates the completion of the RUN_KAT command.                          */
+      __IOM uint32_t NOISE_RDY  : 1;            /*!< NOISE_RDY bit informs the user when 512 bits of noise have been
+                                                     generated.                                                                */
+      __IOM uint32_t ALARMS     : 1;            /*!< The ALARMS bit allows the user to poll failures.                          */
+      __IOM uint32_t DONE       : 1;            /*!< The DONE bit allows the user to poll the completion of all commands       */
+      __IOM uint32_t SIF_ERR    : 1;            /*!< The SIF_ERR bit indicates an error has occured in the safety
+                                                     interface.                                                                */
+      __IOM uint32_t SIF_SBE    : 1;            /*!< The SIF_SBE bit indicates an single bit correctable error has
+                                                     occured in the safety interface.                                          */
+            uint32_t            : 25;
+    } TRNG_REG_ISTAT_b;
+  } ;
+  
+  union {
+    __IOM uint32_t TRNG_REG_ALARM;              /*!< Alarm Register                                                            */
+    
+    struct {
+      __IOM uint32_t FAILED_TEST_ID : 4;        /*!< the FAILED_TEST_ID field shows which test has failed.                     */
+      __IOM uint32_t ILLEGAL_CMD_SEQ : 1;       /*!< The ILLEGAL_CMD_SEQ field indicates that the S/W Driver has
+                                                     executed an illegal command sequence.                                     */
+      __IOM uint32_t FAILED_SEED_ST_HT : 1;     /*!< The FAILED_SEED_ST_HT field indicates that the statistical tests
+                                                     applied on the entropy source output is failed                            */
+            uint32_t            : 26;
+    } TRNG_REG_ALARM_b;
+  } ;
+  
+  union {
+    __IOM uint32_t TRNG_REG_COREKIT_REL;        /*!< CoreKit Release Register                                                  */
+    
+    struct {
+      __IOM uint32_t REL_NUM    : 16;           /*!< Indicates the coreKit release version                                     */
+      __IOM uint32_t EXT_VER    : 8;            /*!< Indicates the coreKit release extension version number.                   */
+            uint32_t            : 4;
+      __IOM uint32_t EXT_ENUM   : 4;            /*!< Indicates the coreKit release extension type.                             */
+    } TRNG_REG_COREKIT_REL_b;
+  } ;
+  
+  union {
+    __IOM uint32_t TRNG_REG_FEATURES;           /*!< Features Register                                                         */
+    
+    struct {
+      __IOM uint32_t SECURE_RST_STATE : 1;      /*!< Indicates if the core resets to MISSION or TEST mode.                     */
+      __IOM uint32_t DIAG_LEVEL_ST_HLT : 3;     /*!< Level of diagnostic circuitry for the health test.                        */
+      __IOM uint32_t DIAG_LEVEL_CLP800 : 3;     /*!< Level of diagnostic circuitry for DWC_trng                                */
+      __IOM uint32_t DIAG_LEVEL_NS : 1;         /*!< Level of diagnostic circuitry for Noise Source output Registers.          */
+      __IOM uint32_t PS_PRESENT : 1;            /*!< Determines whether the content of the NPA_DATAx registers is
+                                                     used as a Personalization String during                                   */
+      __IOM uint32_t AES_256    : 1;            /*!< Indicates whether the instantiated AES is 128-bit or 256-bit.             */
+            uint32_t            : 22;
+    } TRNG_REG_FEATURES_b;
+  } ;
+  __IOM uint32_t  TRNG_REG_RAND0;               /*!< Random Data Registers                                                     */
+  __IOM uint32_t  TRNG_REG_RAND1;               /*!< Random Data Registers                                                     */
+  __IOM uint32_t  TRNG_REG_RAND2;               /*!< Random Data Registers                                                     */
+  __IOM uint32_t  TRNG_REG_RAND3;               /*!< Random Data Registers                                                     */
+  __IOM uint32_t  TRNG_REG_NPA_DATA0;           /*!< The NPA_DATA register holds Noise/Nonce bits                              */
+  __IOM uint32_t  TRNG_REG_NPA_DATA1;           /*!< The NPA_DATA register holds Noise/Nonce bits                              */
+  __IOM uint32_t  TRNG_REG_NPA_DATA2;           /*!< The NPA_DATA register holds Noise/Nonce bits                              */
+  __IOM uint32_t  TRNG_REG_NPA_DATA3;           /*!< The NPA_DATA register holds Noise/Nonce bits                              */
+  __IOM uint32_t  TRNG_REG_NPA_DATA4;           /*!< The NPA_DATA register holds Noise/Nonce bits                              */
+  __IOM uint32_t  TRNG_REG_NPA_DATA5;           /*!< The NPA_DATA register holds Noise/Nonce bits                              */
+  __IOM uint32_t  TRNG_REG_NPA_DATA6;           /*!< The NPA_DATA register holds Noise/Nonce bits                              */
+  __IOM uint32_t  TRNG_REG_NPA_DATA7;           /*!< The NPA_DATA register holds Noise/Nonce bits                              */
+  __IOM uint32_t  TRNG_REG_NPA_DATA8;           /*!< The NPA_DATA register holds Noise/Nonce bits                              */
+  __IOM uint32_t  TRNG_REG_NPA_DATA9;           /*!< The NPA_DATA register holds Noise/Nonce bits                              */
+  __IOM uint32_t  TRNG_REG_NPA_DATA10;          /*!< The NPA_DATA register holds Noise/Nonce bits                              */
+  __IOM uint32_t  TRNG_REG_NPA_DATA11;          /*!< The NPA_DATA register holds Noise/Nonce bits                              */
+  __IOM uint32_t  TRNG_REG_NPA_DATA12;          /*!< The NPA_DATA register holds Noise/Nonce bits                              */
+  __IOM uint32_t  TRNG_REG_NPA_DATA13;          /*!< The NPA_DATA register holds Noise/Nonce bits                              */
+  __IOM uint32_t  TRNG_REG_NPA_DATA14;          /*!< The NPA_DATA register holds Noise/Nonce bits                              */
+  __IOM uint32_t  TRNG_REG_NPA_DATA15;          /*!< The NPA_DATA register holds Noise/Nonce bits                              */
+  __IOM uint32_t  TRNG_REG_SEED0;               /*!< The SEED register holds seed value                                        */
+  __IOM uint32_t  TRNG_REG_SEED1;               /*!< The SEED register holds seed value                                        */
+  __IOM uint32_t  TRNG_REG_SEED2;               /*!< The SEED register holds seed value                                        */
+  __IOM uint32_t  TRNG_REG_SEED3;               /*!< The SEED register holds seed value                                        */
+  __IOM uint32_t  TRNG_REG_SEED4;               /*!< The SEED register holds seed value                                        */
+  __IOM uint32_t  TRNG_REG_SEED5;               /*!< The SEED register holds seed value                                        */
+  __IOM uint32_t  TRNG_REG_SEED6;               /*!< The SEED register holds seed value                                        */
+  __IOM uint32_t  TRNG_REG_SEED7;               /*!< The SEED register holds seed value                                        */
+  __IOM uint32_t  TRNG_REG_SEED8;               /*!< The SEED register holds seed value                                        */
+  __IOM uint32_t  TRNG_REG_SEED9;               /*!< The SEED register holds seed value                                        */
+  __IOM uint32_t  TRNG_REG_SEED10;              /*!< The SEED register holds seed value                                        */
+  __IOM uint32_t  TRNG_REG_SEED11;              /*!< The SEED register holds seed value                                        */
+  __IM  uint32_t  RESERVED[11];
+  __IOM uint32_t  TIME_TO_SEED;                 /*!< Shows the number of system clock cycles taken to generate raw
+                                                     noise for the last GEN_NOISE command.                                     */
+  __IM  uint32_t  RESERVED1[7];
+  
+  union {
+    __IOM uint32_t TRNG_REG_BUILD_CFG0;         /*!< Contains build-time DWC TRNG NIST parameter settings.                     */
+    
+    struct {
+      __IOM uint32_t CORE_TYPE  : 2;            /*!< Core type                                                                 */
+            uint32_t            : 5;
+      __IOM uint32_t BG8        : 1;            /*!< Indicates number of bit generators present                                */
+      __IOM uint32_t CDC_SYNC_DEPTH : 2;        /*!< Depth of the CDC resynchronizer chains                                    */
+      __IOM uint32_t BACKGROUND_NOISE : 1;      /*!< Indicates background noise collection is present                          */
+      __IOM uint32_t EDU_PRESENT : 1;           /*!< Indicates EDU-RNC is present                                              */
+      __IOM uint32_t AES_DATAPATH : 1;          /*!< AES datapath width                                                        */
+      __IOM uint32_t AES_MAX_KEY_SIZE : 1;      /*!< AES max key size                                                          */
+      __IOM uint32_t PERSONALIZATION_STR : 1;   /*!< Personalization string used                                               */
+            uint32_t            : 17;
+    } TRNG_REG_BUILD_CFG0_b;
+  } ;
+  
+  union {
+    __IOM uint32_t TRNG_REG_BUILD_CFG1;         /*!< Contains additional build-time TRNG NIST parameter settings.              */
+    
+    struct {
+      __IOM uint32_t NUM_RAW_NOISE_BLKS : 8;    /*!< Number of raw noise blocks used for start-up test                         */
+      __IOM uint32_t STICKY_STARTUP : 1;        /*!< Sticky-startup test present                                               */
+      __IOM uint32_t BYPASS_STARTUP : 1;        /*!< Bypass-startup test present                                               */
+            uint32_t            : 2;
+      __IOM uint32_t AUTO_CORRELATION_TEST : 1; /*!< Auto-correlation test present                                             */
+      __IOM uint32_t MONOBIT_TEST : 1;          /*!< Monobit test present                                                      */
+      __IOM uint32_t RUN_TEST   : 1;            /*!< Run test present                                                          */
+      __IOM uint32_t POKER_TEST : 1;            /*!< Poker test present                                                        */
+      __IOM uint32_t RAW_HT_ADAP_TEST : 3;      /*!< Raw health adaptive proportion test                                       */
+      __IOM uint32_t RAW_HT_REP_TEST : 1;       /*!< Raw health repetition test present                                        */
+      __IOM uint32_t ENT_SRC_REP_SMPL_SIZE : 3; /*!< Entropy source: sample size                                               */
+      __IOM uint32_t ENT_SRC_REP_TEST : 1;      /*!< Entropy source repetition test present                                    */
+      __IOM uint32_t ENT_SRC_REP_MIN_ENTROPY : 7;/*!< Entropy source repetition minimum entropy per bit                        */
+            uint32_t            : 1;
+    } TRNG_REG_BUILD_CFG1_b;
+  } ;
+} TRNG_CONTROLLER_Type;                         /*!< Size = 248 (0xf8)                                                         */
+
+
+
+/* =========================================================================================================================== */
+/* ================                                      EDU_CONTROLLER                                       ================ */
+/* =========================================================================================================================== */
+
+
+/**
+  * @brief EDU_CONTROLLER_REGISTERS (EDU_CONTROLLER)
+  */
+
+typedef struct {                                /*!< EDU_CONTROLLER Structure                                                  */
+  
+  union {
+    __IOM uint32_t RNC_CTRL;                    /*!< RNC Control Register                                                      */
+    
+    struct {
+      __IOM uint32_t RNC_ENABLE : 1;            /*!< General Enable for the RNC.                                               */
+      __IOM uint32_t AUTO_GENRAND : 1;          /*!< generate random numbers for distribution to the private VTRNG             */
+      __IOM uint32_t AUTO_RESEED : 1;           /*!< generate a seed from the internal noise source and then reseed
+                                                     the DRBG.                                                                 */
+      __IOM uint32_t AUTO_START : 1;            /*!< Enables autonomous function Auto-Start.                                   */
+            uint32_t            : 28;
+    } RNC_CTRL_b;
+  } ;
+  __IM  uint32_t  RESERVED;
+  __IOM uint32_t  EDU_RESEED_CNTR;              /*!< EDU RESEED COUNTER REGISTER                                               */
+  __IM  uint32_t  RESERVED1;
+  
+  union {
+    __IOM uint32_t EDU_RBC_CTRL;                /*!< RBC Control Register                                                      */
+    
+    struct {
+      __IOM uint32_t CH0_RATE   : 1;            /*!< Sets rate of serial entropy output for RBC channel 0                      */
+            uint32_t            : 7;
+      __IOM uint32_t CH1_RATE   : 1;            /*!< Sets rate of serial entropy output for RBC channel 1                      */
+            uint32_t            : 7;
+      __IOM uint32_t CH2_RATE   : 1;            /*!< Sets rate of serial entropy output for RBC channel 2                      */
+            uint32_t            : 7;
+      __IOM uint32_t CH0_URUN_BLANK : 2;        /*!< Sets initial underrun blanking counter duration for channel
+                                                     0                                                                         */
+      __IOM uint32_t CH1_URUN_BLANK : 2;        /*!< Sets initial underrun blanking counter duration for channel
+                                                     1                                                                         */
+      __IOM uint32_t CH2_URUN_BLANK : 2;        /*!< Sets initial underrun blanking counter duration for channel
+                                                     2                                                                         */
+            uint32_t            : 2;
+    } EDU_RBC_CTRL_b;
+  } ;
+  __IM  uint32_t  RESERVED2;
+  
+  union {
+    __IOM uint32_t EDU_STAT;                    /*!< Status Register                                                           */
+    
+    struct {
+      __IOM uint32_t FIFO_FULL  : 1;            /*!< Set to 1 when RBC FIFO is full.                                           */
+      __IOM uint32_t FIFO_EMPTY : 1;            /*!< Set to 1 when RBC FIFO is empty.                                          */
+      __IOM uint32_t RNC_ENABLED : 1;           /*!< Set to 1 when RNC is enabled.                                             */
+      __IOM uint32_t RNC_BUSY   : 1;            /*!< Set to 1 when RNC is busy.                                                */
+            uint32_t            : 20;
+      __IOM uint32_t FIFO_LEVEL : 8;            /*!< Shows the current RNC FIFO fill level.                                    */
+    } EDU_STAT_b;
+  } ;
+  __IM  uint32_t  RESERVED3;
+  
+  union {
+    __IOM uint32_t IE;                          /*!< Interrupt Enable Register                                                 */
+    
+    struct {
+      __IOM uint32_t RESEED_REMINDER_EN : 1;    /*!< RESEED_REMINDER enable                                                    */
+      __IOM uint32_t ACCESS_VIOL_EN : 1;        /*!< ACCESS_VIOL enable                                                        */
+            uint32_t            : 1;
+      __IOM uint32_t RNC_DRVN_OFFLINE_EN : 1;   /*!< RNC_DRVN_OFFLINE_EN                                                       */
+      __IOM uint32_t WAIT_EXP_TIMEOUT_EN : 1;   /*!< WAIT_EXP_TIMEOUT_EN                                                       */
+      __IOM uint32_t PRIVATE_VTRNG_EN : 1;      /*!< PRIVATE_VTRNG_EN                                                          */
+      __IOM uint32_t CH0_RBC_URUNO_EN : 1;      /*!< CH0_RBC_URUNO_EN                                                          */
+      __IOM uint32_t CH1_RBC_URUN_EN : 1;       /*!< CH1_RBC_URUN_EN                                                           */
+      __IOM uint32_t CH2_RBC_URUN_EN : 1;       /*!< CH2_RBC_URUN_EN                                                           */
+            uint32_t            : 22;
+      __IOM uint32_t GLBL_EN    : 1;            /*!< Global enable                                                             */
+    } IE_b;
+  } ;
+  
+  union {
+    __IOM uint32_t ISTAT;                       /*!< Interrupt Status Register                                                 */
+    
+    struct {
+      __IOM uint32_t RESEED_REMINDER : 1;       /*!< Status and acknowledgment (clearing) of RESEED_REMINDER indicator.        */
+      __IOM uint32_t ACCESS_VIOL : 1;           /*!< Status and acknowledgment (clearing) of ACCESS_VIOL indicator.            */
+            uint32_t            : 1;
+      __IOM uint32_t RNC_DRVN_OFFLINE : 1;      /*!< Status and acknowledgment (clearing) of RNC_DRVN_OFFLINE indicator.       */
+      __IOM uint32_t WAIT_EXP_TIMEOUT : 1;      /*!< Status and acknowledgment (clearing) of WAIT_EXP_TIMEOUT indicator.       */
+      __IOM uint32_t PRIVATE_VTRNG : 1;         /*!< Status and acknowledgment (clearing) of PRIVATE_VTRNG indicator.          */
+      __IOM uint32_t CH0_RBC_URUN : 1;          /*!< Status and acknowledgment (clearing) of CH0_RBC_URUN indicator.           */
+      __IOM uint32_t CH1_RBC_URUN : 1;          /*!< Status and acknowledgment (clearing) of CH1_RBC_URUN indicator.           */
+      __IOM uint32_t CH2_RBC_URUN : 1;          /*!< Status and acknowledgment (clearing) of CH2_RBC_URUN indicator.           */
+            uint32_t            : 23;
+    } ISTAT_b;
+  } ;
+  __IM  uint32_t  RESERVED4[34];
+  
+  union {
+    __IOM uint32_t EDU_BUILD_CFG0;              /*!< Contains the build-time EDU parameter settings                            */
+    
+    struct {
+      __IOM uint32_t FIFO_DEPTH : 3;            /*!< Levels in the RNC FIFO                                                    */
+            uint32_t            : 1;
+      __IOM uint32_t RBC_CHANNELS : 2;          /*!< Number of RBC channels                                                    */
+      __IOM uint32_t ESM_CHANNEL : 1;           /*!< Indicates EDU ESM Nonce port is present                                   */
+            uint32_t            : 1;
+      __IOM uint32_t PUBLIC_VTRNG_CHANNELS : 4; /*!< Number of public VTRNG channels                                           */
+      __IOM uint32_t RBC0_RATE_WIDTH : 3;       /*!< Width of RBC0 rate width counter (enumerated)                             */
+            uint32_t            : 1;
+      __IOM uint32_t RBC1_RATE_WIDTH : 3;       /*!< Width of RBC1 rate width counter (enumerated)                             */
+            uint32_t            : 1;
+      __IOM uint32_t RBC2_RATE_WIDTH : 3;       /*!< Width of RBC2 rate width counter (enumerated)                             */
+            uint32_t            : 9;
+    } EDU_BUILD_CFG0_b;
+  } ;
+  __IM  uint32_t  RESERVED5[11];
+  
+  union {
+    __IOM uint32_t VCTRL;                       /*!< Virtual TRNG Control Register                                             */
+    
+    struct {
+      __IOM uint32_t CMD        : 4;            /*!< Execute a command                                                         */
+            uint32_t            : 28;
+    } VCTRL_b;
+  } ;
+  
+  union {
+    __IOM uint32_t VSTAT;                       /*!< Virtual TRNG Status Register                                              */
+    
+    struct {
+      __IOM uint32_t LAST_CMD   : 4;            /*!< Previous enumerated command.                                              */
+      __IOM uint32_t CURRENT_CMD : 4;           /*!< Currently executing enumerated command.                                   */
+      __IOM uint32_t SLICE_VLD0 : 1;            /*!< Indicates that 32-bit slice 0 is valid.                                   */
+      __IOM uint32_t SLICE_VLD1 : 1;            /*!< Indicates that 32-bit slice 1 is valid.                                   */
+      __IOM uint32_t SLICE_VLD2 : 1;            /*!< Indicates that 32-bit slice 2 is valid.                                   */
+      __IOM uint32_t SLICE_VLD3 : 1;            /*!< Indicates that 32-bit slice 3 is valid.                                   */
+      __IOM uint32_t SLICE_RWI0 : 1;            /*!< Indicates that 32-bit slice 0 has a Read While Invalid Error.             */
+      __IOM uint32_t SLICE_RWI1 : 1;            /*!< Indicates that 32-bit slice 1 has a Read While Invalid Error.             */
+      __IOM uint32_t SLICE_RWI2 : 1;            /*!< Indicates that 32-bit slice 2 has a Read While Invalid Error.             */
+      __IOM uint32_t SLICE_RWI3 : 1;            /*!< Indicates that 32-bit slice 3 has a Read While Invalid Error.             */
+            uint32_t            : 6;
+      __IOM uint32_t RNC_FIFO_EMPTY : 1;        /*!< Indicates that the RNC_FIFO is empty.                                     */
+      __IOM uint32_t BCKGRND_NOISE : 1;         /*!< Indicates that BACKGROUND_NOISE build-time configuration feature
+                                                     has been included.                                                        */
+      __IOM uint32_t ANY_RWI    : 1;            /*!< Indicates that one or more SLICE_RWIx bits are set.                       */
+      __IOM uint32_t SRWE       : 1;            /*!< Indicates a Simultaneous Read/Write Error has occurred.                   */
+            uint32_t            : 1;
+      __IOM uint32_t RWUE       : 1;            /*!< Indicates a Request While Unseeded Error has occurred.                    */
+      __IOM uint32_t SEED_ENUM  : 2;            /*!< Indicates seed-state of the NIST core.                                    */
+      __IOM uint32_t RNC_ENABLED : 1;           /*!< Indicates that the RNC is enabled.                                        */
+      __IOM uint32_t BUSY       : 1;            /*!< Indicates that the VTRNG port is busy executing a command.                */
+    } VSTAT_b;
+  } ;
+  
+  union {
+    __IOM uint32_t VIE;                         /*!< The VIE register enables the generation of interrupts                     */
+    
+    struct {
+      __IOM uint32_t RAND_RDY_EN : 1;           /*!< Include or exclude RAND_RDY interrupt contribution.                       */
+      __IOM uint32_t ALARM_EN   : 1;            /*!< Include or exclude ALARM interrupt contribution.                          */
+            uint32_t            : 29;
+      __IOM uint32_t GLBL_EN    : 1;            /*!< Global VTRNG interrupt enable.                                            */
+    } VIE_b;
+  } ;
+  
+  union {
+    __IOM uint32_t VISTAT;                      /*!< The VISTAT register used to monitor internal status                       */
+    
+    struct {
+      __IOM uint32_t RAND_RDY   : 1;            /*!< Status and acknowledgment (clearing) of VTRNG RAND_RDY indicator.         */
+      __IOM uint32_t ALARM      : 1;            /*!< Status and acknowledgment (clearing) of VTRNG ALARM indicator.            */
+            uint32_t            : 30;
+    } VISTAT_b;
+  } ;
+  __IOM uint32_t  VRAND0;                       /*!< Random Data Registers                                                     */
+  __IOM uint32_t  VRAND1;                       /*!< Random Data Registers                                                     */
+  __IOM uint32_t  VRAND2;                       /*!< Random Data Registers                                                     */
+  __IOM uint32_t  VRAND3;                       /*!< Random Data Registers                                                     */
+} EDU_CONTROLLER_Type;                          /*!< Size = 256 (0x100)                                                        */
 
 /* =========================================================================================================================== */
 /* ================                                         VTRNG_EDU                                         ================ */
@@ -3854,7 +4206,6 @@ typedef struct {                                /*!< VTRNG_EDU Structure        
 #define CLOCK_FREQUENCY_FPGA        30000000UL
 #define CLOCK_FREQUENCY_ASIC        700000000UL
 // extern volatile uint8_t log_level;
-extern volatile uint64_t CLOCK_FREQUENCY_BASE;
 // volatile uint64_t CLOCK_FREQUENCY_BASE = CLOCK_FREQUENCY_ASIC;
 
 /** @} */ /* End of group Device_Peripheral_peripheralAddr */

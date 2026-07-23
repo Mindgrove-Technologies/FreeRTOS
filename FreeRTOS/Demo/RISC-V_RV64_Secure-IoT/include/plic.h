@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file   plic.h
  * @brief  This is the PLIC Driver header file for Platform Level Interrupt
  *         Controller.
@@ -47,6 +47,7 @@ extern "C" {
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 /** @brief Defines the maximum interrupt source. */
 #define PLIC_MAX_INTERRUPT_SRC  81U
@@ -88,8 +89,10 @@ typedef void (*PLIC_IRQHandler_t)(void * args);
  * @param interrupt_id The parameter \a interrupt_id is an unsigned integer
  *                     that identifies the PLIC interrupt to be completed.
  * 
- * @return Returns Error code if interrupt id is invalid, else 
- *         return SUCCESS.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  Interrupt marked as completed successfully.
+ * - @ref ENODEV  Returned if the interrupt_id exceeds the maximum supported
+ *                PLIC interrupt source @ref PLIC_MAX_INTERRUPT_SRC.
  */
 uint16_t PLIC_Interrupt_Complete(uint32_t interrupt_id);
 
@@ -118,8 +121,10 @@ void PLIC_Handler(void);
  *                     integer that represents the interrupt id for which
  *                     interrupt has to be enabled.
  * 
- * @return Returns Error code if interrupt id is invalid, else 
- *         return SUCCESS.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  Interrupt enabled successfully.
+ * - @ref ENODEV  Returned if the interrupt_id exceeds the maximum supported
+ *                PLIC interrupt source @ref PLIC_MAX_INTERRUPT_SRC.
  */
 uint16_t PLIC_Interrupt_Enable(uint32_t interrupt_id);
 
@@ -133,8 +138,10 @@ uint16_t PLIC_Interrupt_Enable(uint32_t interrupt_id);
  *                     integer that represents the interrupt id for
  *                     which interrupt has to be disabled.
  * 
- * @return Returns Error code if interrupt id is invalid, else 
- *         return SUCCESS.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  Interrupt disabled successfully.
+ * - @ref ENODEV  Returned if the interrupt_id exceeds the maximum supported
+ *                PLIC interrupt source @ref PLIC_MAX_INTERRUPT_SRC.
  */
 uint16_t PLIC_Interrupt_Disable(uint32_t interrupt_id);
 
@@ -149,24 +156,12 @@ uint16_t PLIC_Interrupt_Disable(uint32_t interrupt_id);
  *                       integer that represents the priority value
  *                       above which interrupt will be triggered.
  * 
- * @return Returns Error code if interrupt id is invalid or if priority
- *         value is invalid , else return SUCCESS.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  Interrupt priority threshold configured successfully.
+ * - @ref EDOM  Returned if the priority_value exceeds the maximum supported
+ *              priority level of @ref PLIC_PRIORITY_7.
  */
 uint16_t PLIC_Interrupt_Threshold(uint32_t priority_value);
-
-/**
- * @brief Used to check the pending status of a PLIC interrupt.
- * 
- * @details This function checks whether the specified PLIC interrupt
- *          source is pending and awaiting service.
- * 
- * @param interrupt_id The parameter \a interrupt_id is an unsigned integer
- *                     that identifies the PLIC interrupt source to be checked.
- * 
- * @return Returns 1 if it is pending, 0 if it is not pending or already
- *         claimed and Error code if the interrupt ID is invalid.
- */
-uint16_t PLIC_Interrupt_Pending(uint8_t int_id);
 
 /**
  * @brief Used to set the priority level for a specific PLIC interrupt.
@@ -181,10 +176,34 @@ uint16_t PLIC_Interrupt_Pending(uint8_t int_id);
  * @param priority_value The parameter \a priority_value is an unsigned
  *                       integer that specifies the interrupt priority level.
  * 
- * @return Returns Error code if interrupt id is invalid, if priority 
- *         value is invalid , else return SUCCESS.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  Interrupt priority configured successfully.
+ * - @ref ENODEV  Returned if the interrupt_id exceeds the maximum supported
+ *                PLIC interrupt source @ref PLIC_MAX_INTERRUPT_SRC.
+ * - @ref EDOM  Returned if the priority_value exceeds the maximum supported
+ *              priority level of @ref PLIC_PRIORITY_7.
  */
 uint16_t PLIC_Set_Interrupt_Priority(uint32_t int_id, uint32_t priority_value);
+
+/**
+ * @brief Used to check the pending status of a PLIC interrupt.
+ * 
+ * @details This function checks whether the specified PLIC interrupt
+ *          source is pending and awaiting service.
+ * 
+ * @param interrupt_id The parameter \a interrupt_id is an unsigned integer
+ *                     that identifies the PLIC interrupt source to be checked.
+ * 
+ * @param pending_status The parameter \a pending_status is a pointer to a 
+ *                       boolean that is set to true if the interrupt is
+ *                       pending, false otherwise.
+ * 
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  Pending status retrieved successfully.
+ * - @ref ENODEV  Returned if the interrupt_id exceeds the maximum supported
+ *                PLIC interrupt source @ref PLIC_MAX_INTERRUPT_SRC.
+ */
+uint16_t PLIC_Interrupt_Pending(uint8_t interrupt_id, bool *pending_status);
 
 /**
  * @brief Used to configure the PLIC interrupt mode as nested or non-nested.
@@ -229,8 +248,11 @@ void PLIC_Init(void);
  * @param args The parameter \a args is of void * type used to pass arguement to
  *             interrupt handler.
  * 
- * @return Returns SUCCESS when successfully initialised or else Error code
- *         when device not found.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  Interrupt handler registered successfully.
+ * - @ref EFAULT  Returned if the provided handler function pointer is NULL.
+ * - @ref ENODEV  Returned if the interrupt_id exceeds the maximum supported
+ *                PLIC interrupt source @ref PLIC_MAX_INTERRUPT_SRC.
  */
 uint16_t PLIC_Set_Handler(uint8_t interrupt_id, \
                          PLIC_IRQHandler_t handler, void *args);

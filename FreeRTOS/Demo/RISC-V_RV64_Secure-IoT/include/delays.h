@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  *
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file delays.h
  * @brief Contains apis for generating delays using mcycle.
  * @details Provides the API for generating delays in milliseconds and microseconds using mcycle.

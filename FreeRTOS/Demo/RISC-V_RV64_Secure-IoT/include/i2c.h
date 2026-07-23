@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file i2c.h
  * @brief  This is a Baremetal I2C Driver header file for I2C Peripheral.
  * @details Provides prototypes for initializing the I2C peripheral and 
@@ -140,6 +140,18 @@ const I2C_Instance_t *I2C_INSTANCE_1(void);
 
 /** @} */  /* end of I2C_Instance_Macros */
 
+/**
+ * @enum I2C_IRQn_Type
+ * 
+ * @brief I2C interrupt ID
+ * 
+ * This enumeration defines the available I2C interrupt numbers supported by the platform.
+*/
+typedef enum {
+/* =========================================  Secure_IoT Specific Interrupt Numbers  ========================================= */
+  I2C0_IRQn                 =  51,              /*!< 51 I2C0                                                                   */
+  I2C1_IRQn                 =  52,              /*!< 52 I2C1                                                                   */
+} I2C_IRQn_Type;
 
 /* Function prototypes */
 
@@ -156,7 +168,9 @@ const I2C_Instance_t *I2C_INSTANCE_1(void);
  * @param clock_frequency The parameter \a clock_frequency is an unsigned integer
  *                        specifying the desired I2C communication clock frequency.
  * 
- * @return SUCCESS when successfully initialised; on failure, returns an error code.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  Configuration applied successfully.
+ * - @ref EINFREQ  Returned if the provided clock frequency is zero.
  */
 uint16_t I2C_Init(const I2C_Instance_t *i2c_num, uint32_t clock_frequency);
 
@@ -185,7 +199,12 @@ uint16_t I2C_Init(const I2C_Instance_t *i2c_num, uint32_t clock_frequency);
  *             - (START_BIT | STOP_BIT ) : sends repeated start bit
  *             
  * 
- * @return SUCCESS if the transmission is successful; on failure, returns an error code.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  Transmission completed successfully; all bytes acknowledged by slave.
+ * - @ref ETIMEDOUT Returned if the bus is not free before transmission starts, or if 
+ *                  the serial interface does not complete bit transmission 
+ *                  within the expected time.
+ * - @ref ENOACK  Returned if acknowledgment is not received from the slave device.
  */
 uint16_t I2C_Transmit(const I2C_Instance_t *i2c_num, uint8_t slave_address, \
                       uint8_t *data, uint8_t length, uint8_t mode);
@@ -214,7 +233,13 @@ uint16_t I2C_Transmit(const I2C_Instance_t *i2c_num, uint8_t slave_address, \
  *             - STOP_BIT : sends stop bit
  *             - (START_BIT | STOP_BIT ) : sends repeated start bit
  * 
- * @return SUCCESS if the reception is successful; on failure, returns an error code.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS  Reception completed successfully; all bytes received from slave.
+ * - @ref ETIMEDOUT Returned if the bus is not free before reception starts, or 
+ *                  if the serial interface does not complete bit reception within
+ *                  the expected time.
+ * - @ref ENOACK  Returned if the slave device does not acknowledge the address byte
+ *                sent prior to reading data.
  */
 uint16_t I2C_Receive(const I2C_Instance_t *i2c_num, uint8_t slave_address, \
                      uint8_t *data, uint8_t length, uint8_t mode);

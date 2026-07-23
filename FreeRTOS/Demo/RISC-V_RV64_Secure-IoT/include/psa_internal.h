@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file psa_internal.h
  * @brief Internal header for PSA Crypto APIs on the Secure-IoT Processor.
  * @details This header declares the internal interfaces, macros, and
@@ -358,11 +358,11 @@ extern "C" {
  *              - PSA_KEY_TYPE_AES
  * @param bits  Size of the key in bits.
  *
- * @return
- * - PSA_SUCCESS if the bit size is valid for the key type.
- * - PSA_ERROR_INVALID_ARGUMENT if the bit size is not allowed or not a
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the bit size is valid for the key type.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if the bit size is not allowed or not a
  *   multiple of 8.
- * - PSA_ERROR_NOT_SUPPORTED if the key type is not supported.
+ * - @ref PSA_ERROR_NOT_SUPPORTED if the key type is not supported.
  */
 psa_status_t psa_validate_unstructured_key_bit_size(psa_key_type_t type,
                                                     size_t bits);
@@ -378,11 +378,11 @@ psa_status_t psa_validate_unstructured_key_bit_size(psa_key_type_t type,
  *
  * @param attributes Pointer to the key attributes to validate.
  *
- * @return
- * - PSA_SUCCESS if the attributes are valid.
- * - PSA_ERROR_INVALID_ARGUMENT if the key ID is invalid or inconsistent with
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the attributes are valid.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if the key ID is invalid or inconsistent with
  *   the lifetime, or if the key policy is invalid.
- * - PSA_ERROR_NOT_SUPPORTED if the key size exceeds the maximum supported
+ * - @ref PSA_ERROR_NOT_SUPPORTED if the key size exceeds the maximum supported
  *   key length.
  */
 psa_status_t psa_validate_key_attributes(const psa_key_attributes_t
@@ -399,9 +399,9 @@ psa_status_t psa_validate_key_attributes(const psa_key_attributes_t
  * @param slot       Pointer to the key slot containing existing key attributes.
  * @param attributes Pointer to the optional attributes to validate.
  *
- * @return
- * - PSA_SUCCESS if the optional attributes are consistent with the key slot.
- * - PSA_ERROR_INVALID_ARGUMENT if any specified attribute conflicts with the
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the optional attributes are consistent with the key slot.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if any specified attribute conflicts with the
  *   corresponding attribute of the key slot.
  */
 psa_status_t psa_validate_optional_attributes(const psa_key_slot_t *slot,
@@ -421,10 +421,10 @@ psa_status_t psa_validate_optional_attributes(const psa_key_slot_t *slot,
  *                        the transition.
  * @param new_state       The new state to set the slot to.
  *
- * @return
- * - PSA_SUCCESS if the key slot was in the expected state and the transition
+ * @return Returns a 32-bit status code: 
+ * - @ref PSA_SUCCESS if the key slot was in the expected state and the transition
  *   succeeded.
- * - PSA_ERROR_CORRUPTION_DETECTED if the key slot was not in the expected
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if the key slot was not in the expected
  *   state.
  */
 psa_status_t psa_key_slot_state_transition(psa_key_slot_t *slot,
@@ -442,10 +442,10 @@ psa_status_t psa_key_slot_state_transition(psa_key_slot_t *slot,
  *
  * @param slot Pointer to the key slot structure.
  *
- * @return
- * - PSA_SUCCESS if the read was successfully unregistered or the slot pointer
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the read was successfully unregistered or the slot pointer
  *   is NULL.
- * - PSA_ERROR_CORRUPTION_DETECTED if the slot state is invalid or if there
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if the slot state is invalid or if there
  *   is an inconsistency in the registered reader count.
  */
 psa_status_t psa_unregister_read(psa_key_slot_t *slot);
@@ -460,11 +460,11 @@ psa_status_t psa_unregister_read(psa_key_slot_t *slot);
  *          the key slots are marked as initialized and ready for key
  *          operations.
  *
- * @return
- * - PSA_SUCCESS if the key slots are successfully initialized.
- * - PSA_ERROR_INSUFFICIENT_MEMORY if dynamic key storage is enabled and
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the key slots are successfully initialized.
+ * - @ref PSA_ERROR_INSUFFICIENT_MEMORY if dynamic key storage is enabled and
  *   memory allocation fails.
- * - PSA_ERROR_GENERIC_ERROR if PMP protection setup fails.
+ * - @ref PSA_ERROR_GENERIC_ERROR if PMP protection setup fails.
  */
 psa_status_t psa_key_slots_init(void);
 
@@ -475,9 +475,9 @@ psa_status_t psa_key_slots_init(void);
  *          by psa_key_slots_init(). It is typically used internally to verify
  *          that key operations can safely proceed.
  *
- * @return
- * - true if the key slots are initialized and ready for key operations.
- * - false if the key slots are not yet initialized.
+ * @return Returns a 32-bit status code:
+ * - @ref true if the key slots are initialized and ready for key operations.
+ * - @ref false if the key slots are not yet initialized.
  */
 bool psa_get_key_slots_initialized(void);
 
@@ -497,11 +497,11 @@ bool psa_get_key_slots_initialized(void);
  * @param p_slot          Output pointer that will point to the reserved key
  *                        slot on success. NULL on failure.
  *
- * @return
- * - PSA_SUCCESS if a key slot was successfully reserved.
- * - PSA_ERROR_BAD_STATE if the key slots subsystem has not been initialized.
- * - PSA_ERROR_CORRUPTION_DETECTED if an internal integrity check fails.
- * - PSA_ERROR_INSUFFICIENT_MEMORY if no free or recyclable slot is available.
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if a key slot was successfully reserved.
+ * - @ref PSA_ERROR_BAD_STATE if the key slots subsystem has not been initialized.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if an internal integrity check fails.
+ * - @ref PSA_ERROR_INSUFFICIENT_MEMORY if no free or recyclable slot is available.
  */
 psa_status_t psa_reserve_free_key_slot(psa_key_id_t *volatile_key_id,
                                        psa_key_slot_t **p_slot);
@@ -531,16 +531,16 @@ psa_status_t psa_reserve_free_key_slot(psa_key_id_t *volatile_key_id,
  * @param bits              Output parameter set to the key size in bits,
  *                          derived from the parsed RSA context. Must not be NULL.
  *
- * @return
- * - PSA_SUCCESS on successful import. key_buffer contains the DER-encoded
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS on successful import. key_buffer contains the DER-encoded
  *   key, key_buffer_length is set to data_length, and bits is set to the
  *   key size in bits.
- * - PSA_ERROR_INVALID_ARGUMENT if any pointer parameter is NULL, or if
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if any pointer parameter is NULL, or if
  *   data_length or key_buffer_size is zero.
- * - PSA_ERROR_BUFFER_TOO_SMALL if data_length exceeds key_buffer_size.
- * - PSA_ERROR_RSA_BAD_INPUT_DATA if the DER-encoded data cannot be parsed
+ * - @ref PSA_ERROR_BUFFER_TOO_SMALL if data_length exceeds key_buffer_size.
+ * - @ref PSA_ERROR_RSA_BAD_INPUT_DATA if the DER-encoded data cannot be parsed
  *   as a valid RSA key (returned from mg_psa_rsa_load_representation).
- * - PSA_ERROR_CORRUPTION_DETECTED if an internal integrity check fails.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if an internal integrity check fails.
  *
  * @note The internal RSA context is always freed before returning,
  *       on both success and failure paths.
@@ -566,11 +566,11 @@ psa_status_t mg_psa_rsa_import_key(const psa_key_attributes_t *attributes,
  * @param[out] p_slot           Pointer to a variable where the allocated key
  *                              slot pointer will be returned.
  *
- * @return
- * - PSA_SUCCESS if a key slot was successfully allocated and locked.
- * - PSA_ERROR_BAD_STATE if the key slot subsystem is not initialized.
- * - PSA_ERROR_CORRUPTION_DETECTED if an internal inconsistency is detected.
- * - PSA_ERROR_INSUFFICIENT_MEMORY if no free or recyclable key slots are
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if a key slot was successfully allocated and locked.
+ * - @ref PSA_ERROR_BAD_STATE if the key slot subsystem is not initialized.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if an internal inconsistency is detected.
+ * - @ref PSA_ERROR_INSUFFICIENT_MEMORY if no free or recyclable key slots are
  *   available.
  */
 psa_status_t psa_get_empty_key_slot(psa_key_id_t *volatile_key_id,
@@ -602,9 +602,9 @@ void psa_wipe_all_key_slots(void);
  * @param slot          Pointer to the key slot to allocate the buffer in.
  * @param buffer_length Desired size of the key buffer in bytes.
  *
- * @return
- * - PSA_SUCCESS if the buffer is successfully allocated and initialized.
- * - PSA_ERROR_NOT_SUPPORTED if the requested buffer length exceeds the
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the buffer is successfully allocated and initialized.
+ * - @ref PSA_ERROR_NOT_SUPPORTED if the requested buffer length exceeds the
  *   maximum supported size for static key slots.
  */
 psa_status_t psa_allocate_buffer_to_slot(psa_key_slot_t *slot,
@@ -625,10 +625,10 @@ psa_status_t psa_allocate_buffer_to_slot(psa_key_slot_t *slot,
  * @param key_buffer_size  On success, contains the required buffer size in
  *                         bits.
  *
- * @return
- * - PSA_SUCCESS if the buffer size was successfully determined.
- * - PSA_ERROR_NOT_SUPPORTED if the data length is zero or cannot be handled.
- * - PSA_ERROR_INVALID_ARGUMENT if the key location is unsupported.
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the buffer size was successfully determined.
+ * - @ref PSA_ERROR_NOT_SUPPORTED if the data length is zero or cannot be handled.
+ * - @ref PSA_ERROR_INVALID_ARGUMENT if the key location is unsupported.
  */
 psa_status_t psa_get_key_buffer_size_from_key_data(
                 const psa_key_attributes_t *attributes,
@@ -651,13 +651,13 @@ psa_status_t psa_get_key_buffer_size_from_key_data(
  * @param alg    Algorithm to be used with the key. If 0, algorithm check is
  *               skipped.
  *
- * @return
- * - PSA_SUCCESS if the key slot is successfully locked and the policy allows
+ * @return Returns a 32-bit status code:
+ * - @ref PSA_SUCCESS if the key slot is successfully locked and the policy allows
  *   the requested usage and algorithm.
- * - PSA_ERROR_INVALID_HANDLE if the key does not exist.
- * - PSA_ERROR_NOT_PERMITTED if the key's policy does not allow the requested
+ * - @ref PSA_ERROR_INVALID_HANDLE if the key does not exist.
+ * - @ref PSA_ERROR_NOT_PERMITTED if the key's policy does not allow the requested
  *   usage or algorithm.
- * - PSA_ERROR_CORRUPTION_DETECTED if internal integrity checks fail.
+ * - @ref PSA_ERROR_CORRUPTION_DETECTED if internal integrity checks fail.
  */
 psa_status_t psa_get_and_lock_key_slot_with_policy(psa_key_id_t key,
                                                    psa_key_slot_t **p_slot,

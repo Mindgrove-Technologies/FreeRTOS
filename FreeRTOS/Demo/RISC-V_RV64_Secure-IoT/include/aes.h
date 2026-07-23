@@ -1,7 +1,6 @@
 /**
  * SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (c) 2021-2026 Mindgrove Technologies. 
- * All rights reserved.
  * 
  * @license Licensed under the Apache License, Version 2.0 (see LICENSE).
  * @licenseblock
@@ -18,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file aes.h
  * @brief Contains APIs, structures, and enums for AES operations.
  * @details This header file defines macros, enumerations, function prototypes,
@@ -201,11 +200,12 @@ typedef struct {
  * input/output buffers, AES key, IV, operation mode, key length, input 
  * length, and iteration parameters.
  *
- * @return `SUCCESS` if the operation completes successfully,
- *         `EFAULT` if any required pointer is NULL,
- *         `EINVAL` if any parameter is invalid,
- *         `ETIMEDOUT` if the AES hardware does not respond within the
- *          timeout window.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if the operation completes successfully,
+ * - @ref EFAULT if any required pointer is NULL,
+ * - @ref EINVAL if any parameter is invalid,
+ * - @ref ETIMEDOUT If the AES hardware does not respond within the
+ *        timeout window.
  */
 uint16_t AES_Run(AES_Config_t *aes_config);
 
@@ -220,9 +220,10 @@ uint16_t AES_Run(AES_Config_t *aes_config);
  * This function may be called independently to ensure the hardware is in
  * a clean state before a new AES operation.
  *
- * @return `SUCCESS` if zeroization completed within the timeout window,
- *         `ETIMEDOUT` if the AES hardware zeroization does not complete
- *          within the timeout window.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS If zeroization completed within the timeout window,
+ * - @ref ETIMEDOUT If the AES hardware zeroization does not complete
+ * within the timeout window.
  */
 uint16_t AES_Zeroize(void);
 

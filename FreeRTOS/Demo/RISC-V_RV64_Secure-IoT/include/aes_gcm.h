@@ -17,7 +17,7 @@
  * limitations under the License.
  * @endlicenseblock
  * 
- * Project                   : Secure IoT SoC
+ * Project                   : MGS2401 SoC
  * @file aes_gcm.h
  * @brief Contains APIs for performing AES-GCM (Galois/Counter Mode) 
  *        encryption, decryption, and authentication. 
@@ -188,10 +188,11 @@ typedef struct {
  * @param cfg Pointer to an AES_GCM_Config structure containing input/output
  * buffers, key, IV, AAD, tag, lengths, and operation mode.
  *
- * @return `SUCCESS` if operation succeeds with valid authentication tag,  
- * `AUTH_TAG_MISMATCH` if authentication fails during decryption,  
- * `EFAULT` if any required pointer in `cfg` is NULL, and
- * `EINVAL` if key length, tag length, IV length, or mode are invalid.
+ * @return Returns a 16-bit status code:
+ * - @ref SUCCESS if operation succeeds with valid authentication tag,  
+ * - @ref AUTHTAGMISMATCH if authentication fails during decryption,  
+ * - @ref EFAULT if any required pointer in `cfg` is NULL, and
+ * - @ref EINVAL if key length, tag length, IV length, or mode are invalid.
  */
 uint16_t AES_GCM(AES_GCM_Config *cfg);
 
