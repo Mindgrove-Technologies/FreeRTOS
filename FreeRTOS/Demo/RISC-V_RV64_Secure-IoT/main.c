@@ -28,13 +28,22 @@
 #include <FreeRTOS.h>
 #include <task.h>
 #include "gpio.h"
-#include "gpiov2.h"
 #include "utils.h"
+#include "core_interrupts.h"
+#include "io.h"
 
-/* Run a simple demo just prints 'Blink' */
-#define DEMO_BLINKY    1
+/* Run a simple demo which prints messages from two tasks */
+#define DEMO_HELLO    1
 
 extern void freertos_risc_v_trap_handler( void );
+
+void freertos_risc_v_application_interrupt_handler(void){
+    on_machine_external_interrupt();   
+}
+
+void freertos_risc_v_application_exception_handler(void){
+    on_fault();
+}
 
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
@@ -47,7 +56,7 @@ void vApplicationTickHook( void );
  */
 static void prvSetupSpike( void );
 
-int main_blinky( void );
+extern int main_hello( void );
 
 /*-----------------------------------------------------------*/
 
@@ -57,10 +66,10 @@ int main( void )
 
     prvSetupSpike();
 
-    #if defined( DEMO_BLINKY )
-        ret = main_blinky();
+    #if defined( DEMO_HELLO )
+        ret = main_hello();
     #else
-    #error "Please add or select demo."
+        #error "Please add or select demo."
     #endif
 
     return ret;
@@ -69,56 +78,7 @@ int main( void )
 static void prvSetupSpike( void )
 {
     __asm__ volatile ( "csrw mtvec, %0" : : "r" ( freertos_risc_v_trap_handler ) );
-}
-
-/*-----------------------------------------------------------*/
-
-void vToggleLED( void )
-{
-    gpiov2_init();
-    //Assumption 1 ---> output, 0 ---> input
-    gpiov2_write_word(GPIO_DIRECTION_CNTRL_REG, GPIO0);
-
-   while(1){
-      delay_loop(500,500);
-     for(int i=0; i< 8; i++){
-      switch(i){
-          case 0: 
-            gpiov2_write_word(GPIO_DATA_REG, GPIO0);
-            delay(2);
-            break;
-          case 1: 
-            gpiov2_write_word(GPIO_DATA_REG, GPIO1);
-            delay(2);
-            break;
-          case 2:
-            gpiov2_write_word(GPIO_DATA_REG, GPIO2);
-            delay(2);
-            break;
-          case 3:
-            gpiov2_write_word(GPIO_DATA_REG, GPIO3);
-            delay(2);
-            break;
-          case 4:
-            gpiov2_write_word(GPIO_DATA_REG, GPIO4);
-            delay(2);
-            break;
-          case 5:
-            gpiov2_write_word(GPIO_DATA_REG, GPIO5);
-            delay(2);
-            break;
-          case 6:
-            gpiov2_write_word(GPIO_DATA_REG, GPIO6);
-            delay(2);
-            break;
-          case 7:
-            gpiov2_write_word(GPIO_DATA_REG, GPIO7);
-            delay(2);
-            break;
-      }
-    }
-   }
-    
+    __asm__ volatile("fence.i");
 }
 
 /*-----------------------------------------------------------*/

@@ -1,103 +1,153 @@
+/**
+ * Project                           : Secure IoT SoC
+ * Name of the file                  : link.ld
+ * Brief Description of file         : This is a linker script to compile code for RAM based application
+ * Name of Author                    : Vishwajith.N.S 
+ * Email ID                          : vishwajith@mindgrovetech.in
+ * 
+ * 
+ * 
+ * @file link.ld
+ * @author Vishwajith .N.S (vishwajith@mindgrovetech.in)
+ * @brief This is a linker script to compile code for ram based application
+ * @version 0.2
+ * @date 2024-09-27
+ * 
+ * @copyright Copyright (c) Mindgrove Technologies Pvt. Ltd 2024. All rights reserved.
+ * 
+ */
 
-/***************************************************************************
- * Project           		:  shakti devt board
- * Name of the file	     	:  link.ld
- * Brief Description of file    :  linker file
- * Name of Author    	        :  Sathya Narayanan N & Abhinav ramnath
- * Email ID                     :  sathya281@gmail.com
-
- Copyright (C) 2020  IIT Madras. All rights reserved.
-
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
- ***************************************************************************/
+/*************************************************************************************************
+1.Text an readonly sections are placed in RAM.
+2.sdata ,data ,bss ,sbss are placed in RAM(vma) which are copied from RAM(lma) in startup code.
+3.Stack is started from end of RAM uptil 1KB.
+4.After Stack end,Heap occupies memory region between end of tbss section and stack section. 
+***************************************************************************************************/
 OUTPUT_ARCH( "riscv" )
 ENTRY(_start)
+
+_STACK_SIZE = 4K;
+
+MEMORY
+{
+  FLASH (rx)                 : ORIGIN = 0x90001000, LENGTH = 512M
+  RAM (rwx)                  : ORIGIN = 0x80000000, LENGTH = 128K
+  PSRAM(rwx)                 : ORIGIN = 0xB0000000, LENGTH = 512M
+}
+
 SECTIONS
 {
-  . = 0x80000000;
-    . = ALIGN(4);
-  .text.init : { *(.text.init) }
-    . = ALIGN(4);
-  .text : { *(.text) }
-    . = ALIGN(4);
-  .rodata : {
-       __rodata_start = .;
-       *(.rodata)
-       *(.rodata.*)
-       *(.gnu.linkonce.r.*)
-       __rodata_end = .;
- }
-  .sdata : {
-    . = ALIGN(4);
+  .text.init : 
+  { 
+    *(.text.init) 
+  }>RAM
+  
+  . = ALIGN(8);
+  
+  .text : 
+  { 
+      *(.text)
+    . = ALIGN(8);
+    *(.text.*)
+  }>RAM
+  
+  . = ALIGN(8);
+.init_array :
+{
+    PROVIDE_HIDDEN(__init_array_start = .);
+    KEEP (*(SORT(.init_array.*)))
+    KEEP (*(.init_array*))
+    PROVIDE_HIDDEN(__init_array_end = .);
+} >RAM
+  . = ALIGN(8);
+  .rodata : 
+  {
+    __rodata_start = .;
+    *(.rodata)
+    *(.rodata.*)
+    *(.gnu.linkonce.r.*)
+    __rodata_end = .;
+      . = ALIGN(8);
+  }>RAM
+  _la_ramcode =LOADADDR(.i2c_driver);
+  .i2c_driver :
+  {
+    . = ALIGN(8);
+    __ram_code_start = .;
+    *(.i2c_driver)
+    . = ALIGN(8);
+    *(.i2c_driver.*)
+    . = ALIGN(8);
+    __ram_code_end = .;
+  }>RAM AT> RAM
+  _la_sdata =LOADADDR(.sdata);
+  
+  .sdata : 
+  {
+    __sdata_start = .;
     __global_pointer$ = . + 0x800;
     *(.srodata.cst16) *(.srodata.cst8) *(.srodata.cst4) *(.srodata.cst2) *(.srodata*)
     *(.sdata .sdata.* .gnu.linkonce.s.*)
-  }
-  .sbss : {
+    __sdata_end = .;
+      . = ALIGN(8);
+  }>RAM AT> RAM
+
+  _la_data =LOADADDR(.data);
+  .data : 
+  {
+    __data_start = .;
+
+    *(.data)
+    *(.data.*)
+    *(.gnu.linkonce.d.*)
+        _tls_data = .;
+    *(.tdata.begin)
+    *(.tdata)
+    *(.tdata.end)
+          *(.tbss)
+      *(.tbss.end)
+    _tls_end = .;
+    
+    __data_end = .;
+  }>RAM AT> RAM
+  
+  .sbss : 
+  {
+    . = ALIGN(8);
     __sbss_start = .;
     *(.sbss)
     *(.sbss.*)
     *(.gnu.linkonce.sb.*)
     __sbss_end = .;
- }
-  .data : {
-    . = ALIGN(4);
-    __data_start = .;
-    *(.data)
-    *(.data.*)
-    *(.gnu.linkonce.d.*)
-    __data_end = .;
- }
-  .bss : {
-       . = ALIGN(4);
-       __bss_start = .;
-       *(.bss)
-       *(.bss.*)
-       *(.gnu.linkonce.b.*)
-       *(COMMON)
-       . = ALIGN(4);
-       __bss_end = .;
-    }
-  .tdata :
-  {
-    _tls_data = .;
-    *(.tdata.begin)
-    *(.tdata)
-    *(.tdata.end)
-    _tls_end = .;
-  }
-  .tbss :
-  {
-    *(.tbss)
-    *(.tbss.end)
-  }
-  . = ALIGN(4);
-  _end = .;
-  . = 0x80000000 + 0x8000000 - 0x400;
-  _free_space = . - _end;
-  _STACK_SIZE = (_free_space * 50) / 100 ;
-  _HEAP_SIZE = _free_space - _STACK_SIZE;
-    .stack : {
-       _stack_end = .;
-       __stack_pointer$ = .;
-       _stack = . - _STACK_SIZE;
-    }
-   . = _stack;
-   .heap : {
-       _heap = . - _HEAP_SIZE;
-       _heap_end = .;
-    }
-}
+  }>RAM
 
+  .bss : 
+  {
+     . = ALIGN(8);
+     __bss_start = .;
+     *(.bss)
+     *(.bss.*)
+     *(.gnu.linkonce.b.*)
+     *(COMMON)
+     . = ALIGN(8);
+      _end = .;
+      __bss_end = .;
+  . = ORIGIN(RAM)+LENGTH(RAM) - 8;
+  }>RAM
+  
+ 
+  .stack : 
+  {
+    . = ALIGN(8);
+   _stack = . ; 
+   __stack_pointer$ = . ;
+   _stack_end = . - _STACK_SIZE;
+  }>RAM
+  
+  .heap : 
+  {
+    _HEAP_SIZE  = _stack_end - _end - 8;
+    _heap_end = _stack_end - 8;
+   _heap = _heap_end - _HEAP_SIZE ;
+  }>RAM
+}

@@ -1,70 +1,212 @@
-#ifndef CRYPTO_DEFINES_INCLUDED
-#define CRYPTO_DEFINES_INCLUDED
+/**
+ * SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (c) 2021-2026 Mindgrove Technologies.
+ *
+ * @license Licensed under the Apache License, Version 2.0 (see LICENSE).
+ * @licenseblock
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * @endlicenseblock
+ *
+ * Project                   : MGS2401 SoC
+ * @file crypto_defines.h
+ * @brief Cryptographic constant definitions for AES, RSA, and SHA-256.
+ * @details This header file defines macros and constants used across
+ *          cryptographic modules including AES, RSA, and SHA-256.
+ * @version 1.2
+ * @authors Vishwajith N S (vishwajith@mindgrovetech.in)
+ *          Jennifer Vinita J (jennifer@mindgrovetech.in)
+ *          Dayana Devi K (dayana@mindgrovetech.in)
+ * @date 07-04-2026
+ *
+ * @section History
+ * -----------------------------------------------------------------------------
+ * Date       | Version | Modified by           | Description
+ * -----------|---------|-----------------------|-------------------------------
+ * 12-11-2024 | 1.0     | Vishwajith N S        | Initial release.
+ * 11-12-2025 | 1.1     | Jennifer Vinita J     | Added crypto accelerator
+ *            |         |                       | specific constants.
+ * 07-04-2026 | 1.2     | Dayana Devi K         | Removed error messages,
+ *            |         |                       | endian enums and added 
+ *            |         |                       | RSA constants and MISRA
+ *            |         |                       | compliance updates.
+ * -----------------------------------------------------------------------------
+ */
 
-// Commonly used variables
-#define byte_length 8
-#define address_bus_length 64
-#define bits_64 0x0000000000000000
+#ifndef  BSP_INCLUDE_CRYPTO_DEFINES_H_
+#define  BSP_INCLUDE_CRYPTO_DEFINES_H_
 
-
-// Little endian printing or big endian printing for print_uchar8
-#define print_little_endian 0
-#define print_big_endian 1
-
-
-// Register addresses
-// RSA
-#define rsa_base_address 0x0000000005000000
-#define rsa_input_text 0x00
-#define rsa_exp_text 0x20
-#define rsa_mod_text 0x40
-#define rsa_r2_mod_n_text 0x60
-#define rsa_output_reg 0x80
-#define rsa_status_reg 0xc0
-// SHA
-#define sha256_base_address 0x0000000003000000
-#define sha256_input_text_address 0x00
-#define sha256_output_reg_address 0x80
-#define sha256_config_reg_address 0xc0
-#define sha256_status_reg_address 0xc1
-// AES
-#define aes_base_address 0x0000000004000000
-#define aes_input_reg 0x00
-#define aes_key_reg 0x20
-#define aes_output_reg 0x40
-#define aes_config_reg 0x60
-#define aes_status_reg 0x61
-#define aes_iv_reg 0x50
-#define aes_nextblock_reg 0x70
-
-
-// Error messages
-#define error_calloc_memory_unavailable "Memory not allocated.\n"
-// RSA
-#define rsa_error_message_too_long "Error : Input text, exp_text, and mod_text should be less than 2048 bits.\n"
-#define rsa_error_mod_cannot_be_lte_byte "Error : Mod length cannot be less than 8 bits.\n"
-#define rsa_error_input_messsage_too_long "Error : Message too long\n"
-#define rsa_error_integer_too_large "Error : Integer too large"
-#define rsa_error_message_rsa_odd_mode "Error : Mod text should be Odd.\n"
-#define rsa_error_memory_unavailable "Error : Memory unavailable. %s\n"
-#define rsa_error_decryption_error "Error : Decryption error.\n"
-// SHA
-#define sha_error_message_input_length "Error : Length of a block is not 512.\n"
-#define sha_error_message_input_length_multishot "Error : Length of input should be between 0 and 512. \n"
-// AES
-#define aes_error_message_only_128bitx_input "Error : The input should contain multiples of 128 bits. In other words multiples of 16 characters. Ensure the string is null appended.\n"
-#define aes_error_message_only_spefic_keylengths "Error : The key should have a length of 128, 192, or 256 bits. Ensure the string is null appended.\n"
-#define aes_error_message_incorrect_mode "Error : The mode should be inclusively between 0 and 4.\n"
-
-
-// RSA Padding type
-#define RSA_NULL_PAD 0
-#define RSAES_PKCS1_v1_5_PAD 1
-#define RSAES_OAEP_PAD 2
-
-
-// RSA Encryption mode
-#define rsa_encrypt_mode 1
-#define rsa_decrypt_mode 0
-
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+/**
+ * @defgroup AES_Macros AES Macros
+ * @brief AES size and configuration macros.
+ *
+ * These macros define constants related to AES such as block size and key sizes.
+ *
+ * @{
+ */
+
+/**
+ * @def AES_BLOCK_SIZE
+ * @brief AES block size in bytes.
+ */
+#define AES_BLOCK_SIZE        16U
+
+/**
+ * @def AES_BLOCK_SIZE_BITS
+ * @brief AES block size in bits.
+ */
+#define AES_BLOCK_SIZE_BITS   128U
+
+/**
+ * @def AES128_KEY_SIZE
+ * @brief AES-128 key size in bytes.
+ */
+#define AES128_KEY_SIZE       16U
+
+/**
+ * @def AES192_KEY_SIZE
+ * @brief AES-192 key size in bytes.
+ */
+#define AES192_KEY_SIZE       24U
+
+/**
+ * @def AES256_KEY_SIZE
+ * @brief AES-256 key size in bytes.
+ */
+#define AES256_KEY_SIZE       32U
+
+/**
+ * @def AES_IV_SIZE
+ * @brief AES Initialization Vector size in bytes.
+ *
+ * AES uses a fixed block size of 128 bits, so IV is always 16 bytes.
+ */
+#define AES_IV_SIZE           16U
+
+/** @} */
+
+/**
+ * @defgroup RSA_Macros RSA Macros
+ * @brief RSA-2048 size and configuration macros.
+ *
+ * These macros define constants related to RSA operations including
+ * key sizes, modulus, exponents, and signature sizes.
+ *
+ * @{
+ */
+
+/**
+ * @def RSA_MODULUS_SIZE
+ * @brief RSA modulus size in bytes.
+ */
+#define RSA_MODULUS_SIZE               256U
+
+/**
+ * @def RSA_MODULUS_SIZE_BITS
+ * @brief RSA modulus size in bits.
+ */
+#define RSA_MODULUS_SIZE_BITS          2048U
+
+/**
+ * @def RSA_SIGNATURE_SIZE
+ * @brief RSA signature size in bytes.
+ */
+#define RSA_SIGNATURE_SIZE             256U
+
+/**
+ * @def RSA_SIGNATURE_SIZE_BITS
+ * @brief RSA signature size in bits.
+ */
+#define RSA_SIGNATURE_SIZE_BITS        2048U
+
+/**
+ * @def RSA_PUBLIC_EXPONENT_MAX_SIZE
+ * @brief Maximum public exponent size in bytes.
+ *
+ * Exponent is typically small (e.g., 65537),
+ * but may be padded to match modulus size.
+ */
+#define RSA_PUBLIC_EXPONENT_MAX_SIZE   256U
+
+/**
+ * @def RSA_PUBLIC_EXPONENT_DEFAULT
+ * @brief Default RSA public exponent value (65537).
+ */
+#define RSA_PUBLIC_EXPONENT_DEFAULT    0x10001UL
+
+/**
+ * @def RSA_PRIVATE_EXPONENT_SIZE
+ * @brief RSA private exponent size in bytes.
+ */
+#define RSA_PRIVATE_EXPONENT_SIZE      256U
+
+/**
+ * @def RSA_BLOCK_SIZE
+ * @brief RSA block size in bytes.
+ *
+ * RSA operates on blocks equal to the modulus size.
+ */
+#define RSA_BLOCK_SIZE                 256U
+
+/**
+ * @def RSA_BLOCK_SIZE_BITS
+ * @brief RSA block size in bits.
+ */
+#define RSA_BLOCK_SIZE_BITS            2048U
+
+/** @} */
+
+/**
+ * @defgroup SHA256_Macros SHA-256 Macros
+ * @brief SHA-256 size and configuration macros.
+ *
+ * These macros define constants related to SHA-256 such as
+ * digest size and block size in both bytes and bits.
+ *
+ * @{
+ */
+
+/**
+ * @def SHA256_DIGEST_SIZE
+ * @brief SHA-256 digest size in bytes.
+ */
+#define SHA256_DIGEST_SIZE        32U
+
+/**
+ * @def SHA256_DIGEST_SIZE_BITS
+ * @brief SHA-256 digest size in bits.
+ */
+#define SHA256_DIGEST_SIZE_BITS   256U
+
+/**
+ * @def SHA256_BLOCK_SIZE
+ * @brief SHA-256 block size in bytes.
+ */
+#define SHA256_BLOCK_SIZE         64U
+
+/**
+ * @def SHA256_BLOCK_SIZE_BITS
+ * @brief SHA-256 block size in bits.
+ */
+#define SHA256_BLOCK_SIZE_BITS    512U
+
+/** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif  // BSP_INCLUDE_CRYPTO_DEFINES_H_
