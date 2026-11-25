@@ -4,6 +4,8 @@
 #include "semphr.h"
 #include "io.h"
 
+#define TASK_STACK_SIZE 256
+
 SemaphoreHandle_t xBinarySemaphore;   
 SemaphoreHandle_t xCountingSemaphore; 
 SemaphoreHandle_t xMutex;             

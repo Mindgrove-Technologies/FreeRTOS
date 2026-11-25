@@ -3,6 +3,8 @@
 #include "queue.h"
 #include "io.h"
 
+#define TASK_STACK_SIZE 384
+
 QueueHandle_t xQueue;
 
 void producer(void* pv) {
@@ -28,8 +30,8 @@ int app_main( void ) {
     xQueue = xQueueCreate(5, sizeof(uint8_t));
 
     if (xQueue != NULL) {
-        xTaskCreate(producer, "Producer", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
-        xTaskCreate(consumer, "Consumer", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+        xTaskCreate(producer, "Producer", TASK_STACK_SIZE, NULL, 1, NULL);
+        xTaskCreate(consumer, "Consumer", TASK_STACK_SIZE, NULL, 1, NULL);
 
         vTaskStartScheduler();
     }

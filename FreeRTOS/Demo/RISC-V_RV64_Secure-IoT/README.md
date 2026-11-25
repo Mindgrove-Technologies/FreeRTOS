@@ -1,47 +1,104 @@
-# Emulating FreeRTOS on Mindgrove Silicon's Secure-IoT SoC
+# FreeRTOS on Mindgrove S2401 Secure IoT
+## Creating a new application
 
-## Requirements
+Create a new folder for your application inside `Demo/RISC-V_RV64_Secure-IoT/apps/` (for example, `apps/<app_name>/`). Place your source files (`.c` and `.h`) inside that folder, define the entry function as `int app_main(void)` (or `void app_main(void)`), create your FreeRTOS tasks, and call `vTaskStartScheduler()`.
 
-1. GNU RISC-V toolchain
-2. OpenOCD from https://github.com/riscv/riscv-openocd
+Hardware trap vector registration (`mtvec`) and FreeRTOS kernel hooks are already handled in `main.c` and do not need to be duplicated in your application folder.
 
-## How to build
+## How to build and run
 
-To build, simply run `make`. If you want a debug build, pass `DEBUG=1`.
+Run `make` from `Demo/RISC-V_RV64_Secure-IoT` and pass the application folder name via `<app_name>` (defaults to `hello` if omitted):
 
-In order to build the executable without FPU, pass `FPU=0` flag when running make.
-By default, the executable will be built with FPU in it.
-
-The resulting executable file is ./build/SecureIoTDemo.elf.
-
-## How to debug with gdb
-
-Start GTKTERM in one terminal:
 ```
-$ sudo gtkterm -p /dev/ttyUSB2 -s 19200
+make <app_name>
 ```
 
-Start OpenOCD in another terminal:
-```
-$ openocd -f seciot_<board>.cfg # <board> can be 100t or 200t, depending on the fpga.
+For a debug build (`-Og -ggdb3`), pass `DEBUG=1`:
+
+```bash
+make <app_name> DEBUG=1
+
 ```
 
-Start gdb in yet another:
+
+* To compile the specified application for FLASH. Use the below command:
 ```
-$ riscv64-unknown-elf-gdb
-...
-(gdb) set remotetimeout unlimited
-(gdb) target extended-remote localhost:3333
-(gdb) file ./build/SecureIoTDemo.shakti
-(gdb) load
-(gdb) c
+make <app_name> FLASH_LINK=y
 ```
 
-## Description
+This will prompt you interactively for
 
-This demo prints Hello Worlld, and displays the current HART id.
-You can enable one of the following test configurations by defining it in `main_blinky.c`.  
-Ensure that **only one test macro is defined at a time**.
+**`Custom QSPI Configuration needed? (y/n):`**
+
+By default, the boot configures QSPI in single line mode — answer `n` unless you need a
+custom QSPI configuration. Answering `y` prompts you for three 32-bit hex values,
+one at a time: `CR` (Configuration Register), `DCR` (Device Configuration Register), and
+`CCR` (Command Configuration Register).
+
+To skip this prompt, pass the argument directly via the command line:
+
+- QSPI_CONFIG=y: Prompts for the configuration values directly, skipping the initial (y/n) question.
+
+- QSPI_CONFIG=n: Bypasses the initial prompt and skips asking for custom configuration values entirely.
+```
+make <app_name> FLASH_LINK=y QSPI_CONFIG=n
+
+```
+* To compile the specified application for PSRAM. Use the below command:
+```
+make <app_name> PSRAM_LINK=y
+```
+
+* To compile the specified application and execute the application in RAM. Use the below command:
+```
+make <app_name> RUN
+```
+
+* To compile the application for FLASH and execute the application from FLASH memory. Use the below command:
+```
+make <app_name> FLASH
+```
+
+This will prompt you interactively for:
+
+**`Custom QSPI Configuration needed? (y/n):`**
+
+By default, the boot configures QSPI in single line mode — answer `n` unless you need a
+custom QSPI configuration. Answering `y` prompts you for three 32-bit hex values,
+one at a time: `CR` (Configuration Register), `DCR` (Device Configuration Register), and
+`CCR` (Command Configuration Register).
+
+To skip this prompt, pass the argument directly via the command line:
+
+- QSPI_CONFIG=y: Prompts for the configuration values directly, skipping the initial (y/n) question.
+
+- QSPI_CONFIG=n: Bypasses the initial prompt and skips asking for custom configuration values entirely.
+```
+make <app_name> FLASH QSPI_CONFIG=n
+```
+
+* To compile the application for PSRAM and execute the application from PSRAM memory. Use the below command:
+```
+make <app_name> PSRAM
+```
+
+## Cleaning build artifacts
+
+* Clean a specific application (`./build/<app_name>/`):
+```bash
+make clean <app_name>
+
+```
+
+
+* Clean all built applications (`./build/`):
+```bash
+make cleanall
+```
+
+## Sample applications Description
+
+This FreeRTOS port contains three sample applications hello, semaphore_test and queue_test inside the apps folder to demonstrate the task creation, semaphore and queue usage.
 
 - **TEST_HELLO_TASK**: Demonstrates task creation, scheduling, delays, and optional GPIO interrupt handling.
 
