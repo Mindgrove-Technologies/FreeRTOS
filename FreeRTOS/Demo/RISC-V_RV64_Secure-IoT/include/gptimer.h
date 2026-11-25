@@ -20,11 +20,11 @@
  * Project                   : MGS2401 SoC
  * @file gptimer.h
  * @brief Contains driver apis for GPTimer Interface
- * @details Provides the API for hardware control of General Purpose Timer (GPTimer)
- *          including configuration and resetting the counter.
+ * @details Provides the APIs for hardware control of General Purpose Timer
+ * (GPTimer) including initialization/configuration, counter reset, counter/PWM disable, and reading the capture input register.
  * @version 1.1
  * @authors Shri Mahaalakshmi S J (mahaalakshmi@mindgrovetech.in)
- *          Deeptha G             (deeptha@mindgrovetch.in)
+ *          Deeptha G             (deeptha@mindgrovetech.in)
  * @date 17-02-2026
  *
  * @section History
@@ -48,30 +48,42 @@ extern "C" {
 #include <stdint.h>
 
 /**
- * @defgroup GPTIMER_MODES GPTimer Operational Modes
- * @brief Definitions for the timer counting logic and waveform generation.
- * @{
+ * @brief GPTimer Operational Modes
+ * @details Enum that selects the GPTIMER mode: PWM mode or one of the counting
+ * modes.
  */
-/** @brief The value of this macro is 0U. Pulse Width Modulation mode.
+typedef enum {
+    GPT_PWM_MODE = 0U,    /**< Pulse Width Modulation mode */
+    GPT_UP_COUNT = 1U,    /**< Up-counting mode */
+    GPT_DOWN_COUNT = 2U,  /**< Down-counting mode */
+    GPT_UPDOWN_COUNT = 3U /**< Up-Down counting mode */
+} GPTIMER_Mode_t;
+
+/**
+ * @brief Interrupt Configuration Options for the GPTIMER.
+ * @details Selects how GPTIMER interrupts are configured:
+ *          - Disabled: no interrupts are generated.
+ *          - General enable: interrupts are enabled (except for pwm mode).
+ *          - PWM-specific options: enable interrupts only on PWM rising edges,
+ * only on PWM falling edges, or on both rising and falling edges.
  */
-#define GPT_PWM_MODE 0U
-/** @brief The value of this macro is 1U. Standard Up-counting mode.
- */
-#define GPT_UP_COUNT 1U
-/** @brief The value of this macro is 2U. Standard Down-counting mode.
- */
-#define GPT_DOWN_COUNT 2U
-/** @brief The value of this macro is 3U. Up-Down counting mode.
- */
-#define GPT_UPDOWN_COUNT 3U
-/** @} */
+typedef enum {
+    GPT_INTR_DISABLE = 0x00U, /* Interrupts disabled. */
+    GPT_INTR_EN = 0x01U, /*Interrupts enabled (for non-PWM counter modes) */
+    GPT_PWM_RISE_INTR =
+        0x02U, /* Enable interrupts only on PWM rising edges. */
+    GPT_PWM_FALL_INTR =
+        0x03U, /* Enable interrupts only on PWM falling edges. */
+    GPT_PWM_RISE_FALL_INTR =
+        0x04U /* Enable interrupts on both PWM rising and falling edges. */
+} GPTIMER_Interrupt_Opt_t;
 
 /**
  * @defgroup GPTIMER_Instance_Type GPTIMER Instance Handle Type
  * @brief Opaque GPTIMER hardware instance handle type.
  *
- * This module defines the GPTIMER instance handle type used by the GPTIMER driver.
- * The type is opaque and represents a specific GPTIMER hardware block.
+ * This module defines the GPTIMER instance handle type used by the GPTIMER
+ * driver. The type is opaque and represents a specific GPTIMER hardware block.
  *
  * Users must not create objects of this type directly. Valid instances
  * must only be obtained using the provided GPTIMER instance constructors
@@ -99,25 +111,25 @@ typedef struct GPTIMER_Instance GPTIMER_Instance_t;
  *
  * @return Pointer to GPTIMER0 hardware instance descriptor.
  */
-const GPTIMER_Instance_t *GPTIMER_INSTANCE_0(void);
+const GPTIMER_Instance_t* GPTIMER_INSTANCE_0(void);
 
 /**
  * @brief Get handle for GPTIMER instance 1.
  * @return Pointer to GPTIMER1 hardware instance descriptor.
  */
-const GPTIMER_Instance_t *GPTIMER_INSTANCE_1(void);
+const GPTIMER_Instance_t* GPTIMER_INSTANCE_1(void);
 
 /**
  * @brief Get handle for GPTIMER instance 2.
  * @return Pointer to GPTIMER2 hardware instance descriptor.
  */
-const GPTIMER_Instance_t *GPTIMER_INSTANCE_2(void);
+const GPTIMER_Instance_t* GPTIMER_INSTANCE_2(void);
 
 /**
  * @brief Get handle for GPTIMER instance 3.
  * @return Pointer to GPTIMER3 hardware instance descriptor.
  */
-const GPTIMER_Instance_t *GPTIMER_INSTANCE_3(void);
+const GPTIMER_Instance_t* GPTIMER_INSTANCE_3(void);
 
 /** @} */ /* end of GPTIMER_Instance_Constructors */
 
@@ -162,17 +174,19 @@ const GPTIMER_Instance_t *GPTIMER_INSTANCE_3(void);
 
 /**
  * @enum GPTIMER_IRQn_Type
- * 
+ *
  * @brief GPTIMER interrupt ID
- * 
- * This enumeration defines the available GPTIMER interrupt numbers supported by the platform.
-*/
+ *
+ * This enumeration defines the available GPTIMER interrupt numbers supported by
+ * the platform.
+ */
 typedef enum {
-/* =========================================  Secure_IoT Specific Interrupt Numbers  ========================================= */
-  GPTIMER0_IRQn             =  47,              /*!< 47 GPTIMER0                                                               */
-  GPTIMER1_IRQn             =  48,              /*!< 48 GPTIMER1                                                               */
-  GPTIMER2_IRQn             =  49,              /*!< 49 GPTIMER2                                                               */
-  GPTIMER3_IRQn             =  50,              /*!< 50 GPTIMER3                                                               */
+    /* =========================================  Secure_IoT Specific Interrupt
+       Numbers  ========================================= */
+    GPTIMER0_IRQn = 47, /*!< 47 GPTIMER0 */
+    GPTIMER1_IRQn = 48, /*!< 48 GPTIMER1 */
+    GPTIMER2_IRQn = 49, /*!< 49 GPTIMER2 */
+    GPTIMER3_IRQn = 50, /*!< 50 GPTIMER3 */
 } GPT_IRQn_Type;
 
 /**
@@ -183,28 +197,30 @@ typedef enum {
  */
 typedef struct {
     /**
-     * @brief GPTIMER hardware instance handle.
+     * @brief GPTIMER hardware instances.
      *
-     * This parameter selects the GPTIMER hardware block to be used.
-     * Valid instances are GPTIMER1, GPTIMER2, GPTIMER3 and GPTIMER4.
+     * This parameter selects the GPTIMER hardware instance to be used.
+     * Valid instances are @ref GPTIMER0, @ref GPTIMER1, @ref GPTIMER2 and @ref
+     * GPTIMER3.
      *
-     * @note GPTIMER instance 0 is reserved for serial debug communication.
      */
-    const GPTIMER_Instance_t *gpt_num;
+    const GPTIMER_Instance_t* gpt_num;
     /**
      * @brief GPTIMER operating mode.
      *
-     * Selects the counting or PWM mode of the timer.
-     *
-     * @note Valid range: 0 <= mode < 4.
+     * @details Selects the counting mode (up,down,up-down) or PWM mode.
+     * Valid values map to @ref GPTIMER_Mode_t (0..3).
      */
-    uint8_t mode;
+    GPTIMER_Mode_t mode : 2;
     /**
      * @brief Timer period value.
      *
-     * Specifies the period up to which the GPTIMER counts
-     * before overflowing, underflowing, or resetting
-     * (depending on the selected mode).
+     * Specifies the terminal count value for one timer cycle.
+     * - Up-count mode : counts up to `period`, then overflows.
+     * - Down-count mode : counts down to `period`, then underflows.
+     * - Up-down mode: counts between the configured limits and turns around at the
+     * period limit.
+     * - Pwm mode: `period` defines the PWM period (the PWM time base).
      */
     uint32_t period;
     /**
@@ -229,69 +245,113 @@ typedef struct {
      */
     uint32_t dutycycle;
     /**
-     * @brief Interrupt enable flag.
+     * @brief Interrupt enable option.
      *
-     * Enables or disables GPTIMER interrupts based
-     * on the selected mode.
-     *
-     * @note 1 = Enable interrupt, 0 = Disable interrupt
+     * @details Selects which GPTIMER interrupts are enabled.
+     * Valid values map to @ref GPTIMER_Interrupt_Opt_t:
+     * - 0: interrupts disabled
+     * - 1: interrupts enabled (for any counter mode excluding PWM mode).
+     * - 2: PWM rising-edge interrupts only
+     * - 3: PWM falling-edge interrupts only
+     * - 4: PWM rising- and falling-edge interrupts
      */
-    bool interrupt_en;
+    GPTIMER_Interrupt_Opt_t interrupt_en : 3;
+
     /**
      * @brief Continuous count enable flag.
      *
-     * Enables continuous counting mode for the GPTIMER.
+     * @details Enables continuous counting for the GPTIMER (the timer continues
+     * counting without stopping).
      *
-     * @note 1 = Continuous counting enabled
      */
     bool cnt_en;
     /**
-     * @brief Capture input enable flag.
+     * @brief Capture input selection.
      *
-     * Enables capturing of the external input value.
+     * Selects which GPTIMER input event triggers a capture. When the selected
+     * event occurs on the GPTIMER input, the current counter value is stored
+     * into the capture input register.
+     *
+     * @details capture_val selects the capture event based on its value (0 or
+     * 1).
      */
-    bool capture_val;
+    uint8_t capture_val : 1;
     /**
      * @brief Output enable flag.
      *
      * @details Enable the output signal in PWM mode by setting
-     * the output enable bit in the control/status register.
+     * the output enable bit in the control register. For
+     * non-PWM modes, this flag is ignored.
      */
     bool output_en;
 } GPTIMER_Config_t;
 
 /**
+ * @brief GPT_Init initializes the GPTIMER with the selected mode and configures
+ * required registers.
+ * @details Programs the GPTIMER instance settings including mode, prescaler,
+ * period, duty cycle, continuous counting enable, capture input selection, and
+ * output enable.
  *
- * @brief The function `GPT_Init` initialises the gptimer with different modes and configures necessary registers.
+ * @param gptimer_config Pointer to a GPTIMER_Config_t structure used to
+ * configure the GPTIMER instance.
  *
- * @details It is used to select the specific GPT instance, set the mode, set the prescaler, set the dutycycle, enable
- * continous count and set the input bit to be captured.
- *
- * @param gptimer The `gptimer` parameter in the `GPT_Init` function is a struct that
- * contains several properties related to configuring a General Purpose Timer (GPT).It has the following properties:
- * gpt_num, mode, interrupt_en, period, prescaler, dutycycle, cnt_en, capture_val, output_en.
- *
- * @return Returns a 16-bit status code:
+ * @return 16-bit status code.
  * - @ref SUCCESS Configuration applied successfully.
- * - @ref EFAULT Returned by @ref CHECK_NULL if null pointer is given as input.
- * - @ref EPERM  Returned if prescaler is less than or equal to zero. 
- * - @ref EINVAL Returned if invalid inconfiguration value is given such as mode or interrupt_enable
+ * - @ref EFAULT Returned if gptimer_config is NULL.
+ * - @ref EPERM Returned if prescaler is invalid (e.g., prescaler == 0).
+ * - @ref EINVAL Returned if invalid configuration values are provided (e.g.,
+ * mode or interrupt_en).
  */
-uint16_t GPT_Init(GPTIMER_Config_t const *gptimer_config);
+uint16_t GPT_Init(GPTIMER_Config_t const* gptimer_config);
 
 /**
+ * @brief The function `GPT_Reset` resets the counter, interrupts and register
+ * values.
+ * @details Resets the GPTIMER counter and related GPTIMER state for the
+ * selected GPTIMER instance, including interrupt and register settings as
+ * applicable.
  *
- * @brief The function ` GPT_Reset` resets the counter, interrupts and register values.
+ * @param gptimer_config Pointer to a GPTIMER_Config_t structure used to
+ * select/configure the GPTIMER instance.
  *
- * @details It is used to reset the counter, interrupts and register values. for the specified GPTIMER
- * instance.
- *
- * @param gptimer The `gptimer` parameter in the `GPT_Init` function is a struct that
- * contains several properties related to configuring a General Purpose Timer (GPT).It has the following properties:
- * gpt_num, mode, interrupt_en, period, prescaler, dutycycle, cnt_en, capture_val, output_en.
- * @return SUCCESS if the configuration was successful, else ERROR code.
+ * @return 16-bit status code.
+ * - @ref SUCCESS Reset completed successfully.
+ * - @ref EFAULT Returned by if gptimer_config is NULL.
  */
-uint16_t GPT_Reset(GPTIMER_Config_t const *gptimer_config);
+uint16_t GPT_Reset(GPTIMER_Config_t const* gptimer_config);
+
+/**
+ * @brief The function `GPT_Disable` disables the GPTIMER instance.
+ * @details Disables the GPTIMER counter, PWM output enable, and clears GPTIMER
+ * interrupt enable bits for the selected GPTIMER instance.
+ *
+ * @param gptimer_config Pointer to a GPTIMER_Config_t structure used to
+ * select/configure the GPTIMER instance.
+ *
+ * @return 16-bit status code.
+ * - @ref SUCCESS Disabled successfully.
+ * - @ref EFAULT Returned if gptimer_config is NULL.
+ */
+uint16_t GPT_Disable(GPTIMER_Config_t const* gptimer_config);
+
+/**
+ * @brief The function `GPT_Read_Capture_Input` reads the captured value from
+ * the GPTIMER capture register.
+ * @details Reads the captured value generated by the GPTIMER capture event and
+ * writes it to captured_value.
+ *
+ * @param gptimer_config Pointer to a GPTIMER_Config_t structure used to
+ * select/configure the GPTIMER instance.
+ * @param capture_val Pointer to a uint16_t variable where the captured value
+ * will be stored.
+ *
+ * @return 16-bit status code.
+ * - @ref SUCCESS Captured value read successfully.
+ * - @ref EFAULT Returned if gptimer_config is NULL.
+ */
+uint16_t GPT_Read_Capture_Input(GPTIMER_Config_t const* gptimer_config,
+                                uint16_t* captured_value);
 
 #ifdef __cplusplus
 }

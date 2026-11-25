@@ -22,7 +22,7 @@
  * @brief Contains apis for generating delays using mcycle.
  * @details Provides the API for generating delays in milliseconds and microseconds using mcycle.
  * @version 1.1
- * @authors Deeptha G      (deeptha@mindgrovetch.in)
+ * @authors Deeptha G      (deeptha@mindgrovetech.in)
  * @date 17-02-2026
  *
  * @section History

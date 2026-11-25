@@ -41,14 +41,15 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_SHA3_H_
-#define BSP_INCLUDE_SHA3_H_
+#ifndef INCLUDES_SHA3_H_
+#define INCLUDES_SHA3_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <stdint.h>
+#include "crypto_api.h"
 
 /**
  * @defgroup SHA3_MACROS SHA-3 Configuration Macros
@@ -228,4 +229,4 @@ uint16_t Sha3_512_Final(Sha3* ctx, uint8_t* hash);
 }
 #endif
 
-#endif  /* BSP_INCLUDE_SHA3_H_ */
+#endif  /* INCLUDES_SHA3_H_ */

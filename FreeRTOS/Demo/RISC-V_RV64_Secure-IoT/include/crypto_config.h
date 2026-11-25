@@ -34,8 +34,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_CRYPTO_CONFIG_H_
-#define BSP_INCLUDE_CRYPTO_CONFIG_H_
+#ifndef INCLUDES_CRYPTO_CONFIG_H_
+#define INCLUDES_CRYPTO_CONFIG_H_
 
 /**
  * @defgroup PSA_CRYPTO_CONFIG_MACROS PSA Crypto Configuration Macros
@@ -91,4 +91,4 @@
 
 /** @} */
 
-#endif  // BSP_INCLUDE_CRYPTO_CONFIG_H_
+#endif  // INCLUDES_CRYPTO_CONFIG_H_

@@ -35,8 +35,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_PSA_TYPES_H_
-#define BSP_INCLUDE_PSA_TYPES_H_
+#ifndef INCLUDES_PSA_TYPES_H_
+#define INCLUDES_PSA_TYPES_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -715,4 +715,4 @@ typedef struct rsa_context {
 }
 #endif
 
-#endif  // BSP_INCLUDE_PSA_TYPES_H_
+#endif  // INCLUDES_PSA_TYPES_H_

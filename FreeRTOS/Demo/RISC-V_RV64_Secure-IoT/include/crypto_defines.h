@@ -42,8 +42,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef  BSP_INCLUDE_CRYPTO_DEFINES_H_
-#define  BSP_INCLUDE_CRYPTO_DEFINES_H_
+#ifndef INCLUDES_CRYPTO_DEFINES_H_
+#define INCLUDES_CRYPTO_DEFINES_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -209,4 +209,4 @@ extern "C" {
 }
 #endif
 
-#endif  // BSP_INCLUDE_CRYPTO_DEFINES_H_
+#endif  // INCLUDES_CRYPTO_DEFINES_H_

@@ -23,7 +23,7 @@
  * @details Provides the API for configuring CLINT timers and counters.
  * @version 1.1
  * @authors Kapil Shyam. M (kapil@mindgrovetech.in)
- *          Deeptha G      (deeptha@mindgrovetch.in)
+ *          Deeptha G      (deeptha@mindgrovetech.in)
  * @date 17-02-2026
  *
  * @section History
@@ -44,21 +44,8 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include "secure_iot.h"
 #include "log.h"
 
-/**
- * @defgroup CLINT_REGISTERS CLINT Hardware Register Pointers
- * @brief External pointers to the memory-mapped CLINT register interface.
- * @{
- */
-/** @brief Machine Software Interrupt Pending register. */
-extern volatile uint64_t *msip;
-/** @brief Machine Time register. */
-extern volatile uint64_t *mtime;
-/** @brief Machine Time Compare register. */
-extern volatile uint64_t *mtimecmp;
-/** @} */
 
 /**
  * @defgroup CLINT_MACROS CLINT Macros
@@ -75,33 +62,47 @@ extern volatile uint64_t *mtimecmp;
 /** @} */
 
 /**
- * @brief The function `Get_MTIME` returns the current 64-bit machine time.
- * @details It returns the mtime value.
- * @return 64-bit unsigned integer representing the current ticks.
+ * @brief The function `CLINT_Get_MTIME` gets the current machine timer value (MTIME).
+ * 
+ * @details Reads the CLINT MTIME register and stores the 64-bit value into
+ * the provided pointer.
+ * 
+ * @param mtime_val Pointer to a 64-bit variable that will receive the MTIME
+ *  value.
+ * @return @ref SUCCESS MTIME value successfully read.
+ * 
  */
-uint64_t Get_MTIME(void);
+uint16_t CLINT_Get_MTIME(uint64_t *mtime_val);
 
 /**
- * @brief The function `Config_Counter` sets up the CLINT timer threshold.
- * @details It is used to set the mtimecmp register to the current mtime value
- * plus the provided delta, scheduling the next timer interrupt.
- * @param value The delta value after which the interrupt happens.
- * @return SUCCESS if configuration was successful otherwise error code.
+ * @brief The function `CLINT_Config_Counter` sets up the CLINT timer threshold.
+ * @details Programs the mtimecmp register to trigger the next timer
+ * interrupt at (current MTIME + value).
+ * @param value Value added to the current MTIME to determine the interrupt time.
+ * @return @ref SUCCESS On successful configuration.
  */
-void Config_Counter(uint64_t value);
+uint16_t CLINT_Config_Counter(uint64_t value);
 
 /**
  * @brief The function `CLINT_Timer` configures the CLINT timer and triggers a software interrupt.
- * @par Detailed Description:
- * This function performs the following operations:
+ * @details This function:
  * - Triggers a software interrupt by writing to the MSIP register.
  * - Disables specific interrupts by clearing bits in the MIE register.
- * - Enables global interrupts by setting bits in the MSTATUS register.
- * - Configures the next timer threshold using @ref Config_Counter.
- * @param timer_value The value to configure the timer via `Config_Counter`.
- * @return SUCCESS if the operation was successful otherwise error code.
+ * - Enables global interrupts by setting the appropriate bits in MSTATUS.
+ * - Configures the next timer interrupt threshold using @ref CLINT_Config_Counter.
+ * @param timer_value Value passed to @ref CLINT_Config_Counter to set mtimecmp.
+ * @return @ref SUCCESS Timer configured and interrupt handling updated successfully.
  */
-void CLINT_Timer(uint64_t timer_value);
+uint16_t CLINT_Timer(uint64_t timer_value);
+
+/**
+ * @brief Weak handler for the Machine Timer Interrupt.
+ *
+ * @details Sets MTIMECMP0 to a maximum value so the timer
+ *          interrupt won’t fire again until MTIMECMP0 is updated.
+ *
+ */
+__attribute__((weak)) void on_machine_timer_interrupt(void);
 
 #ifdef __cplusplus
 }

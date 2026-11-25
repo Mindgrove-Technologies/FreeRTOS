@@ -103,7 +103,7 @@ uint16_t PINMUX_AllPWM(bool enable);
  * error is returned.
  *
  * @param num The SPI number to be enabled for pin multiplexing.
- * @param enable  If set to true, configures the pin for PWM functionality.
+ * @param enable  If set to true, configures the pin for SPI functionality.
  * If set to false, reverts the pin to GPIO functionality.
  *
  * @return Returns a 16-bit status code:
@@ -122,7 +122,7 @@ uint16_t PINMUX_SPI(uint8_t num, bool enable);
  * error is returned.
  *
  * @param num The UART number to be enabled for pin multiplexing.
- * @param enable  If set to true, configures the pin for PWM functionality.
+ * @param enable  If set to true, configures the pin for UART functionality.
  * If set to false, reverts the pin to GPIO functionality.
  * 
  * @return Returns a 16-bit status code:
@@ -143,7 +143,7 @@ uint16_t PINMUX_UART(uint8_t num, bool enable);
  * an error is returned.
  *
  * @param num The GPTIimer number to be enabled for pin multiplexing.
- * @param enable  If set to true, configures the pin for PWM functionality.
+ * @param enable  If set to true, configures the pin for GPTimer functionality.
  * If set to false, reverts the pin to GPIO functionality.
  *
  * @return Returns a 16-bit status code:

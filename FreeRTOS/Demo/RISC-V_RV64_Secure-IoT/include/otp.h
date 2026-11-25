@@ -39,11 +39,12 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_OTP_H_
-#define BSP_INCLUDE_OTP_H_
+#ifndef INCLUDES_OTP_H_
+#define INCLUDES_OTP_H_
 
 #include <stdint.h>
 #include <stddef.h>
+#include "crypto_api.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -176,4 +177,4 @@ uint16_t OTP_Lock(OTP_LOCK lock);
 #ifdef __cplusplus
 }
 #endif
-#endif  // BSP_INCLUDE_OTP_H_
+#endif  // INCLUDES_OTP_H_

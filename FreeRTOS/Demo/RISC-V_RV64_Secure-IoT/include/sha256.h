@@ -43,8 +43,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_SHA256_H_
-#define BSP_INCLUDE_SHA256_H_
+#ifndef INCLUDES_SHA256_H_
+#define INCLUDES_SHA256_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,6 +52,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stddef.h>
+#include "crypto_api.h"
 
 /**
  * @brief Performs a complete SHA-256 hashing operation on a single
@@ -157,4 +158,4 @@ uint16_t SHA256_Zeroize(void);
 }
 #endif
 
-#endif  // BSP_INCLUDE_SHA256_H_
+#endif  // INCLUDES_SHA256_H_

@@ -37,8 +37,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_AES_GCM_H_
-#define BSP_INCLUDE_AES_GCM_H_
+#ifndef INCLUDES_AES_GCM_H_
+#define INCLUDES_AES_GCM_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,6 +46,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stddef.h>
+#include "crypto_api.h"
 
 /**
  * @enum AES_GCM_Mode
@@ -200,4 +201,4 @@ uint16_t AES_GCM(AES_GCM_Config *cfg);
 }
 #endif
 
-#endif  // BSP_INCLUDE_AES_GCM_H_
+#endif  // INCLUDES_AES_GCM_H_

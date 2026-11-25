@@ -71,6 +71,10 @@ extern "C" {
  *   Driver issues the flash command and returns immediately
  *   without waiting for completion (non-blocking behavior).
  *
+* - FLASH_NOTIFY_ON_COMPLETE :
+ *   Driver issues the flash command and returns immediately
+ *   notify user on completion (non-blocking behavior but will notify).
+ *
  * This mode is useful when the user wants to manually handle:
  * - Suspend/Resume operations
  * - Custom polling
@@ -82,8 +86,9 @@ extern "C" {
  * while the operation is in progress.
  */
 typedef enum {
-    FLASH_WAIT_FOR_COMPLETION = 0,   /* Wait internally until flash operation   completes */
-    FLASH_NO_WAIT                    /* Return immediately without waiting */
+    FLASH_WAIT_FOR_COMPLETION = 0,   /* Wait internally until flash operation completes */
+    FLASH_NO_WAIT,                    /* Return immediately without waiting */
+    FLASH_NOTIFY_ON_COMPLETE         /* Non-blocking: return immediately, notify via Interrupt*/
 } flash_wait_mode_t;
 
 /* ============================================================
@@ -134,7 +139,7 @@ uint16_t Flash_Fast_Read_Quad(const QSPI_Instance_t *qspi_inst,
                               uint8_t *data,
                               uint32_t address,
                               size_t data_length,
-                              uint8_t prescaler);
+                              uint16_t prescaler);
 
 /**
  * @brief Perform Fast Quad I/O Read operation (1-4-4 mode).
@@ -180,7 +185,7 @@ uint16_t Flash_Fast_Read_Quad_IO(const QSPI_Instance_t *qspi_inst,
                                  uint8_t *data,
                                  uint32_t address,
                                  size_t data_length,
-                                 uint8_t prescaler);
+                                 uint16_t prescaler);
 
 /**
  * @brief Perform standard single-line read operation (1-1-1 mode).
@@ -224,7 +229,7 @@ uint16_t Flash_Fast_Read_Single(const QSPI_Instance_t *qspi_inst,
                                 uint8_t *data,
                                 uint32_t address,
                                 size_t data_length,
-                                uint8_t prescaler);
+                                uint16_t prescaler);
 
 /* ============================================================
 * PROGRAM OPERATIONS
@@ -250,6 +255,9 @@ uint16_t Flash_Fast_Read_Single(const QSPI_Instance_t *qspi_inst,
  * If @ref FLASH_NO_WAIT is selected, the function returns
  * immediately after issuing the program command.
  *
+ * If @ref FLASH_NOTIFY_ON_COMPLETE is selected, the function returns immediately
+ * but will notify using the interrupt and the ISR used @ref QSPI_IRQ_Handler
+ *
  * @param[in] qspi_inst
  * Pointer to the QSPI hardware instance.
  *
@@ -266,6 +274,7 @@ uint16_t Flash_Fast_Read_Single(const QSPI_Instance_t *qspi_inst,
  * Flash wait mode selection:
  * - FLASH_WAIT_FOR_COMPLETION
  * - FLASH_NO_WAIT
+ * - FLASH_NOTIFY_ON_COMPLETE
  *
  * @param[in] prescaler
  * Clock prescaler value used to divide the QSPI input clock.
@@ -297,7 +306,7 @@ uint16_t Flash_Input_Page_Quad(const QSPI_Instance_t *qspi_inst,
                                uint32_t address,
                                size_t data_length,
                                flash_wait_mode_t wait_mode,
-                               uint8_t prescaler);
+                               uint16_t prescaler);
 
 /**
  * @brief Program a flash page using Single Page Program (1-1-1 mode).
@@ -319,6 +328,9 @@ uint16_t Flash_Input_Page_Quad(const QSPI_Instance_t *qspi_inst,
  * If @ref FLASH_NO_WAIT is selected, the function returns
  * immediately after issuing the program command.
  *
+ * If @ref FLASH_NOTIFY_ON_COMPLETE is selected, the function returns immediately
+ * but will notify using the interrupt and the ISR used @ref QSPI_IRQ_Handler
+ *
  * @param[in] qspi_inst
  * Pointer to the QSPI hardware instance.
  *
@@ -335,6 +347,7 @@ uint16_t Flash_Input_Page_Quad(const QSPI_Instance_t *qspi_inst,
  * Flash wait mode selection:
  * - FLASH_WAIT_FOR_COMPLETION
  * - FLASH_NO_WAIT
+ * - FLASH_NOTIFY_ON_COMPLETE
  *
  * @param[in] prescaler
  * Clock prescaler value used to divide the QSPI input clock.
@@ -366,7 +379,7 @@ uint16_t Flash_Input_Page_Single(const QSPI_Instance_t *qspi_inst,
                                  uint32_t address,
                                  size_t data_length,
                                  flash_wait_mode_t wait_mode,
-                                 uint8_t prescaler);
+                                 uint16_t prescaler);
 
 /* ============================================================
 * ERASE OPERATIONS
@@ -389,6 +402,9 @@ uint16_t Flash_Input_Page_Single(const QSPI_Instance_t *qspi_inst,
  * If @ref FLASH_NO_WAIT is selected, the function returns
  * immediately after issuing the erase command.
  *
+ * If @ref FLASH_NOTIFY_ON_COMPLETE is selected, the function returns immediately
+ * but will notify using the interrupt and the ISR used @ref QSPI_IRQ_Handler
+ *
  * @param[in] qspi_inst
  * Pointer to the QSPI hardware instance.
  *
@@ -399,6 +415,7 @@ uint16_t Flash_Input_Page_Single(const QSPI_Instance_t *qspi_inst,
  * Flash wait mode selection:
  * - FLASH_WAIT_FOR_COMPLETION
  * - FLASH_NO_WAIT
+ * - FLASH_NOTIFY_ON_COMPLETE
  *
  * @param[in] prescaler
  * Clock prescaler value used to divide the QSPI input clock.
@@ -428,7 +445,7 @@ uint16_t Flash_Input_Page_Single(const QSPI_Instance_t *qspi_inst,
 uint16_t Flash_Sector_4K_Erase(const QSPI_Instance_t *qspi_inst,
                                uint32_t address,
                                flash_wait_mode_t wait_mode,
-                               uint8_t prescaler);
+                               uint16_t prescaler);
 
 /**
  * @brief Erase a 32KB flash block.
@@ -447,6 +464,9 @@ uint16_t Flash_Sector_4K_Erase(const QSPI_Instance_t *qspi_inst,
  * If @ref FLASH_NO_WAIT is selected, the function returns
  * immediately after issuing the erase command.
  *
+ * If @ref FLASH_NOTIFY_ON_COMPLETE is selected, the function returns immediately
+ * but will notify using the interrupt and the ISR used @ref QSPI_IRQ_Handler
+ *
  * @param[in] qspi_inst
  * Pointer to the QSPI hardware instance.
  *
@@ -457,6 +477,7 @@ uint16_t Flash_Sector_4K_Erase(const QSPI_Instance_t *qspi_inst,
  * Flash wait mode selection:
  * - FLASH_WAIT_FOR_COMPLETION
  * - FLASH_NO_WAIT
+ * - FLASH_NOTIFY_ON_COMPLETE
  *
  * @param[in] prescaler
  * Clock prescaler value used to divide the QSPI input clock.
@@ -486,7 +507,7 @@ uint16_t Flash_Sector_4K_Erase(const QSPI_Instance_t *qspi_inst,
 uint16_t Flash_Sector_32K_Erase(const QSPI_Instance_t *qspi_inst,
                                 uint32_t address,
                                 flash_wait_mode_t wait_mode,
-                                uint8_t prescaler);
+                                uint16_t prescaler);
 
 /**
  * @brief Perform complete flash chip erase.
@@ -495,16 +516,27 @@ uint16_t Flash_Sector_32K_Erase(const QSPI_Instance_t *qspi_inst,
  * This function issues the Chip Erase command to erase the
  * entire flash memory contents.
  *
- * Unlike sector/block erase APIs, this function always performs
- * blocking wait internally until the WIP (Write In Progress)
- * bit clears, indicating that the erase operation has completed.
+ * The function supports both blocking and non-blocking behavior
+ * using @ref flash_wait_mode_t.
  *
- * Since chip erase can take significantly longer than page
- * program or sector erase operations, an appropriate timeout
- * value is used internally.
+ * If @ref FLASH_WAIT_FOR_COMPLETION is selected, the driver waits
+ * internally until the WIP (Write In Progress) bit clears,
+ * indicating that the erase operation has completed.
+ *
+ * If @ref FLASH_NO_WAIT is selected, the function returns
+ * immediately after issuing the erase command.
+ *
+ * If @ref FLASH_NOTIFY_ON_COMPLETE is selected, the function returns immediately
+ * but will notify using the interrupt and the ISR used @ref QSPI_IRQ_Handler
  *
  * @param[in] qspi_inst
  * Pointer to the QSPI hardware instance.
+ *
+ * @param[in] wait_mode
+ * Flash wait mode selection:
+ * - FLASH_WAIT_FOR_COMPLETION
+ * - FLASH_NO_WAIT
+ * - FLASH_NOTIFY_ON_COMPLETE
  *
  * @param[in] prescaler
  * Clock prescaler value used to divide the QSPI input clock.
@@ -530,8 +562,8 @@ uint16_t Flash_Sector_32K_Erase(const QSPI_Instance_t *qspi_inst,
  * This operation erases the complete flash memory and cannot
  * be undone. Use with caution.
  */
-uint16_t Flash_Chip_Erase(const QSPI_Instance_t *qspi_inst,
-                          uint8_t prescaler);
+uint16_t Flash_Chip_Erase(const QSPI_Instance_t *qspi_inst, \
+                            flash_wait_mode_t wait_mode, uint16_t prescaler);
 
 /* ============================================================
 * CONTROL COMMANDS
@@ -568,7 +600,7 @@ uint16_t Flash_Chip_Erase(const QSPI_Instance_t *qspi_inst,
  * - Other error codes returned by @ref QSPI_Transaction()
  */
 uint16_t Flash_Write_Enable(const QSPI_Instance_t *qspi_inst,
-                            uint8_t prescaler);
+                            uint16_t prescaler);
 
 /**
  * @brief Disable flash write operations.
@@ -600,7 +632,7 @@ uint16_t Flash_Write_Enable(const QSPI_Instance_t *qspi_inst,
  * - Other error codes returned by @ref QSPI_Transaction()
  */
 uint16_t Flash_Write_Disable(const QSPI_Instance_t *qspi_inst,
-                             uint8_t prescaler);
+                             uint16_t prescaler);
 
 
 /**
@@ -642,7 +674,7 @@ uint16_t Flash_Write_Disable(const QSPI_Instance_t *qspi_inst,
  * to other flash regions while erase/program is paused.
  */
 uint16_t Flash_Suspend(const QSPI_Instance_t *qspi_inst,
-                       uint8_t prescaler);
+                       uint16_t prescaler);
 
 /**
  * @brief Resume a suspended erase or program operation.
@@ -679,7 +711,7 @@ uint16_t Flash_Suspend(const QSPI_Instance_t *qspi_inst,
  * - Other error codes returned by register read/write operations
  */
 uint16_t Flash_Resume(const QSPI_Instance_t *qspi_inst,
-                      uint8_t prescaler);
+                      uint16_t prescaler);
 
 /**
  * @brief Put flash into deep power-down mode.
@@ -711,7 +743,7 @@ uint16_t Flash_Resume(const QSPI_Instance_t *qspi_inst,
  * - Other error codes returned by @ref QSPI_Transaction()
  */
 uint16_t Flash_Power_Down(const QSPI_Instance_t *qspi_inst,
-                          uint8_t prescaler);
+                          uint16_t prescaler);
 
 /**
  * @brief Release flash from deep power-down mode.
@@ -743,7 +775,49 @@ uint16_t Flash_Power_Down(const QSPI_Instance_t *qspi_inst,
  * - Other error codes returned by @ref QSPI_Transaction()
  */
 uint16_t Flash_Release_Power_Down(const QSPI_Instance_t *qspi_inst,
-                                  uint8_t prescaler);
+                                  uint16_t prescaler);
+
+/* ============================================================
+* QSPI IRQ HANDLER
+* ============================================================*/
+/**
+ * @brief QSPI interrupt handler (weak, application-overridable).
+ *
+ * @details
+ * This function is invoked when a QSPI flash operation completes
+ * and its associated interrupt fires.
+ *
+ * It is declared as a weak symbol so that the default implementation
+ * (which logs completion and disables the interrupt for the given
+ * QSPI instance) can be overridden by the application when custom
+ * handling is required.
+ *
+ * To override, define a function with the exact same name and
+ * signature in application code, without the weak attribute. The
+ * linker will then use the application's definition in place of
+ * this default.
+ *
+ * @param[in] args
+ * Pointer to the QSPI hardware instance associated with the
+ * completed operation. The handler casts this back to the
+ * appropriate instance/ID type before use.
+ *
+ * @note
+ * - This handler is only invoked when @ref FLASH_NOTIFY_ON_COMPLETE
+ *   is passed as the @c wait_mode argument to the flash write/erase
+ *   APIs.
+ * - This function may execute in interrupt context. Any overriding
+ *   implementation should be kept short and must avoid blocking calls.
+ * - The default (weak) implementation disables the interrupt for
+ *   the given QSPI instance after logging completion.
+ *
+ * @warning
+ * If overridden, the new implementation must appropriately disable
+ * or clear the interrupt for the given QSPI instance, or handle it
+ * consistently with the driver's expectations, to avoid repeated
+ * interrupt entry.
+ */
+void QSPI_IRQ_Handler(void *args) __attribute__((weak));
 
 /* ============================================================
 * STATUS REGISTER OPERATIONS
@@ -787,7 +861,7 @@ uint16_t Flash_Release_Power_Down(const QSPI_Instance_t *qspi_inst,
  */
 uint16_t Flash_Read_Status_Register1(const QSPI_Instance_t *qspi_inst,
                                      uint8_t* data,
-                                     uint8_t prescaler);
+                                     uint16_t prescaler);
 
 /**
  * @brief Read Status Register 2.
@@ -827,7 +901,7 @@ uint16_t Flash_Read_Status_Register1(const QSPI_Instance_t *qspi_inst,
  */
 uint16_t Flash_Read_Status_Register2(const QSPI_Instance_t *qspi_inst,
                                      uint8_t* data,
-                                     uint8_t prescaler);
+                                     uint16_t prescaler);
 
 /**
  * @brief Read Status Register 3.
@@ -866,7 +940,7 @@ uint16_t Flash_Read_Status_Register2(const QSPI_Instance_t *qspi_inst,
  */
 uint16_t Flash_Read_Status_Register3(const QSPI_Instance_t *qspi_inst,
                                      uint8_t* data,
-                                     uint8_t prescaler);
+                                     uint16_t prescaler);
 
 /**
  * @brief Read Flag Status Register.
@@ -908,7 +982,7 @@ uint16_t Flash_Read_Status_Register3(const QSPI_Instance_t *qspi_inst,
  */
 uint16_t Flash_Read_Flag_Status_Register(const QSPI_Instance_t *qspi_inst,
                                          uint8_t* data,
-                                         uint8_t prescaler);
+                                         uint16_t prescaler);
 
 /**
  * @brief Enable volatile write access to status registers.
@@ -942,7 +1016,7 @@ uint16_t Flash_Read_Flag_Status_Register(const QSPI_Instance_t *qspi_inst,
  * - Other error codes returned by @ref QSPI_Transaction()
  */
 uint16_t Flash_Write_Enable_Status_Register(const QSPI_Instance_t *qspi_inst,
-                                            uint8_t prescaler);
+                                            uint16_t prescaler);
 
 /**
  * @brief Write Status Register 1.
@@ -978,7 +1052,7 @@ uint16_t Flash_Write_Enable_Status_Register(const QSPI_Instance_t *qspi_inst,
  */
 uint16_t Flash_Write_Status_Register1(const QSPI_Instance_t *qspi_inst,
                                       uint8_t* statusData,
-                                      uint8_t prescaler);
+                                      uint16_t prescaler);
 
 /**
  * @brief Write Status Register 2.
@@ -1014,7 +1088,7 @@ uint16_t Flash_Write_Status_Register1(const QSPI_Instance_t *qspi_inst,
  */
 uint16_t Flash_Write_Status_Register2(const QSPI_Instance_t *qspi_inst,
                                       uint8_t* statusData,
-                                      uint8_t prescaler);
+                                      uint16_t prescaler);
 
 /**
  * @brief Write Status Register 3.
@@ -1050,7 +1124,7 @@ uint16_t Flash_Write_Status_Register2(const QSPI_Instance_t *qspi_inst,
  */
 uint16_t Flash_Write_Status_Register3(const QSPI_Instance_t *qspi_inst,
                                       uint8_t* statusData,
-                                      uint8_t prescaler);
+                                      uint16_t prescaler);
 
 /* ============================================================
 * SPECIAL FEATURE OPERATIONS
@@ -1089,7 +1163,7 @@ uint16_t Flash_Write_Status_Register3(const QSPI_Instance_t *qspi_inst,
  */
 uint16_t Flash_Read_Global_Freeze_Bit(const QSPI_Instance_t *qspi_inst,
                                       uint8_t* data,
-                                      uint8_t prescaler);
+                                      uint16_t prescaler);
 
 /**
  * @brief Set or clear Global Freeze Bit.
@@ -1130,7 +1204,7 @@ uint16_t Flash_Read_Global_Freeze_Bit(const QSPI_Instance_t *qspi_inst,
  */
 uint16_t Flash_Write_Global_Freeze_Bit(const QSPI_Instance_t *qspi_inst,
                                        uint8_t data,
-                                       uint8_t prescaler);
+                                       uint16_t prescaler);
 
 /* ============================================================
 * FLASH IDENTIFICATION & CONFIGURATION
@@ -1178,7 +1252,7 @@ uint16_t Flash_Write_Global_Freeze_Bit(const QSPI_Instance_t *qspi_inst,
 uint16_t Flash_Read_SFDP(const QSPI_Instance_t *qspi_inst,
                          uint32_t address,
                          uint8_t* data,
-                         uint8_t prescaler);
+                         uint16_t prescaler);
 
 /**
  * @brief Read JEDEC ID.
@@ -1216,7 +1290,7 @@ uint16_t Flash_Read_SFDP(const QSPI_Instance_t *qspi_inst,
  */
 uint16_t Flash_Read_Jedec_ID(const QSPI_Instance_t *qspi_inst,
                              uint8_t *id,
-                             uint8_t prescaler);
+                             uint16_t prescaler);
 
 /**
  * @brief Read Non-Volatile Configuration Register (NVCR).
@@ -1256,7 +1330,7 @@ uint16_t Flash_Read_Jedec_ID(const QSPI_Instance_t *qspi_inst,
  */
 uint16_t Flash_Read_NVCR(const QSPI_Instance_t *qspi_inst,
                          uint8_t* data,
-                         uint8_t prescaler);
+                         uint16_t prescaler);
 
 /**
  * @brief Write Non-Volatile Configuration Register (NVCR).
@@ -1300,7 +1374,7 @@ uint16_t Flash_Read_NVCR(const QSPI_Instance_t *qspi_inst,
  */
 uint16_t Flash_Write_NVCR(const QSPI_Instance_t *qspi_inst,
                           uint8_t* data,
-                          uint8_t prescaler);
+                          uint16_t prescaler);
 
 /* ============================================================
 * MEMORY MODES
@@ -1356,7 +1430,7 @@ uint16_t Flash_Write_NVCR(const QSPI_Instance_t *qspi_inst,
  */
 uint16_t Flash_XIP_Init(const QSPI_Instance_t *qspi_inst,
                         size_t flash_mem_size,
-                        uint8_t prescaler);
+                        uint16_t prescaler);
 
 #ifdef __cplusplus
 }

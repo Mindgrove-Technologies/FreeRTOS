@@ -35,8 +35,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_RSA_PADDING_H_
-#define BSP_INCLUDE_RSA_PADDING_H_
+#ifndef INCLUDES_RSA_PADDING_H_
+#define INCLUDES_RSA_PADDING_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,6 +44,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stddef.h>
+#include "crypto_api.h"
 
 /**
  * @brief Encrypts a message using RSAES PKCS#1 v1.5 padding.
@@ -230,9 +231,8 @@ uint16_t RSASSA_PSS_Verify(const uint8_t *signature, size_t signature_length,
                            const uint8_t *input, size_t input_length,
                            size_t expected_salt_length);
 
-
 #ifdef __cplusplus
 }
 #endif
 
-#endif  // BSP_INCLUDE_RSA_PADDING_H_
+#endif  // INCLUDES_RSA_PADDING_H_

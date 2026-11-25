@@ -43,8 +43,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_PSA_H_
-#define BSP_INCLUDE_PSA_H_
+#ifndef INCLUDES_PSA_H_
+#define INCLUDES_PSA_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -54,6 +54,7 @@ extern "C" {
 #include <stdint.h>
 #include "psa_errors.h"
 #include "psa_types.h"
+#include "crypto_api.h"
 
 /**
  * @defgroup psa_cipher Cipher operations
@@ -1246,4 +1247,4 @@ psa_status_t psa_destroy_key(psa_key_id_t key);
 }
 #endif
 
-#endif  // BSP_INCLUDE_PSA_H_
+#endif  // INCLUDES_PSA_H_

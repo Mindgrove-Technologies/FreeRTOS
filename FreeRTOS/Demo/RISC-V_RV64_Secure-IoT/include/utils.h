@@ -52,6 +52,8 @@ extern "C" {
 
 #include <stdint.h>
 #include <stddef.h>
+#include "log.h"
+#include "errors.h"
 
 extern volatile uint64_t CLOCK_FREQUENCY_BASE;
 
@@ -288,6 +290,7 @@ void Write_Data(volatile size_t *addr, size_t val);
  * @brief The function `Millis_Init` initializes the millisecond counter.
  * @details This function initializes the timer hardware and updates the
  * mtimecmp value to begin generating interrupts for elapsed time calculation.
+ * @return void
  */
 void Millis_Init(void);
 
@@ -307,8 +310,45 @@ uint64_t Millis(void);
  * @param status Exit status code (0 for success, non-zero for errors).
  * @note This function is guaranteed not to return. If SBI is unavailable,
  * it falls back to an infinite Wait-For-Interrupt (WFI) loop.
+ * @return void
  */
 void Exit(int status);
+
+/**
+ * @brief Moves the elapsed-time reference point to the present moment.
+ * @details Reads the current `cycle` value into `elapsed_last_cycles_reinit`
+ * and repoints `active_baseline` to it. This discards the previous
+ * reference point in favor of "now," so subsequent calls to
+ * @ref Get_Elapsed_Time report time elapsed only from this call onward,
+ * until @ref Elapsed_Time_Rebase restores the earlier reference.
+ * @return None.
+ */
+void Elapsed_Time_Reinit(void);
+
+/**
+ * @brief Restores the elapsed-time reference point to the one captured during
+ * system initialization.
+ * @details Repoints `active_baseline` back to `elapsed_last_cycles`, the
+ * cycle count captured once, prior to the call to `main()`, as the final
+ * step of system initialization. Undoes any redirection made by
+ * @ref Elapsed_Time_Reinit. No new `cycle` read occurs here; only the
+ * baseline pointer is reassigned, so subsequent calls to
+ * @ref Get_Elapsed_Time resume measuring from that initialization-time
+ * reference point.
+ * @return None.
+ */
+void Elapsed_Time_Rebase(void);
+
+/**
+ * @brief Returns the elapsed time, in seconds, since the active reference point.
+ * @details Reads the current `cycle` value and subtracts the cycle count
+ * stored at `*active_baseline` (whichever reference point is currently
+ * active: the one captured once during system initialization prior to
+ * `main()`, or a later point set by @ref Elapsed_Time_Reinit or
+ * @ref Elapsed_Time_Rebase).
+ * @return Number of whole seconds elapsed since the active reference point.
+ */
+uint64_t Get_Elapsed_Time(void);
 
 /**
  * @brief Wait until a specific register bit matches the expected condition
@@ -382,7 +422,6 @@ void Exit(int status);
  * @endcode
  * 
  */
-
 uint16_t  Wait_For_Timeout(uintptr_t address,
                            uint32_t bit_mask,
                            uint8_t cond,

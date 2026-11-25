@@ -40,8 +40,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_PSA_VALUES_H_
-#define BSP_INCLUDE_PSA_VALUES_H_
+#ifndef INCLUDES_PSA_VALUES_H_
+#define INCLUDES_PSA_VALUES_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -491,4 +491,4 @@ extern "C" {
 }
 #endif
 
-#endif  /* BSP_INCLUDE_PSA_VALUES_H_ */
+#endif  /* INCLUDES_PSA_VALUES_H_ */

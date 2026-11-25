@@ -35,8 +35,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_PSA_ERRORS_H_
-#define BSP_INCLUDE_PSA_ERRORS_H_
+#ifndef INCLUDES_PSA_ERRORS_H_
+#define INCLUDES_PSA_ERRORS_H_
 
 #include <stdint.h>
 
@@ -176,4 +176,4 @@ typedef int32_t psa_status_t;
 
 /** @} */  // end PSA_ERROR_CODES
 
-#endif  // BSP_INCLUDE_PSA_ERRORS_H_
+#endif  // INCLUDES_PSA_ERRORS_H_

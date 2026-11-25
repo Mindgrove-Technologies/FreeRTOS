@@ -36,8 +36,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_HMAC_H_
-#define BSP_INCLUDE_HMAC_H_
+#ifndef INCLUDES_HMAC_H_
+#define INCLUDES_HMAC_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,6 +46,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include "crypto_api.h"
 
 /**
  * @enum HMAC_HashType_t
@@ -56,25 +57,25 @@ extern "C" {
  */
 typedef enum {
     /** The value of this enum is 0U. It represents SHA-256. */
-    SHA_256 = 0U,
+    SHA_256_ALG = 0U,
 
     /** The value of this enum is 1U. It represents SHA-384. */
-    SHA_384 = 1U,
+    SHA_384_ALG = 1U,
 
     /** The value of this enum is 2U. It represents SHA-512. */
-    SHA_512 = 2U,
+    SHA_512_ALG = 2U,
 
     /** The value of this enum is 3U. It represents SHA3-224. */
-    SHA3_224 = 3U,
+    SHA3_224_ALG = 3U,
 
     /** The value of this enum is 4U. It represents SHA3-256. */
-    SHA3_256 = 4U,
+    SHA3_256_ALG = 4U,
 
     /** The value of this enum is 5U. It represents SHA3-384. */
-    SHA3_384 = 5U,
+    SHA3_384_ALG = 5U,
 
     /** The value of this enum is 6U. It represents SHA3-512. */
-    SHA3_512 = 6U
+    SHA3_512_ALG = 6U
 } HMAC_HashType_t;
 
 /* Opaque HMAC context structure defined inside the driver. */
@@ -184,4 +185,4 @@ uint16_t HMAC_Final(Hmac* hmac, uint8_t* hash);
 }
 #endif
 
-#endif /* BSP_INCLUDE_HMAC_H_ */
+#endif /* INCLUDES_HMAC_H_ */

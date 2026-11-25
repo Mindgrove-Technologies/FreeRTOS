@@ -224,25 +224,25 @@ typedef struct {
 typedef struct {                                /*!< DMA Structure                                                             */
   
   union {
-    __IOM uint32_t CONFIG_REG;                    /*!< Channel configuration regisster of channel                              */
+    __IOM uint32_t CONFIG_REG;                    /*!< Channel configuration register of channel                              */
     
     struct {
-      __IOM uint32_t CHANNEL_EN         : 1;            /*!< To enable the channel                                                     */
-      __IOM uint32_t TRANSFER_COMPLETE_INT_EN    : 1;            /*!< Transfer complete interrupt enable                                        */
-      __IOM uint32_t HALF_TRANSFER_INT_EN       : 1;            /*!< Half transfer interrupt enable                                            */
-      __IOM uint32_t TRANSFER_ERROR_INT_EN       : 1;            /*!< Transfer error interrupt enable                                           */
-      __IOM uint32_t TRANSFER_DIRECTION        : 1;            /*!< Data transfer direction                                                   */
+      __IOM uint32_t CHANNEL_EN                   : 1;            /*!< To enable the channel                                               */
+      __IOM uint32_t TRANSFER_COMPLETE_INTR_EN    : 1;            /*!< Transfer complete interrupt enable                                  */
+      __IOM uint32_t HALF_TRANSFER_INTR_EN        : 1;            /*!< Half transfer interrupt enable                                      */
+      __IOM uint32_t TRANSFER_ERROR_INTR_EN       : 1;            /*!< Transfer error interrupt enable                                     */
+      __IOM uint32_t TRANSFER_DIR        : 1;                     /*!< Data transfer direction                                             */
             uint32_t            : 1;
-      __IOM uint32_t PERIPH_ADDR_INCREMENT       : 2;            /*!< Peripheral increment mode                                                  */
-      __IOM uint32_t MEM_ADDR_INCREMENT       : 2;            /*!< Memory increment mode                                                     */
-      __IOM uint32_t PERIPH_TRANSFER_SIZE      : 2;            /*!< Data size of each DMA transfer to the peripheral                          */
-      __IOM uint32_t MEM_TRANSFER_SIZE      : 2;            /*!< Data size of each DMA transfer to the memory                              */
+      __IOM uint32_t PINC       : 2;            /*!< Peripheral increment mode                                                  */
+      __IOM uint32_t MINC       : 2;            /*!< Memory increment mode                                                     */
+      __IOM uint32_t PSIZE      : 2;            /*!< Data size of each DMA transfer to the peripheral                          */
+      __IOM uint32_t MSIZE      : 2;            /*!< Data size of each DMA transfer to the memory                              */
       __IOM uint32_t PRIORITY_LEVEL         : 2;            /*!< Priority level                                                            */
-      __IOM uint32_t MEMORY_TO_MEMORY    : 1;            /*!< Memory to memory mode                                                     */
+      __IOM uint32_t M2M        : 1;            /*!< Memory to memory mode                                                     */
             uint32_t            : 1;
-      __IOM uint32_t PERIPH_TO_PERIPH        : 1;            /*!< Periheral to peripheral mode                                              */
+      __IOM uint32_t P2P        : 1;            /*!< Periheral to peripheral mode                                              */
             uint32_t            : 13;
-    } DMA_CCR_b;
+    } CONFIG_REG_b;
   } ;
   __IM  uint32_t  RESERVED;
   
@@ -253,13 +253,13 @@ typedef struct {                                /*!< DMA Structure              
   __IM  uint32_t  RESERVED2;
   
   union {
-    __IOM uint32_t PERIPH_ADDR_REG;                   /*!< Channel peripheral address register                                      */
+    __IOM uint32_t CPAR;                   /*!< Channel peripheral address register                                      */
     
   } ;
   __IM  uint32_t  RESERVED3;
   
   union {
-    __IOM uint32_t MEM_ADDR_REG;                   /*!< Channel memory address register                                          */
+    __IOM uint32_t CMAR;                   /*!< Channel memory address register                                          */
   
   } ;
   __IM  uint32_t  RESERVED4;
@@ -269,7 +269,7 @@ typedef struct {                                /*!< DMA Structure              
     
     struct {
       __IOM uint16_t SRC_REQUEST_ID : 6;           /*!< Selects the source peripheral request line for the DMA channel.        */
-      __IOM uint16_t DEST_REQUEST_ID : 6;           /*!< Selects the destination peripheral request line for the DMA channel.      */
+      __IOM uint16_t DEST_REQUEST_ID : 6;           /*!< Selects the destination peripheral request line for the DMA channel.  */
             uint16_t            : 4;
     } REQUEST_SELECT_REG_b;
   } ;
@@ -278,104 +278,88 @@ typedef struct {                                /*!< DMA Structure              
   
 }  DMA_CHANNEL_Type;
 
-typedef struct { 
-
-  DMA_CHANNEL_Type CHANNEL[8];
-
+typedef struct {                                /*!< DMA Structure                        */
+  __IOM DMA_CHANNEL_Type CHANNEL[8];            /*!< [0..7]                               */
+  
   union {
-      __IOM uint32_t INTERRUPT_STATUS_REG; /*!< Interrupt status register */
-
-      struct {
-          __IOM uint32_t GLOBAL_INT_FLAG_CH0        : 1; /*!< global interrupt flag for channel0 */
-          __IOM uint32_t TRANSFER_COMPLETE_FLAG_CH0 : 1; /*!< Transfer completion flag for channel0 */
-          __IOM uint32_t HALF_TRANSFER_FLAG_CH0     : 1; /*!< Half transfer flag for channel0 */
-          __IOM uint32_t TRANSFER_ERROR_FLAG_CH0    : 1; /*!< Transfer error flag for channel0 */
-
-          __IOM uint32_t GLOBAL_INT_FLAG_CH1        : 1; /*!< global interrupt flag for channel1 */
-          __IOM uint32_t TRANSFER_COMPLETE_FLAG_CH1 : 1; /*!< Transfer completion flag for channel1 */
-          __IOM uint32_t HALF_TRANSFER_FLAG_CH1     : 1; /*!< Half transfer flag for channel1 */
-          __IOM uint32_t TRANSFER_ERROR_FLAG_CH1    : 1; /*!< Transfer error flag for channel1 */
-
-          __IOM uint32_t GLOBAL_INT_FLAG_CH2        : 1; /*!< global interrupt flag for channel2 */
-          __IOM uint32_t TRANSFER_COMPLETE_FLAG_CH2 : 1; /*!< Transfer completion flag for channel2 */
-          __IOM uint32_t HALF_TRANSFER_FLAG_CH2     : 1; /*!< Half transfer flag for channel2 */
-          __IOM uint32_t TRANSFER_ERROR_FLAG_CH2    : 1; /*!< Transfer error flag for channel2 */
-
-          __IOM uint32_t GLOBAL_INT_FLAG_CH3        : 1; /*!< global interrupt flag for channel3 */
-          __IOM uint32_t TRANSFER_COMPLETE_FLAG_CH3 : 1; /*!< Transfer completion flag for channel3 */
-          __IOM uint32_t HALF_TRANSFER_FLAG_CH3     : 1; /*!< Half transfer flag for channel3 */
-          __IOM uint32_t TRANSFER_ERROR_FLAG_CH3    : 1; /*!< Transfer error flag for channel3 */
-
-          __IOM uint32_t GLOBAL_INT_FLAG_CH4        : 1; /*!< global interrupt flag for channel4 */
-          __IOM uint32_t TRANSFER_COMPLETE_FLAG_CH4 : 1; /*!< Transfer completion flag for channel4 */
-          __IOM uint32_t HALF_TRANSFER_FLAG_CH4     : 1; /*!< Half transfer flag for channel4 */
-          __IOM uint32_t TRANSFER_ERROR_FLAG_CH4    : 1; /*!< Transfer error flag for channel4 */
-
-          __IOM uint32_t GLOBAL_INT_FLAG_CH5        : 1; /*!< global interrupt flag for channel5 */
-          __IOM uint32_t TRANSFER_COMPLETE_FLAG_CH5 : 1; /*!< Transfer completion flag for channel5 */
-          __IOM uint32_t HALF_TRANSFER_FLAG_CH5     : 1; /*!< Half transfer flag for channel5 */
-          __IOM uint32_t TRANSFER_ERROR_FLAG_CH5    : 1; /*!< Transfer error flag for channel5 */
-
-          __IOM uint32_t GLOBAL_INT_FLAG_CH6        : 1; /*!< global interrupt flag for channel6 */
-          __IOM uint32_t TRANSFER_COMPLETE_FLAG_CH6 : 1; /*!< Transfer completion flag for channel6 */
-          __IOM uint32_t HALF_TRANSFER_FLAG_CH6     : 1; /*!< Half transfer flag for channel6 */
-          __IOM uint32_t TRANSFER_ERROR_FLAG_CH6    : 1; /*!< Transfer error flag for channel6 */
-
-          __IOM uint32_t GLOBAL_INT_FLAG_CH7        : 1; /*!< global interrupt flag for channel7 */
-          __IOM uint32_t TRANSFER_COMPLETE_FLAG_CH7 : 1; /*!< Transfer completion flag for channel7 */
-          __IOM uint32_t HALF_TRANSFER_FLAG_CH7     : 1; /*!< Half transfer flag for channel7 */
-          __IOM uint32_t TRANSFER_ERROR_FLAG_CH7    : 1; /*!< Transfer error flag for channel7 */
-      } ISR_b;
-  };
-  __IM  uint32_t  RESERVED56;
+    __IOM uint32_t INTR_STATUS_REG;        /*!< Interrupt status register                */
+    
+    struct {
+      __IOM uint32_t GLOBAL_INTR_FLAG_CH0                 : 1;   /*!< global interrupt flag for channel0                               */
+      __IOM uint32_t TRANSFER_COMPLETE_INTR_FLAG_CH0      : 1;  /*!< Transfer completion flag for channel0                             */
+      __IOM uint32_t HALF_TRANSFER_INTR_FLAG_CH0          : 1;  /*!< Half transfer flag for channel0                                   */
+      __IOM uint32_t TRANSFER_ERROR_INTR_FLAG_CH0         : 1;  /*!< Transfer error flag channel0                                      */
+      __IOM uint32_t GLOBAL_INTR_FLAG_CH1                 : 1;  /*!< global interrupt flag for channel1                                */
+      __IOM uint32_t TRANSFER_COMPLETE_INTR_FLAG_CH1      : 1;  /*!< Transfer completion flag for channel1                             */
+      __IOM uint32_t HALF_TRANSFER_INTR_FLAG_CH1          : 1;  /*!< Half transfer flag for channel1                                   */
+      __IOM uint32_t TRANSFER_ERROR_INTR_FLAG_CH1         : 1;  /*!< Transfer error flag channel1                                      */
+      __IOM uint32_t GLOBAL_INTR_FLAG_CH2                 : 1;  /*!< global interrupt flag for channel2                                */
+      __IOM uint32_t TRANSFER_COMPLETE_INTR_FLAG_CH2      : 1;  /*!< Transfer completion flag for channel2                             */
+      __IOM uint32_t HALF_TRANSFER_INTR_FLAG_CH2          : 1;  /*!< Half transfer flag for channel2                                   */
+      __IOM uint32_t TRANSFER_ERROR_INTR_FLAG_CH2         : 1;  /*!< Transfer error flag channel2                                      */
+      __IOM uint32_t GLOBAL_INTR_FLAG_CH3                 : 1;  /*!< global interrupt flag for channel3                                */
+      __IOM uint32_t TRANSFER_COMPLETE_INTR_FLAG_CH3      : 1;  /*!< Transfer completion flag for channel3                             */
+      __IOM uint32_t HALF_TRANSFER_INTR_FLAG_CH3          : 1;  /*!< Half transfer flag for channel3                                   */
+      __IOM uint32_t TRANSFER_ERROR_INTR_FLAG_CH3         : 1;  /*!< Transfer error flag channel3                                      */
+      __IOM uint32_t GLOBAL_INTR_FLAG_CH4                 : 1;  /*!< global interrupt flag for channel4                                */
+      __IOM uint32_t TRANSFER_COMPLETE_INTR_FLAG_CH4      : 1;  /*!< Transfer completion flag for channel4                             */
+      __IOM uint32_t HALF_TRANSFER_INTR_FLAG_CH4          : 1;  /*!< Half transfer flag for channel4                                   */
+      __IOM uint32_t TRANSFER_ERROR_INTR_FLAG_CH4         : 1;  /*!< Transfer error flag channel4                                      */
+      __IOM uint32_t GLOBAL_INTR_FLAG_CH5                 : 1;  /*!< global interrupt flag for channel5                                */
+      __IOM uint32_t TRANSFER_COMPLETE_INTR_FLAG_CH5      : 1;  /*!< Transfer completion flag for channel5                             */
+      __IOM uint32_t HALF_TRANSFER_INTR_FLAG_CH5          : 1;  /*!< Half transfer flag for channel5                                   */
+      __IOM uint32_t TRANSFER_ERROR_INTR_FLAG_CH5         : 1;  /*!< Transfer error flag channel5                                      */
+      __IOM uint32_t GLOBAL_INTR_FLAG_CH6                 : 1;  /*!< global interrupt flag for channel6                                */
+      __IOM uint32_t TRANSFER_COMPLETE_INTR_FLAG_CH6      : 1;  /*!< Transfer completion flag for channel6                             */
+      __IOM uint32_t HALF_TRANSFER_INTR_FLAG_CH6          : 1;  /*!< Half transfer flag for channel6                                   */
+      __IOM uint32_t TRANSFER_ERROR_INTR_FLAG_CH6         : 1;  /*!< Transfer error flag channel6                                      */
+      __IOM uint32_t GLOBAL_INTR_FLAG_CH7                 : 1;  /*!< global interrupt flag for channel7                                */
+      __IOM uint32_t TRANSFER_COMPLETE_INTR_FLAG_CH7      : 1;  /*!< Transfer completion flag for channel7                             */
+      __IOM uint32_t HALF_TRANSFER_INTR_FLAG_CH7          : 1;  /*!< Half transfer flag for channel7                                   */
+      __IOM uint32_t TRANSFER_ERROR_INTR_FLAG_CH7         : 1;  /*!< Transfer error flag channel7                                      */
+    } INTERRUPT_STATUS_REG_b;
+  } ;
+  __IM  uint32_t  RESERVED;
   
 union {
-    __IOM uint32_t INT_FLAG_CLEAR_REG; /*!< Interrupt flag clear register */
+    __IOM uint32_t INTR_FLAG_CLEAR_REG; /*!< Interrupt flag clear register */
 
     struct {
-        __IOM uint32_t CLEAR_GLOBAL_FLAG_CH0            : 1; /*!< global interrupt flag clear for channel0 */
+        __IOM uint32_t CLEAR_GLOBAL_INTR_FLAG_CH0       : 1; /*!< global interrupt flag clear for channel0 */
         __IOM uint32_t CLEAR_TRANSFER_COMPLETE_FLAG_CH0 : 1; /*!< Transfer completion flag clear channel0 */
         __IOM uint32_t CLEAR_HALF_TRANSFER_FLAG_CH0     : 1; /*!< Half transfer flag clear channel0 */
         __IOM uint32_t CLEAR_TRANSFER_ERROR_FLAG_CH0    : 1; /*!< Transfer error clear channel0 */
-
-        __IOM uint32_t CLEAR_GLOBAL_FLAG_CH1            : 1; /*!< global interrupt flag clear for channel1 */
+        __IOM uint32_t CLEAR_GLOBAL_INTR_FLAG_CH1       : 1; /*!< global interrupt flag clear for channel1 */
         __IOM uint32_t CLEAR_TRANSFER_COMPLETE_FLAG_CH1 : 1; /*!< Transfer completion flag clear channel1 */
         __IOM uint32_t CLEAR_HALF_TRANSFER_FLAG_CH1     : 1; /*!< Half transfer flag clear channel1 */
         __IOM uint32_t CLEAR_TRANSFER_ERROR_FLAG_CH1    : 1; /*!< Transfer error clear channel1 */
-
-        __IOM uint32_t CLEAR_GLOBAL_FLAG_CH2            : 1; /*!< global interrupt flag clear for channel2 */
+        __IOM uint32_t CLEAR_GLOBAL_INTR_FLAG_CH2       : 1; /*!< global interrupt flag clear for channel2 */
         __IOM uint32_t CLEAR_TRANSFER_COMPLETE_FLAG_CH2 : 1; /*!< Transfer completion flag clear channel2 */
         __IOM uint32_t CLEAR_HALF_TRANSFER_FLAG_CH2     : 1; /*!< Half transfer flag clear channel2 */
         __IOM uint32_t CLEAR_TRANSFER_ERROR_FLAG_CH2    : 1; /*!< Transfer error clear channel2 */
-
-        __IOM uint32_t CLEAR_GLOBAL_FLAG_CH3            : 1; /*!< global interrupt flag clear for channel3 */
+        __IOM uint32_t CLEAR_GLOBAL_INTR_FLAG_CH3       : 1; /*!< global interrupt flag clear for channel3 */
         __IOM uint32_t CLEAR_TRANSFER_COMPLETE_FLAG_CH3 : 1; /*!< Transfer completion flag clear channel3 */
         __IOM uint32_t CLEAR_HALF_TRANSFER_FLAG_CH3     : 1; /*!< Half transfer flag clear channel3 */
         __IOM uint32_t CLEAR_TRANSFER_ERROR_FLAG_CH3    : 1; /*!< Transfer error clear channel3 */
-
-        __IOM uint32_t CLEAR_GLOBAL_FLAG_CH4            : 1; /*!< global interrupt flag clear for channel4 */
+        __IOM uint32_t CLEAR_GLOBAL_INTR_FLAG_CH4       : 1; /*!< global interrupt flag clear for channel4 */
         __IOM uint32_t CLEAR_TRANSFER_COMPLETE_FLAG_CH4 : 1; /*!< Transfer completion flag clear channel4 */
         __IOM uint32_t CLEAR_HALF_TRANSFER_FLAG_CH4     : 1; /*!< Half transfer flag clear channel4 */
         __IOM uint32_t CLEAR_TRANSFER_ERROR_FLAG_CH4    : 1; /*!< Transfer error clear channel4 */
-
-        __IOM uint32_t CLEAR_GLOBAL_FLAG_CH5            : 1; /*!< global interrupt flag clear for channel5 */
+        __IOM uint32_t CLEAR_GLOBAL_INTR_FLAG_CH5       : 1; /*!< global interrupt flag clear for channel5 */
         __IOM uint32_t CLEAR_TRANSFER_COMPLETE_FLAG_CH5 : 1; /*!< Transfer completion flag clear channel5 */
         __IOM uint32_t CLEAR_HALF_TRANSFER_FLAG_CH5     : 1; /*!< Half transfer flag clear channel5 */
         __IOM uint32_t CLEAR_TRANSFER_ERROR_FLAG_CH5    : 1; /*!< Transfer error clear channel5 */
-
-        __IOM uint32_t CLEAR_GLOBAL_FLAG_CH6            : 1; /*!< global interrupt flag clear for channel6 */
+        __IOM uint32_t CLEAR_GLOBAL_INTR_FLAG_CH6       : 1; /*!< global interrupt flag clear for channel6 */
         __IOM uint32_t CLEAR_TRANSFER_COMPLETE_FLAG_CH6 : 1; /*!< Transfer completion flag clear channel6 */
         __IOM uint32_t CLEAR_HALF_TRANSFER_FLAG_CH6     : 1; /*!< Half transfer flag clear channel6 */
         __IOM uint32_t CLEAR_TRANSFER_ERROR_FLAG_CH6    : 1; /*!< Transfer error clear channel6 */
-
-        __IOM uint32_t CLEAR_GLOBAL_FLAG_CH7            : 1; /*!< global interrupt flag clear for channel7 */
+        __IOM uint32_t CLEAR_GLOBAL_INTR_FLAG_CH7       : 1; /*!< global interrupt flag clear for channel7 */
         __IOM uint32_t CLEAR_TRANSFER_COMPLETE_FLAG_CH7 : 1; /*!< Transfer completion flag clear channel7 */
         __IOM uint32_t CLEAR_HALF_TRANSFER_FLAG_CH7     : 1; /*!< Half transfer flag clear channel7 */
         __IOM uint32_t CLEAR_TRANSFER_ERROR_FLAG_CH7    : 1; /*!< Transfer error clear channel7 */
-    } IFCR_b;
-};} DMA_Type;                                     /*!< Size = 332 (0x14c)                                                        */
-
-
+    } INTR_FLAG_CLEAR_REG_b;
+  } ;
+} DMA_Type;                                     /*!< Size = 332 (0x14c)                                                        */
 
 /* =========================================================================================================================== */
 /* ================                                            ADC                                            ================ */
@@ -1189,8 +1173,8 @@ typedef struct {                                /*!< GPTIMER0 Structure         
     __IOM uint32_t CLOCK_CTRL;                  /*!< Clock control register                                                    */
     
     struct {
-      __IOM uint32_t CLK_SRC    : 1;            /*!< GPTIMER clock select bit                                                  */
-      __IOM uint32_t CLK_PRESCALAR : 16;        /*!< GPTIMER prescalar value                                                   */
+      __IOM uint32_t RESERVED    : 1;            /*!< GPTIMER clock select bit                                                  */
+      __IOM uint32_t CLK_PRESCALER : 16;        /*!< GPTIMER prescaler value                                                   */
       __IOM uint32_t UPDATE_EN  : 1;            /*!< GPTIMER update enable                                                     */
             uint32_t            : 14;
     } CLOCK_CTRL_b;
@@ -1242,8 +1226,8 @@ typedef struct {                                /*!< GPTIMER0 Structure         
 //     __IOM uint32_t CLOCK_CTRL;                  /*!< Clock control register                                                    */
     
 //     struct {
-//       __IOM uint32_t CLK_SRC    : 1;            /*!< GPTIMER clock select bit                                                  */
-//       __IOM uint32_t CLK_PRESCALAR : 16;        /*!< GPTIMER prescalar value                                                   */
+//       __IOM uint32_t RESERVED    : 1;            /*!< GPTIMER clock select bit                                                  */
+//       __IOM uint32_t CLK_PRESCALER : 16;        /*!< GPTIMER prescaler value                                                   */
 //       __IOM uint32_t UPDATE_EN  : 1;            /*!< GPTIMER update enable                                                     */
 //             uint32_t            : 14;
 //     } CLOCK_CTRL_b;
@@ -1295,8 +1279,8 @@ typedef struct {                                /*!< GPTIMER0 Structure         
 //     __IOM uint32_t CLOCK_CTRL;                  /*!< Clock control register                                                    */
     
 //     struct {
-//       __IOM uint32_t CLK_SRC    : 1;            /*!< GPTIMER clock select bit                                                  */
-//       __IOM uint32_t CLK_PRESCALAR : 16;        /*!< GPTIMER prescalar value                                                   */
+//       __IOM uint32_t RESERVED    : 1;            /*!< GPTIMER clock select bit                                                  */
+//       __IOM uint32_t CLK_PRESCALER : 16;        /*!< GPTIMER prescaler value                                                   */
 //       __IOM uint32_t UPDATE_EN  : 1;            /*!< GPTIMER update enable                                                     */
 //             uint32_t            : 14;
 //     } CLOCK_CTRL_b;
@@ -1348,8 +1332,8 @@ typedef struct {                                /*!< GPTIMER0 Structure         
 //     __IOM uint32_t CLOCK_CTRL;                  /*!< Clock control register                                                    */
     
 //     struct {
-//       __IOM uint32_t CLK_SRC    : 1;            /*!< GPTIMER clock select bit                                                  */
-//       __IOM uint32_t CLK_PRESCALAR : 16;        /*!< GPTIMER prescalar value                                                   */
+//       __IOM uint32_t RESERVED    : 1;            /*!< GPTIMER clock select bit                                                  */
+//       __IOM uint32_t CLK_PRESCALER : 16;        /*!< GPTIMER prescaler value                                                   */
 //       __IOM uint32_t UPDATE_EN  : 1;            /*!< GPTIMER update enable                                                     */
 //             uint32_t            : 14;
 //     } CLOCK_CTRL_b;
@@ -1364,18 +1348,22 @@ typedef struct {                                /*!< GPTIMER0 Structure         
 
 
 /* =========================================================================================================================== */
-/* ================                                          CLINT0                                           ================ */
+/* ================                                          CLINT                                            ================ */
 /* =========================================================================================================================== */
 
 
 /**
-  * @brief Core Local Interrupt Controller (CLINT0)
+  * @brief Core Local Interrupt Controller (CLINT)
   */
 
-typedef struct {                                /*!< CLINT0 Structure                                                          */
-} CLINT0_Type;                                  /*!< Size = 0 (0x0)                                                            */
 
-
+typedef struct {                   /*!< CLINT Structure*/
+  __IOM uint32_t MSIP;            /*!< Machine Software Interrupt Pending*/
+  __IM  uint32_t RESERVED0[4095];  
+  __IOM uint64_t MTIMECMP;        /*!< Machine Timer Compare Register (Hart 0) */
+  __IM  uint32_t RESERVED1[8188];  
+  __IOM uint64_t MTIME;            /*!< Machine Time Counter Register*/
+} CLINT_Type;
 
 /* =========================================================================================================================== */
 /* ================                                           UART                                            ================ */
@@ -1800,7 +1788,7 @@ typedef struct {                                /*!< UART0 Structure            
 
 
 /* =========================================================================================================================== */
-/* ================                                           I2C                                             ================ */
+/* ================                                           I2C0                                            ================ */
 /* =========================================================================================================================== */
 
 
@@ -1843,35 +1831,17 @@ typedef struct {                                /*!< I2C0 Structure             
     struct {
       __IOM uint8_t STATUS_BB   : 1;            /*!< Bus Busy bit - Indicates that the bus is busy(0 = busy). Also
                                                      used in multi master systems only. 0 = busy                               */
-      __IOM uint8_t STATUS_LAB  : 1;            /*!< Lost Arbitration bit - Used in Multiple Master systems only
-                                                     to denote that the master lost the arbitration                            */
-      __IOM uint8_t STATUS_AAS  : 1;            /*!< Addressed as slave - Used in Slave Receiver mode                          */
+            uint8_t             : 2; 
       __IOM uint8_t STATUS_AD0_LRB : 1;         /*!< LRB - holds the last received bit through I2C bus. AD0 - Generall
                                                      Call bit used for broadcast. Valid only while PIN=0                       */
       __IOM uint8_t STATUS_BER  : 1;            /*!< Bus Error - Set to 1 when there is a misplaced START, STOP bit            */
             uint8_t             : 2;
-      __IOM uint8_t STATUS_STS  : 1;            /*!< Read the PIN bit of control register                                      */
+	    __IOM uint8_t STATUS_PIN  : 1;            /*!< Read the status of the PIN bit.                                           */
     } STATUS_b;
   } ;
   __IM  uint8_t   RESERVED9;
   __IM  uint16_t  RESERVED10;
-  __IM  uint32_t  RESERVED11;
-  __IOM uint32_t  S01;                          /*!< I2C Own Address Slave Register                                            */
-  __IM  uint32_t  RESERVED12;
-  __IOM uint32_t  S3;                           /*!< Interrupt vector register                                                 */
-  __IM  uint32_t  RESERVED13;
-  
-  union {
-    __IOM uint32_t TIME;                        /*!< I2C timeout calculation and interrupt register                            */
-    
-    struct {
-      __IOM uint32_t TIMEOUT    : 14;           /*!< The transmission timeout value                                            */
-      __IOM uint32_t TIMEOUT_EN : 1;            /*!< Enable the transmission timeout calculation and interrupt generation      */
-      __IOM uint32_t TIMEOUT_INTR : 1;          /*!< Interrupt output for transmission timeout                                 */
-            uint32_t            : 16;
-    } TIME_b;
-  } ;
-  __IM  uint32_t  RESERVED14;
+  __IM  uint32_t  RESERVED11[7];
   __IOM uint32_t  SCL;                          /*!< Clock period register                                                     */
 } I2C_Type;                                    /*!< Size = 60 (0x3c)                                                          */
 
@@ -1921,38 +1891,19 @@ typedef struct {                                /*!< I2C0 Structure             
 //     struct {
 //       __IOM uint8_t STATUS_BB   : 1;            /*!< Bus Busy bit - Indicates that the bus is busy(0 = busy). Also
 //                                                      used in multi master systems only. 0 = busy                               */
-//       __IOM uint8_t STATUS_LAB  : 1;            /*!< Lost Arbitration bit - Used in Multiple Master systems only
-//                                                      to denote that the master lost the arbitration                            */
-//       __IOM uint8_t STATUS_AAS  : 1;            /*!< Addressed as slave - Used in Slave Receiver mode                          */
+//             uint8_t             : 2; 
 //       __IOM uint8_t STATUS_AD0_LRB : 1;         /*!< LRB - holds the last received bit through I2C bus. AD0 - Generall
 //                                                      Call bit used for broadcast. Valid only while PIN=0                       */
 //       __IOM uint8_t STATUS_BER  : 1;            /*!< Bus Error - Set to 1 when there is a misplaced START, STOP bit            */
 //             uint8_t             : 2;
-//       __IOM uint8_t STATUS_STS  : 1;            /*!< Read the PIN bit of control register                                      */
+//       __IOM uint8_t STATUS_PIN  : 1;            /*!< Read the status of the PIN bit.                                           */
 //     } STATUS_b;
 //   } ;
 //   __IM  uint8_t   RESERVED9;
 //   __IM  uint16_t  RESERVED10;
-//   __IM  uint32_t  RESERVED11;
-//   __IOM uint32_t  S01;                          /*!< I2C Own Address Slave Register                                            */
-//   __IM  uint32_t  RESERVED12;
-//   __IOM uint32_t  S3;                           /*!< Interrupt vector register                                                 */
-//   __IM  uint32_t  RESERVED13;
-  
-//   union {
-//     __IOM uint32_t TIME;                        /*!< I2C timeout calculation and interrupt register                            */
-    
-//     struct {
-//       __IOM uint32_t TIMEOUT    : 14;           /*!< The transmission timeout value                                            */
-//       __IOM uint32_t TIMEOUT_EN : 1;            /*!< Enable the transmission timeout calculation and interrupt generation      */
-//       __IOM uint32_t TIMEOUT_INTR : 1;          /*!< Interrupt output for transmission timeout                                 */
-//             uint32_t            : 16;
-//     } TIME_b;
-//   } ;
-//   __IM  uint32_t  RESERVED14;
+//   __IM  uint32_t  RESERVED11[7];
 //   __IOM uint32_t  SCL;                          /*!< Clock period register                                                     */
 // } I2C1_Type;                                    /*!< Size = 60 (0x3c)                                                          */
-
 
 
 /* =========================================================================================================================== */
@@ -2086,22 +2037,22 @@ typedef struct {                                /*!< GPIO_PRO Structure         
                                                      dequeue to GPIO enabled                                            */
       __IOM uint32_t PRO_IO_OCTA_DIR : 1;       /*!< When 0 : OCTA enqueue from GPIO is enabled ; 1 : OCTA
                                                      dequeue to GPIO enabled                                            */
-      __IOM uint32_t PRO_IO_DUO_CLR : 1;        /*!< clears DUO data and makes the empty                         */
-      __IOM uint32_t PRO_IO_TETRA_CLR : 1;      /*!< clears TETRA data and makes the empty                       */
-      __IOM uint32_t PRO_IO_OCTA_CLR : 1;       /*!< clears OCTA data and makes the empty                        */
-      __IOM uint32_t PRO_IO_DUO_DATA_CHECK : 1; /*!< Size for data availability check in DUO ; 00 : not checking
+      __IOM uint32_t PRO_IO_DUO_FLUSH : 1;        /*!< clears DUO data and makes the empty                         */
+      __IOM uint32_t PRO_IO_TETRA_FLUSH : 1;      /*!< clears TETRA data and makes the empty                       */
+      __IOM uint32_t PRO_IO_OCTA_FLUSH : 1;       /*!< clears OCTA data and makes the empty                        */
+      __IOM uint32_t PRO_IO_DUO_DATA_WIDTH : 1; /*!< Size for data availability check in DUO ; 00 : not checking
                                                      for any data ; 01 : checking for 8 bits send or receive
                                                      ; 10 : checking for 16 bits send or receive ; 11 : checking
                                                      for 32 bits send or receive                                               */
-      __IOM uint32_t PRO_IO_TETRA_DATA_CHECK : 1;/*!< Size for data availability check in TETRA ; 00 : not
+      __IOM uint32_t PRO_IO_TETRA_DATA_WIDTH : 1;/*!< Size for data availability check in TETRA ; 00 : not
                                                      checking for any data ; 01 : checking for 8 bits send or
                                                      receive ; 10 : checking for 16 bits send or receive ; 11
                                                      : checking for 32 bits send or receive                                    */
-      __IOM uint32_t PRO_IO_OCTA_DATA_CHECK : 1;/*!< Size for data availability check in OCTA ; 00 : not checking
+      __IOM uint32_t PRO_IO_OCTA_DATA_WIDTH : 1;/*!< Size for data availability check in OCTA ; 00 : not checking
                                                      for any data ; 01 : checking for 8 bits send or receive
                                                      ; 10 : checking for 16 bits send or receive ; 11 : checking
                                                      for 32 bits send or receive                                               */
-      __IOM uint32_t PRO_IO_FUSION_DATA_CHECK : 1;/*!< Size for data availability check in FUSION ; 00 : not
+      __IOM uint32_t PRO_IO_FUSION_DATA_WIDTH : 1;/*!< Size for data availability check in FUSION ; 00 : not
                                                      checking for any data ; 01 : checking for 8 bits send or
                                                      receive ; 10 : checking for 16 bits send or receive ; 11
                                                      : checking for 32 bits send or receive                                    */
@@ -2230,20 +2181,20 @@ typedef struct {                                /*!< AES Structure              
     
     struct {
       __IOM uint8_t CTRL_ENCDEC : 1;            /*!< 0 - Encrypt, 1 - Decrypt                                                  */
-      __IOM uint8_t CTRL_KEYLEN : 2;            /*!< To select the lenght of key. 0 - 128 bits, 1 - 192 bits, 2 -
+      __IOM uint8_t CTRL_KEYLEN : 2;            /*!< To select the length of key. 0 - 128 bits, 1 - 192 bits, 2 -
                                                      256 bits                                                                  */
       __IOM uint8_t CTRL_MODE : 3;              /*!< 0-ECB, 1-CBC, 2-CFB, 3-OFB, 4-CTR                                         */
-      __IOM uint8_t CTRL_END : 1;               /*!< To specify end of message                                                 */
-            uint8_t             : 1;
+      __IOM uint8_t CTRL_START : 1;             /*!<To be set once per operation.                                              */
+            uint8_t           : 1;
     } CTRL_b;
   } ;
   
   union {
-    __IOM uint8_t STATUS;                       /*!< To check the status.                                                      */
+    __IM uint8_t STATUS;                       /*!< To check the status.                                                      */
     
     struct {
-      __IOM uint8_t STATUS_CAN_TAKE_INPUT : 1;  /*!< AES is ready to take the input                                            */
-      __IOM uint8_t STATUS_OUTP_READY : 1;      /*!< Becomes 1 when the accelerator has computed the output                    */
+      __IM uint8_t STATUS_CAN_TAKE_INPUT : 1;  /*!< AES is ready to take the input                                            */
+      __IM uint8_t STATUS_OUTP_READY : 1;      /*!< Becomes 1 when the accelerator has computed the output                    */
             uint8_t             : 6;
     } STATUS_b;
   } ;
@@ -2262,22 +2213,34 @@ typedef struct {                                /*!< AES Structure              
   __IM  uint8_t RESERVED20;
   __IM  uint8_t RESERVED21;
   __IM  uint8_t RESERVED22;
-
-  __IOM uint8_t NEXT_BLOCK; 
-
-  __IM  uint8_t RESERVED23;
+  __IM  uint8_t RESERVED23; 
   __IM  uint8_t RESERVED24;
   __IM  uint8_t RESERVED25;
+  __IM  uint8_t RESERVED26;
 
-  __IOM uint8_t ZEROIZE;                        /*!< AES Zeroize register                                                      */
+  union {
+    __IOM uint8_t  ZEROIZE;                      /*!< Reset all the registers in AES.                                          */
+    
+    struct {
+      __IOM uint8_t ZEROIZE_EN : 1;              /*!< When AES is zeroized.                                                    */
+            uint8_t         : 7;
+    } ZEROIZE_b;
+  } ;
 
-  __IM uint8_t RESERVED26;
   __IM uint8_t RESERVED27;
   __IM uint8_t RESERVED28;
+  __IM uint8_t RESERVED29;
 
-  __IOM uint8_t ZEROIZE_STATUS;                 /*!< AES Zeroize status register                                               */
+  union {
+    __IM  uint8_t ZEROIZE_STATUS;               /*!< Read the status of zeroize of AES.                                        */
+    
+    struct {
+      __IM  uint8_t ZEROIZE_STATUS_BUSY : 1;    /*!< Represents the zeroized status of AES.                                    */                                  
+            uint8_t                     : 7;
+    } ZEROIZE_STATUS_b;
+  } ;
 
-} AES_Type;                                     /*!< Size = 120 (0x78)                                                         */
+} AES_Type;                                     /*!< Size = 121 (0x79)                                                         */
 
 
 
@@ -2309,7 +2272,7 @@ typedef struct {                                /*!< SHA256 Structure           
   __IOM uint64_t RESERVED14;
   __IOM uint64_t RESERVED15;
   
-  __IOM uint64_t OUTPUT;                        /*!< Output text register. Input is given 64 bits at a time.                   */
+  __IOM uint64_t OUTPUT;                        /*!< Output text register. Output is given 64-bits at a time.                   */
 
   __IOM uint64_t RESERVED16;
   __IOM uint64_t RESERVED17;
@@ -2323,7 +2286,7 @@ typedef struct {                                /*!< SHA256 Structure           
     __IOM uint8_t CTRL;                         /*!< Control register                                                          */
     
     struct {
-      __IOM uint8_t CONT_PREHASH : 1;           /*!< To continue the hash calculated from previous block to next
+      __IOM uint8_t CTRL_CONT_PREHASH : 1;      /*!< To continue the hash calculated from previous block to next
                                                      block or not. 1 - continue from previous block. 0 - Initial
                                                      prehash                                                                   */
             uint8_t             : 7;
@@ -2334,8 +2297,8 @@ typedef struct {                                /*!< SHA256 Structure           
     __IM  uint8_t STATUS;                       /*!< To read the status register                                               */
     
     struct {
-      __IM  uint8_t STATUS_READY : 1;           /*!< Sha is ready to take another input                                        */
-      __IM  uint8_t STATUS_OUT_READY : 1;       /*!< The output of the SHA is ready                                            */
+      __IM  uint8_t STATUS_CAN_TAKE_INPUT : 1;  /*!< Sha is ready to take another input                                        */
+      __IM  uint8_t STATUS_OUTP_READY : 1;      /*!< The output of the SHA is ready                                            */
             uint8_t             : 6;
     } STATUS_b;
   } ;
@@ -2343,15 +2306,29 @@ typedef struct {                                /*!< SHA256 Structure           
   __IM  uint8_t  RESERVED23;
   __IM  uint8_t  RESERVED24;
 
-  __IOM uint8_t  ZEROIZE;                        /*!< SHA Zeroize register                                                     */
+  union {
+    __IOM uint8_t  ZEROIZE;                      /*!< Reset all the registers in SHA.                                          */
+    
+    struct {
+      __IOM uint8_t ZEROIZE_EN : 1;              /*!< When set SHA is zeroized.                                                */
+            uint8_t            : 7;
+    } ZEROIZE_b;
+  } ;
   
   __IM  uint8_t  RESERVED25;
   __IM  uint8_t  RESERVED26;
   __IM  uint8_t  RESERVED27;
-  
-  __IOM uint8_t  ZEROIZE_STATUS;                 /*!< SHA Zeroize status register                                              */
 
-} SHA256_Type;                                   /*!< Size = 200 (0xc8)                                                        */
+  union {
+    __IM  uint8_t ZEROIZE_STATUS;               /*!< Read the status of zeroize of SHA.                                        */
+    
+    struct {
+      __IM  uint8_t ZEROIZE_STATUS_BUSY : 1;    /*!< Represents the zeroized status of SHA.                                    */                                  
+            uint8_t                     : 7;
+    } ZEROIZE_STATUS_b;
+  } ;
+
+} SHA256_Type;                                   /*!< Size = 201 (0xc9)                                                        */
 
 
 
@@ -2383,13 +2360,13 @@ typedef struct {                                /*!< RSA Structure              
   __IOM uint64_t RESERVED8;                     
   __IOM uint64_t RESERVED9;
 
-  __IOM uint64_t R2MODN;                        /*!< RSA modulus register                                                      */
+  __IOM uint64_t R2MODN;                        /*!< RSA (R^2) % N register                                                    */
   
   __IOM uint64_t RESERVED10;                     
   __IOM uint64_t RESERVED11;                     
   __IOM uint64_t RESERVED12;
 
-  __IOM uint64_t OUTPUT;                        /*!< RSA modulus register                                                      */
+  __IOM uint64_t OUTPUT;                        /*!< RSA output register                                                       */
 
   __IOM uint64_t RESERVED13;                     
   __IOM uint64_t RESERVED14;                     
@@ -2403,8 +2380,8 @@ typedef struct {                                /*!< RSA Structure              
     __IM  uint8_t STATUS;                       /*!< RSA status register                                                       */
     
     struct {
-      __IM  uint8_t OUTP_READY : 1;             /*!< RSA can give output                                                       */
-      __IM  uint8_t STATUS_READY : 1;           /*!< RSA is ready to take input                                                */
+      __IM  uint8_t STATUS_OUTP_READY : 1;      /*!< RSA can give output                                                       */
+      __IM  uint8_t STATUS_CAN_TAKE_INPUT : 1;  /*!< RSA is ready to take input                                                */
             uint8_t             : 6;
     } STATUS_b;
   } ;
@@ -2413,15 +2390,29 @@ typedef struct {                                /*!< RSA Structure              
   __IM  uint8_t RESERVED21;
   __IM  uint8_t RESERVED22;
 
-  __IOM uint8_t ZEROIZE;                        /*!< RSA Zeroize register                                                      */
+  union {
+    __IOM uint8_t  ZEROIZE;                      /*!< Reset all the registers in RSA.                                          */
+    
+    struct {
+      __IOM uint8_t ZEROIZE_EN : 1;              /*!< When set RSA is zeroized.                                                */
+            uint8_t            : 7;
+    } ZEROIZE_b;
+  } ;
 
   __IM uint8_t RESERVED23;
   __IM uint8_t RESERVED24;
   __IM uint8_t RESERVED25;
 
-  __IOM uint8_t ZEROIZE_STATUS;                 /*!< RSA Zeroize status register                                               */
+  union {
+    __IM  uint8_t ZEROIZE_STATUS;               /*!< Read the status of zeroize of RSA.                                        */
+    
+    struct {
+      __IM  uint8_t ZEROIZE_STATUS_BUSY : 1;    /*!< Represents the zeroized status of RSA.                                    */                                  
+            uint8_t                     : 7;
+    } ZEROIZE_STATUS_b;
+  } ;
 
-} RSA_Type;                                     /*!< Size = 200 (0xc8)                                                         */
+} RSA_Type;                                     /*!< Size = 201 (0xc9)                                                         */
 
 
 
@@ -3437,7 +3428,7 @@ typedef struct {                                /*!< QUADSPI0 Structure         
 typedef struct {                                /*!< ITRACE Structure                                                          */
   
   union {
-    __IOM uint16_t CTRL;                        /*!< Itrace control register                                                   */
+    __IOM uint16_t ITRACE_CTRL;                        /*!< Itrace control register                                                   */
     
     struct {
       __IOM uint16_t ACTIVE     : 1;            /*!< Indicates whether trace is active or not. Used for gating.                */
@@ -3610,14 +3601,17 @@ typedef struct {                                /*!< ITRACE Structure           
 typedef struct {                                /*!< ITRACE_RAM Structure                                                      */
   
   union {
-    __IOM uint32_t CTRL;                        /*!< Control register                                                          */
+    __IOM uint32_t ITRACE_RAM_CTRL;                        /*!< Control register                                                          */
     
     struct {
       __IOM uint32_t ACTIVE     : 1;            /*!< Indicates whether RAM is active or not.                                   */
       __IOM uint32_t EN         : 1;            /*!< Enables the RAM to take trace packets.                                    */
-            uint32_t            : 4;
+            uint32_t            : 1;
+      __IM  uint32_t EMPTY      : 1;
+      __IM  uint32_t MODE       : 1;
+            uint32_t            : 3;
       __IOM uint32_t STOP_ON_WRAP : 1;          /*!< Stop filling up packets into RAM when full                                */
-            uint32_t            : 25;
+            uint32_t            : 23;
     } CTRL_b;
   } ;
   
@@ -3625,12 +3619,12 @@ typedef struct {                                /*!< ITRACE_RAM Structure       
     __IM  uint32_t IMPL;                        /*!< Implementation details register                                           */
     
     struct {
-      __IM  uint32_t VER_MAJOR  : 1;            /*!< Major version number                                                      */
-      __IM  uint32_t VER_MINOR  : 1;            /*!< Minor version number                                                      */
-      __IM  uint32_t COMP_TYPE  : 1;            /*!< Trace RAM sink component type                                             */
+      __IM  uint32_t VER_MAJOR  : 4;            /*!< Major version number                                                      */
+      __IM  uint32_t VER_MINOR  : 4;            /*!< Minor version number                                                      */
+      __IM  uint32_t COMP_TYPE  : 4;            /*!< Trace RAM sink component type                                             */
       __IM  uint32_t HAS_SRAM   : 1;            /*!< Indicates whether SRAM is present                                         */
       __IM  uint32_t HAS_SMEM   : 1;            /*!< Indicates whether SREM is present                                         */
-            uint32_t            : 27;
+            uint32_t            : 18;
     } IMPL_b;
   } ;
   __IM  uint32_t  RESERVED[2];
@@ -4166,7 +4160,7 @@ typedef struct {                                /*!< VTRNG_EDU Structure        
 #define GPTIMER1_BASE               0x00044220UL
 #define GPTIMER2_BASE               0x00044240UL
 #define GPTIMER3_BASE               0x00044260UL
-#define CLINT0_BASE                 0x02000000UL
+#define CLINT_BASE                 0x02000000UL
 #define UART0_BASE                  0x00011300UL
 #define UART1_BASE                  0x00011400UL
 #define UART2_BASE                  0x00011500UL

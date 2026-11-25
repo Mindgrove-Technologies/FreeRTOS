@@ -38,8 +38,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef CMAC_AES_H
-#define CMAC_AES_H
+#ifndef INCLUDES_CMAC_AES_H_
+#define INCLUDES_CMAC_AES_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,6 +47,7 @@ extern "C" {
 
 #include <stddef.h>
 #include <stdint.h>
+#include "crypto_api.h"
 
 /**
  * @enum CMAC_AES_Mode_t
@@ -173,4 +174,4 @@ uint16_t CMAC_AES(CMAC_AES_Config *cfg);
 }
 #endif
 
-#endif /* CMAC_AES_H */
+#endif  // INCLUDES_CMAC_AES_H_

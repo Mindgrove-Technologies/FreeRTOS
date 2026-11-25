@@ -36,8 +36,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_ASCON_H_
-#define BSP_INCLUDE_ASCON_H_
+#ifndef INCLUDES_ASCON_H_
+#define INCLUDES_ASCON_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -45,6 +45,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stddef.h>
+#include "crypto_api.h"
 
 /**
  * @enum ASCON_Mode
@@ -364,4 +365,4 @@ uint16_t ASCON_CXOF128(ASCON_CXOF128_Config *cfg);
 }
 #endif
 
-#endif /* BSP_INCLUDE_ASCON_H_ */
+#endif /* INCLUDES_ASCON_H_ */

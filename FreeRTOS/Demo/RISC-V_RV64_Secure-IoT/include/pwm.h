@@ -154,7 +154,7 @@ typedef struct {
      * 
      * The prescaler value must be lesser than 32768U
      */
-    uint16_t prescalar_value;
+    uint16_t prescaler_value;
 
     /**
      * @brief PWM Deadband delay value

@@ -34,8 +34,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_TRNG_H_
-#define BSP_INCLUDE_TRNG_H_
+#ifndef INCLUDES_TRNG_H_
+#define INCLUDES_TRNG_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,6 +44,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include "crypto_api.h"
 
 /**
  * @enum TRNG_IRQn_Type
@@ -53,8 +54,8 @@ extern "C" {
  * This enumeration defines the available TRNG interrupt numbers supported by the platform.
 */
 typedef enum {
-/* =========================================  Secure_IoT Specific Interrupt Numbers  ========================================= */
-  TRNG_INTR_IRQn            =  69,              /*!< 69 TRNG_INTR_IRQn                                                         */
+/* ================ Secure_IoT Specific Interrupt Numbers  ==================*/
+  TRNG_INTR_IRQn            =  69,              /*!< 69 TRNG_INTR_IRQn*/
 } TRNG_IRQn_Type;
 
 /**
@@ -130,4 +131,4 @@ uint16_t TRNG_Full_KAT(void);
 }
 #endif
 
-#endif  // BSP_INCLUDE_TRNG_H_
+#endif  // INCLUDES_TRNG_H_

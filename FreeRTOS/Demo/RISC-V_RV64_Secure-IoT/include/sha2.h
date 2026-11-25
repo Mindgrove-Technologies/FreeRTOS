@@ -34,12 +34,13 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_SHA2_H_
-#define BSP_INCLUDE_SHA2_H_
+#ifndef INCLUDES_SHA2_H_
+#define INCLUDES_SHA2_H_
 
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
+#include "crypto_api.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -67,6 +68,7 @@ extern "C" {
  * Defines the length of the SHA-384 hash output.
  */
 #define SHA384_DIGEST_SIZE 48
+/** @} */
 
 /**
  * @brief SHA-384 context structure.
@@ -104,7 +106,6 @@ typedef struct {
      */
     uint32_t buffer_len;
 } SHA2;
-
 
 /**
  * @brief Initialize a SHA-512 hashing context.
@@ -242,4 +243,4 @@ uint16_t SHA384_Run(const uint8_t* data, size_t len, uint8_t* hash);
 #ifdef __cplusplus
 }
 #endif
-#endif  //  BSP_INCLUDE_SHA2_H_
+#endif  //  INCLUDES_SHA2_H_

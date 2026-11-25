@@ -174,7 +174,7 @@ typedef struct {
      * @note This field is used only when @ref clk_sel is
      *       set to CLK_INTERNAL.
      */
-    uint32_t prescale;
+    uint32_t prescaler;
 
     /**
      * @brief Pro IO data width selection.
@@ -264,7 +264,7 @@ typedef struct {
  * @param config Pointer to a constant @ref PRO_IO_Struct_t structure.
  * This parameter defines the operational parameters for the Pro IO hardware, 
  * including: such as pro_io number, mode, data size, direction, clock edge selection, 
- * clock selection, prescale value.
+ * clock selection, prescaler value.
  * 
  * @return Returns a 16-bit status code:
  * - @ref SUCCESS: Configuration applied successfully.

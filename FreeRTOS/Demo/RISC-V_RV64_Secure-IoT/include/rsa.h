@@ -48,8 +48,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_RSA_H_
-#define BSP_INCLUDE_RSA_H_
+#ifndef INCLUDES_RSA_H_
+#define INCLUDES_RSA_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -57,6 +57,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stddef.h>
+#include "crypto_api.h"
 
 /**
  * @brief RSA key pair structure.
@@ -253,4 +254,4 @@ uint16_t RSA_Run(RSA_Config_t *rsa_config);
 }
 #endif
 
-#endif  // BSP_INCLUDE_RSA_H_
+#endif  // INCLUDES_RSA_H_

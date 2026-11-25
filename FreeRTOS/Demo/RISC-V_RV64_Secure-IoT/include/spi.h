@@ -341,7 +341,8 @@ typedef struct {
      * @brief SPI hardware instance handle.
      *
      * This parameter selects the SPI hardware block to be used.
-     * Valid instances are `SPI1`, `SPI2`, `SPI3` and `SPI4`.
+     * Valid instances are @ref SPI0, @ref SPI1, @ref SPI2 and @ref
+     * SPI3.
      */
     const SPI_Instance_t *spi_num;
 

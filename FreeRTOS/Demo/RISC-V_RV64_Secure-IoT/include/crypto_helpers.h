@@ -41,8 +41,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_CRYPTO_HELPERS_H_
-#define BSP_INCLUDE_CRYPTO_HELPERS_H_
+#ifndef INCLUDES_CRYPTO_HELPERS_H_
+#define INCLUDES_CRYPTO_HELPERS_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -50,6 +50,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stddef.h>
+#include "crypto_api.h"
 
 /**
  * @brief Endianness selection for print utilities.
@@ -250,4 +251,4 @@ uint16_t Crypto_Wait_For_Timeout(const volatile uint8_t *reg,
 }
 #endif
 
-#endif   // BSP_INCLUDE_CRYPTO_HELPERS_H_
+#endif   // INCLUDES_CRYPTO_HELPERS_H_

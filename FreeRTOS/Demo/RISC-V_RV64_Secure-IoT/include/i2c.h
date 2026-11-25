@@ -184,21 +184,19 @@ uint16_t I2C_Init(const I2C_Instance_t *i2c_num, uint32_t clock_frequency);
  *                Specifies the I2C peripheral instance to configure. Use I2C0 or 
  *                I2C1 as defined in the I2C instance macros.
  * 
- * @param slave_address The parameter \a slave_address is an 7 bit address that
+ * @param slave_address The parameter \a slave_address is a 7 bit address that
  *                      represents the I2C slave address.
  * 
- * @param data The parameter \a data is an pointer to buffer containing data to send.
+ * @param data The parameter \a data is a pointer to buffer containing data to send.
  * 
  * @param length The parameter \a length is the number of bytes to transmit from the 
  *               data buffer.
  * 
  * @param mode The parameter \a mode is used to set whether to send start bit,
  *             stop bit and repeated start bit in transaction.
- *             - START_BIT : sends start bit 
- *             - STOP_BIT : sends stop bit
- *             - (START_BIT | STOP_BIT ) : sends repeated start bit
+ *             - START BIT - alone is repeated start 
+ *             - START | STOP - is single transaction.
  *             
- * 
  * @return Returns a 16-bit status code:
  * - @ref SUCCESS  Transmission completed successfully; all bytes acknowledged by slave.
  * - @ref ETIMEDOUT Returned if the bus is not free before transmission starts, or if 
@@ -219,19 +217,18 @@ uint16_t I2C_Transmit(const I2C_Instance_t *i2c_num, uint8_t slave_address, \
  *                Specifies the I2C peripheral instance to configure. Use I2C0 or 
  *                I2C1 as defined in the I2C instance macros.
  * 
- * @param slave_address The parameter \a slave_address is an 7 bit address that 
+ * @param slave_address The parameter \a slave_address is a 7 bit address that 
  *                      represents the I2C slave address.
  * 
- * @param data The parameter \a data is an pointer to buffer containing data to send.
+ * @param data The parameter \a data is a pointer to buffer containing data to send.
  * 
  * @param length The parameter \a length is the number of bytes to transmit from the 
  *               data buffer.
  * 
  * @param mode The parameter \a mode is used to set whether to send start
  *             bit, stop bit and repeated start in transaction.
- *             - START_BIT : sends start bit 
- *             - STOP_BIT : sends stop bit
- *             - (START_BIT | STOP_BIT ) : sends repeated start bit
+ *             - START BIT - alone is repeated start 
+ *             - START | STOP - is single transaction.
  * 
  * @return Returns a 16-bit status code:
  * - @ref SUCCESS  Reception completed successfully; all bytes received from slave.

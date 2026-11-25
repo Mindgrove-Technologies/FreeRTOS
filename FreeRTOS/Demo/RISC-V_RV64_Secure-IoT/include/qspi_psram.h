@@ -110,7 +110,7 @@ extern "C" {
  */
 uint16_t PSRAM_Init(const QSPI_Instance_t *qspi_inst,
                     size_t psram_mem_size,
-                    uint8_t prescaler);
+                    uint16_t prescaler);
 
 #ifdef __cplusplus
 }

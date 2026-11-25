@@ -1,6 +1,7 @@
 /**
  * SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (c) 2021-2026 Mindgrove Technologies. 
+ * All rights reserved.
  * 
  * @license Licensed under the Apache License, Version 2.0 (see LICENSE).
  * @licenseblock
@@ -42,8 +43,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_AES_H_
-#define BSP_INCLUDE_AES_H_
+#ifndef INCLUDES_AES_H_
+#define INCLUDES_AES_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,6 +52,7 @@ extern "C" {
 
 #include <stddef.h>
 #include <stdint.h>
+#include "crypto_api.h"
 
 /**
 * @enum AES_OPERATION
@@ -231,4 +233,4 @@ uint16_t AES_Zeroize(void);
 }
 #endif
 
-#endif  // BSP_INCLUDE_AES_H_
+#endif  // INCLUDES_AES_H_

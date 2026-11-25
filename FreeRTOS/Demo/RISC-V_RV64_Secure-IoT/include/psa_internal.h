@@ -40,8 +40,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef BSP_INCLUDE_PSA_INTERNAL_H_
-#define BSP_INCLUDE_PSA_INTERNAL_H_
+#ifndef INCLUDES_PSA_INTERNAL_H_
+#define INCLUDES_PSA_INTERNAL_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -710,4 +710,4 @@ void mg_zeroize(void *buf, size_t len);
 }
 #endif
 
-#endif  // BSP_INCLUDE_PSA_INTERNAL_H_
+#endif  // INCLUDES_PSA_INTERNAL_H_
