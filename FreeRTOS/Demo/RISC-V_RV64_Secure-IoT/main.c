@@ -24,16 +24,12 @@
  *
  */
 
-/* FreeRTOS kernel includes. */
 #include <FreeRTOS.h>
 #include <task.h>
 #include "gpio.h"
 #include "utils.h"
 #include "core_interrupts.h"
 #include "io.h"
-
-/* Run a simple demo which prints messages from two tasks */
-#define DEMO_HELLO    1
 
 extern void freertos_risc_v_trap_handler( void );
 
@@ -47,18 +43,12 @@ void freertos_risc_v_application_exception_handler(void){
 
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
-void vApplicationStackOverflowHook( TaskHandle_t pxTask,
-                                    char * pcTaskName );
+void vApplicationStackOverflowHook(TaskHandle_t pxTask, char * pcTaskName );
 void vApplicationTickHook( void );
 
-/*
- * Setup the Spike simulator to run this demo.
- */
 static void prvSetupSpike( void );
 
-extern int main_hello( void );
-
-/*-----------------------------------------------------------*/
+extern int app_main( void );
 
 int main( void )
 {
@@ -66,15 +56,9 @@ int main( void )
 
     prvSetupSpike();
 
-    #if defined( DEMO_HELLO )
-        ret = main_hello();
-    #else
-        #error "Please add or select demo."
-    #endif
-
-    return ret;
+    return app_main();
 }
-/*-----------------------------------------------------------*/
+
 static void prvSetupSpike( void )
 {
     __asm__ volatile ( "csrw mtvec, %0" : : "r" ( freertos_risc_v_trap_handler ) );
@@ -132,12 +116,8 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
     {
     }
 }
-/*-----------------------------------------------------------*/
 
-void vApplicationTickHook( void )
-{
-}
-/*-----------------------------------------------------------*/
+void vApplicationTickHook( void ) { }
 
 void vAssertCalled( void )
 {

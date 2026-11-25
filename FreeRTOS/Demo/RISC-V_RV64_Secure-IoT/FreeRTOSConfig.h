@@ -47,9 +47,8 @@
 /* Hardware description related definitions. **********************************/
 /******************************************************************************/
 
-#include "include/uart.h"
-#include "include/utils.h"
-#include "clint.h"
+#include "include/secure_iot.h"
+
 #define configMTIME_BASE_ADDRESS      0x0200BFF8UL   
 #define configMTIMECMP_BASE_ADDRESS   0x02004000UL  
 
@@ -60,7 +59,7 @@
  * settings.  Your application will certainly need a different value so set this
  * correctly. This is very often, but not always, equal to the main system clock
  * frequency. */
-#define configCPU_CLOCK_HZ    ( ( unsigned long ) CLOCK_FREQUENCY_ASIC/2U ) //700/256 MHz
+#define configCPU_CLOCK_HZ    (CLOCK_FREQUENCY_ASIC / 2U )
 
 /* configSYSTICK_CLOCK_HZ is an optional parameter for ARM Cortex-M ports only.
  *
