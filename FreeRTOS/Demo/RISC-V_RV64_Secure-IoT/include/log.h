@@ -1,49 +1,114 @@
-/***************************************************************************
-* Project               	: shakti devt board
-* Name of the file	        : log.h
-* Brief Description of file     : Header file for logger.
-* Name of Author    	        : Abhinav Ramnath
-* Email ID                      : abhinavramnath13@gmail.com
-
- Copyright (C) 2019  IIT Madras. All rights reserved.
-
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https://www.gnu.org/licenses/>.
-***************************************************************************/
 /**
+ * SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (c) 2021-2026 Mindgrove Technologies. All rights reserved.
+ *
+ * @license Licensed under the Apache License, Version 2.0 (see LICENSE).
+ * @licenseblock
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * @endlicenseblock
+ *
+ * Project                   : MGS2401 SoC
  * @file log.h
- * @brief Header file for logger.
- * @details This file is used for logging. There are 6 levels of logging.
- Level 0 is the most critical. Usually system stops after level 0 logging.
- Level 3 is the default level of logging.
+ * @brief  Contains the API for log statment.
+ * @details Provides the API for log statement.
+ * @version 1.1
+ * @authors Kapil Shyam. M (kapil@mindgrovetech.in)
+ *          Harini Sree.S (harini@mindgrovetech.in)
+ * @date 11-05-2026
+ *
+ * @section History
+ * -----------------------------------------------------------------------------
+ * Date       | Version | Modified by           | Description
+ * -----------|---------|-----------------------|-------------------------------
+ * 13-09-2024 | 1.0     | Kapil Shyam. M        | Initial release.
+ * 11-05-2026 | 1.1     | Harini Sree. S        | Updated it to be
+ *            |         |                       | MISRA-compliant.
+ * -----------------------------------------------------------------------------
  */
 
-#include <stdarg.h>
+#ifndef LOG_H
+#define LOG_H
 
-// Log Levels
-#define TRACE 5
-#define DEBUG 4
-#define INFO  3
-#define WARN  2
-#define ERROR 1
-#define FATAL 0
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-extern void vprintfmt(void (*putch)(int, void**), void **putdat, const char *fmt, va_list ap);
+/**
+ * @enum: LogLevel
+ * @brief: Describes the Log Level Macros
+ */
+typedef enum {
+	FATAL = 0, // Ordered by severity
+	ERROR = 1,
+	WARN = 2,
+	INFO = 3,
+	TRACE = 4,
+	DEBUG = 5
+} LogLevel;
 
-//function prototype
-void log_trace(const char*fmt, ...);
-void log_info(const char*fmt, ...);
-void log_debug(const char*fmt, ...);
-void log_warn(const char*fmt, ...);
-void log_error(const char*fmt, ...);
-void log_fatal(const char*fmt, ...);
+/**
+ * @defgroup LOG_LEVEL Configuration Macros
+ *
+ * @brief Macros used to configure the severity of the log statment.
+ *
+ * @{
+ */
+/** @brief Conditional Default level. */
+#ifndef LOG_LEVEL
+#define LOG_LEVEL WARN
+#endif
+
+/** @brief Conditional log emission macro.
+ *  @details Evaluates the specified log level against the current global
+ *  log_level and invokes log_emit_function() only if the message severity is
+ *  enabled. This helps in filtering log output at runtime without additional
+ *  function overhead.
+ *  @param level Logging severity level of the message.
+ *  @param fmt   Format string (similar to printf-style formatting).
+ *  @param ...   Optional arguments corresponding to the format string.
+ */
+#define log_emit(level, fmt, ...)                         \
+	do {                                                  \
+		if ((level) <= log_level) {                       \
+			log_emit_function(level, fmt, ##__VA_ARGS__); \
+		}                                                 \
+	} while (0)
+
+/**
+ * @brief Global log level control variable.
+ * @details Determines the current logging verbosity used across the system.
+ *          The value of this variable can be modified at runtime to adjust
+ *          the level of log messages being generated.
+ * @note The default value is set during initialization in log.c.
+ *       It can be overridden at runtime (from main.c) by assigning
+ *       a new value to log_level.
+ */
+extern volatile LogLevel log_level;
+
+/**
+ * @brief General function to emit logs based on log level.
+ * @details This function emits logs based on the provided log level.
+ *          It will only print logs if the provided level is equal to or
+ *          more severe than the current `log_level`.
+ * @param level Log level (TRACE, DEBUG, INFO, WARN, ERROR, FATAL)
+ * @param fmt   Format string for printf-style arguments
+ * @return none
+ */
+void log_emit_function(LogLevel level, const char *fmt, ...);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // LOG_H

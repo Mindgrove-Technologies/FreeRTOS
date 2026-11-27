@@ -29,6 +29,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef DEFINES_H
 #define DEFINES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define REGSIZE __riscv_xlen/8
 
 #if __riscv_xlen == 64
@@ -41,6 +45,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #define MSTATUS_MPP         0x00001800
 #define MSTATUS_FS          0x00006000
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
